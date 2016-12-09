@@ -3,22 +3,23 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Windows.Security.Cryptography.Core;
 
 namespace UWPEindopdracht.GPSConnections
 {
     /// <summary>
     /// GCoordinate is a base coordinate with only latitude and longitude
     /// </summary>
-    class GCoordinate
+    public class GCoordinate
     {
         /// <summary>
         /// latitude of the coordinate
         /// </summary>
-        protected double lati { get; set; }
+        public double lati { get; set; }
         /// <summary>
         /// longitude of the coordinate
         /// </summary>
-        protected double longi { get; set; }
+        public double longi { get; set; }
 
         /// <summary>
         /// The speed of the user

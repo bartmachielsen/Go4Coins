@@ -23,9 +23,30 @@ namespace UWPEindopdracht.GPSConnections
         /// <returns>returns the location of the user in form of <see cref="GCoordinate"/> or <see cref="CivilCoordinate"/></returns>
         public static async Task<GCoordinate> getLocation()
         {
+            if (!(await checkGPSState())) return null;
             var locator = new Geolocator() {DesiredAccuracyInMeters = desiredAccuracy};
             return getGCoordinate(await locator.GetGeopositionAsync());
         }
+
+        private static async Task<bool> checkGPSState()
+        {
+            var accesstate = await Geolocator.RequestAccessAsync();
+            if (accesstate != GeolocationAccessStatus.Allowed) return false;
+            return true;
+        }
+
+        public static Geopoint getPointOutLocation(GCoordinate coordinates)
+        {
+            return new Geopoint(new BasicGeoposition() { Latitude = coordinates.lati, Longitude = coordinates.longi});
+        }
+
+        public static async Task<Geoposition> getLocationOriginal()
+        {
+            if (!(await checkGPSState())) return null;
+            var locator = new Geolocator() { DesiredAccuracyInMeters = desiredAccuracy };
+            return await locator.GetGeopositionAsync();
+        }
+
         /// <summary>
         /// Convers a Geoposition from windows to our own GCoordinate or CivilCoordinate
         /// <see cref="CivilCoordinate"/>
@@ -62,4 +83,6 @@ namespace UWPEindopdracht.GPSConnections
             };
         }
     }
+
+
 }

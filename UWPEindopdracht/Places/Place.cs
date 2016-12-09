@@ -3,21 +3,24 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Windows.Devices.Geolocation;
 using UWPEindopdracht.GPSConnections;
 
 namespace UWPEindopdracht.Places
 {
-    class Place
+    public class Place
     {
+        private Geopoint _geoPoint;
+
         /// <summary>
         /// Gcoordinate of the location of the place
         /// <see cref="GCoordinate"/>
         /// </summary>
-        private GCoordinate location { get; set; }
+        public GCoordinate location { get; set; }
         /// <summary>
         /// Name of the place
         /// </summary>
-        private string name { get; set; }
+        public string name { get; set; }
         /// <summary>
         /// Distance to the place (from the google places api)
         /// Warning! is optional and can be NULL
@@ -52,5 +55,8 @@ namespace UWPEindopdracht.Places
             this.types = types;
             this.imageLocation = imageLocation;
         }
+
+
+       
     }
 }
