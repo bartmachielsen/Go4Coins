@@ -17,6 +17,7 @@ using Windows.UI.Xaml.Data;
 using Windows.UI.Xaml.Input;
 using Windows.UI.Xaml.Media;
 using Windows.UI.Xaml.Navigation;
+using UWPEindopdracht.DataConnections;
 using UWPEindopdracht.GPSConnections;
 using UWPEindopdracht.Places;
 
@@ -30,7 +31,7 @@ namespace UWPEindopdracht
     public sealed partial class MapPage : Page
     {
         public bool follow = false;
-        public ObservableCollection<Place> places = new ObservableCollection<Place>() { new Place(new GCoordinate(51.598573733256, 4.70588350628871), "TestObject", null, new string[0], null) };
+        public ObservableCollection<Place> places = new ObservableCollection<Place>() { new Place(new GCoordinate(51.598573733256, 4.70588350628871), "TestObject", null, new string[0], null, null, null) };
 
 
 
@@ -45,7 +46,10 @@ namespace UWPEindopdracht
             
             mapControl.ZoomInteractionMode = MapInteractionMode.GestureAndControl;
             mapControl.ZoomLevel = 13;
-            
+
+            var connector = new GooglePlacesConnector();
+            connector.GetPlaces(500, new GCoordinate(51.598573733256, 4.70588350628871));
+
         }
 
         private void placePinPoints(Geopoint location)
@@ -60,8 +64,8 @@ namespace UWPEindopdracht
             {
                 mapControl.MapElements.Add(new MapIcon()
                 {
-                    Title = place.name,
-                    Location = GPSHelper.getPointOutLocation(place.location)
+                    Title = place.Name,
+                    Location = GPSHelper.getPointOutLocation(place.Location)
                 });
             }
         }

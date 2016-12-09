@@ -16,18 +16,18 @@ namespace UWPEindopdracht
         /// <summary>
         /// Httpclient class for putting the requests to the server
         /// </summary>
-        protected HttpClient client;
+        private HttpClient client;
 
         /// <summary>
         /// the host address of the target server
         /// default: localhost
         /// </summary>
-        private string host { get; set; }
+        public string host { get; set; }
         /// <summary>
         /// the host port of the target server
         /// default: 80
         /// </summary>
-        private int port { get; set; }
+        public int port { get; set; }
 
         /// <summary>
         /// Default constructor for creating a HttpConnector class
@@ -38,6 +38,7 @@ namespace UWPEindopdracht
         {
             this.host = host;
             this.port = port;
+            client = new HttpClient();
         }
 
         /// <summary>

@@ -19,15 +19,19 @@ namespace UWPEindopdracht.DataConnections
         /// </summary>
         public string apiKey { get; set; } = "AIzaSyALNAeJEW5aA8D8AdXE4CDDXX4IYh5o1Ns";
 
+        public GooglePlacesConnector() : base("https://maps.googleapis.com")
+        {
+        }
+
         public async Task<Place[]> GetPlaces(int diameter, GCoordinate coordinate)
         {
-            Uri uriPlaces = new Uri($"http://maps.googleapis.com/maps/api/place/nearbysearch/json?location={coordinate}&radius={diameter}&key={apiKey}");
+            Uri uriPlaces = new Uri($"{host}/maps/api/place/nearbysearch/json?location={coordinate.lati},{coordinate.longi}&radius={diameter}&key={apiKey}");
             return GooglePlacesParser.GetPlaces(await get(uriPlaces));
         }
 
         public async Task<Place[]> GetPlaces(string city)
         {
-            Uri uriPlaces = new Uri($"https://maps.googleapis.com/maps/api/place/textsearch/json?query={city}&key={apiKey}");
+            Uri uriPlaces = new Uri($"{host}/maps/api/place/textsearch/json?query={city}&key={apiKey}");
             return GooglePlacesParser.GetPlaces(await get(uriPlaces));
         }
     }
