@@ -27,7 +27,7 @@ namespace UWPEindopdracht.Places
         /// Warning! is optional and can be NULL
         /// <exception cref="NullReferenceException"> Exception when distance is not set</exception>
         /// </summary>
-        private int? Distance { get; set; }
+        public double? Distance { get; set; }
         /// <summary>
         /// The types that the Place has like supermarket, point of interest, point of worship
         /// </summary>
@@ -67,6 +67,10 @@ namespace UWPEindopdracht.Places
         }
 
 
-       
+        public Boolean isCity()
+        {
+            List<string> types = new List<string>(Types);
+            return types.Contains("locality") && types.Contains("political");
+        }
     }
 }

@@ -95,6 +95,7 @@
     <Compile Include="App.xaml.cs">
       <DependentUpon>App.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Assigment.cs" />
     <Compile Include="DataConnections\GooglePlacesConnector.cs" />
     <Compile Include="DataConnections\HttpConnector.cs" />
     <Compile Include="GPSConnections\GCoordinate.cs" />

@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Windows.Devices.Geolocation;
+using Windows.Services.Maps;
 
 namespace UWPEindopdracht.GPSConnections
 {
@@ -27,19 +28,31 @@ namespace UWPEindopdracht.GPSConnections
             var locator = new Geolocator() {DesiredAccuracyInMeters = desiredAccuracy};
             return getGCoordinate(await locator.GetGeopositionAsync());
         }
-
+        /// <summary>
+        /// Method for checking if gps receiver is working and the system has granted acces
+        /// </summary>
+        /// <returns>returns True if is allowed, False if nog working</returns>
         private static async Task<bool> checkGPSState()
         {
             var accesstate = await Geolocator.RequestAccessAsync();
             if (accesstate != GeolocationAccessStatus.Allowed) return false;
             return true;
         }
+        
 
+        /// <summary>
+        /// Method for converting a GCoordinate to a Geopoint needed for a map
+        /// </summary>
+        /// <param name="coordinates"></param>
+        /// <returns></returns>
         public static Geopoint getPointOutLocation(GCoordinate coordinates)
         {
             return new Geopoint(new BasicGeoposition() { Latitude = coordinates.lati, Longitude = coordinates.longi});
         }
-
+        /// <summary>
+        /// Get the location of the user
+        /// </summary>
+        /// <returns>returns the location of the user in form of <see cref="GCoordinate"/> or <see cref="Geoposition"/></returns>
         public static async Task<Geoposition> getLocationOriginal()
         {
             if (!(await checkGPSState())) return null;
@@ -82,6 +95,12 @@ namespace UWPEindopdracht.GPSConnections
 
             };
         }
+
+        public static async Task<MapRoute> calculateRouteBetween(GCoordinate start, GCoordinate end)
+        {
+            return (await MapRouteFinder.GetWalkingRouteAsync(getPointOutLocation(start),getPointOutLocation(end))).Route;
+        }
+
     }
 
 
