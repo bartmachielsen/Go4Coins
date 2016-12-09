@@ -14,11 +14,32 @@ namespace UWPEindopdracht.GPSConnections
         /// <summary>
         /// latitude of the coordinate
         /// </summary>
-        private double lati { get; set; }
+        protected double lati { get; set; }
         /// <summary>
         /// longitude of the coordinate
         /// </summary>
-        private double longi { get; set; }
+        protected double longi { get; set; }
+
+        /// <summary>
+        /// The speed of the user
+        /// Warning! can be null
+        /// <exception cref="NullReferenceException">When no speed or unavailable</exception>
+        /// </summary>
+        public double? speed { get; set; }
+
+        /// <summary>
+        /// The accuracy of the measurement
+        /// Waring! can be null
+        /// <exception cref="NullReferenceException">When accuracy is unavailable or not needed</exception>
+        /// </summary>
+        public double? accuracy { get; set; }
+
+        /// <summary>
+        /// The height of the coordinate
+        /// Warning! can be null
+        /// <exception cref="NullReferenceException">When no height available</exception>
+        /// </summary>
+        public double? altitude { get; set; }
 
         /// <summary>
         /// Base constructor for a GCoordinate

@@ -99,6 +99,7 @@
     <Compile Include="DataConnections\HttpConnector.cs" />
     <Compile Include="GPSConnections\GCoordinate.cs" />
     <Compile Include="GPSConnections\GPSHelper.cs" />
+    <Compile Include="JSON\GooglePlacesParser.cs" />
     <Compile Include="MainPage.xaml.cs">
       <DependentUpon>MainPage.xaml</DependentUpon>
     </Compile>
