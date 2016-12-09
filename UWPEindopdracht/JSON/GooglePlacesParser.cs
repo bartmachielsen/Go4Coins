@@ -16,7 +16,6 @@ namespace UWPEindopdracht.JSON
     {
         public static Place[] GetPlaces(string response)
         {
-
             /** BEGIN JSON
              * De totale json bestaat uit 
              * - html_attributions ( hoeven we niks mee te doen)
@@ -41,57 +40,36 @@ namespace UWPEindopdracht.JSON
             **/
             dynamic json = JsonConvert.DeserializeObject(response);
             System.Diagnostics.Debug.WriteLine(response);
-            // where is this one created ?
-            Place[] placesToSend = null;
-
-            // why these variables that are used in a lower piece ?
-            var name = "";
-            var lati = 0.0;
-            var longi = 0.0;
-            var reference = "";
-            var icon = "";
-            string[] types = null;
-            var count = 0;
+            var placesToSend = new List<Place>();
+            var typeList = new List<string>();
             
             if (!(json is JObject))
             {
                 System.Diagnostics.Debug.WriteLine(response);
                 return null;
             }
-            // is not possible to parse because it is not a JArray!
-            JArray jsonval = JArray.Parse(json);
-            // why this dynamic and not a forloop with the created jarray?
+            JObject jsonval = JObject.Parse(json);
             dynamic jsonplaces = jsonval;
-            foreach (dynamic jsonplace in jsonplaces)
+            foreach (var jsonplace in jsonplaces)
             {
-                // why save temp and not immediately in constructor of place? (PLEASE NO EXTRA SAVE)
-                name = jsonplace.name;
-                reference = jsonplace.photos.photo_reference;
-                lati = jsonplace.geometry.location.lat;
-                longi = jsonplace.geometry.location.lng;
-                icon = jsonplace.icon;
-                // jsonplace.type.Count is not possible! replace with a forloop! 
-                for (int i = 0; i < jsonplace.type.Count; i++)
+                var lati = jsonplace.geometry.location.lat;
+                var longi = jsonplace.geometry.location.lng;
+
+                foreach (var type in jsonplace.types)
                 {
-                    // types is null because never initialized
-                    // jsonplace.type is not possible because it is a whole array that is saved everytime
-                    types[i] = jsonplace.type;
+                    typeList.Add(type);
                 }
-                if (types != null)
-                {
-                    // nullpointer because placestosend is null
-                    placesToSend[count] = new Place(new GCoordinate(lati, longi), name, 0, types, $"{lati}, {longi}", icon, reference);
-                    count++;
-                }
-                // why kill the whole loop if one item does not containt types ?
-                else return null;
+
+                placesToSend.Add(new Place(
+                    new GCoordinate(lati, longi), 
+                    jsonplace.name, 
+                    typeList.ToArray(), 
+                    $"{lati}, {longi}", 
+                    jsonplace.icon, 
+                    jsonplace.reference)
+                );
             }
-            // why first check if object is null and if null return null ? bullshit extra code
-            if (placesToSend != null)
-            {
-                return placesToSend;
-            }
-            else return null;
+            return placesToSend.ToArray();
         }
     }
 }

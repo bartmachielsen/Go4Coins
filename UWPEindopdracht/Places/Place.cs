@@ -22,12 +22,14 @@ namespace UWPEindopdracht.Places
         /// Name of the place
         /// </summary>
         public string Name { get; set; }
+
         /// <summary>
         /// Distance to the place (from the google places api)
         /// Warning! is optional and can be NULL
         /// <exception cref="NullReferenceException"> Exception when distance is not set</exception>
         /// </summary>
-        public double? Distance { get; set; }
+        //public double? Distance { get; set; }
+
         /// <summary>
         /// The types that the Place has like supermarket, point of interest, point of worship
         /// </summary>
@@ -55,11 +57,11 @@ namespace UWPEindopdracht.Places
         /// <param name="distance"><see cref="distance"/></param>
         /// <param name="types"><see cref="types"/></param>
         /// <param name="imageLocation"><see cref="imageLocation"/></param>
-        public Place(GCoordinate location, string name, int? distance, string[] types, string imageLocation, string icon, string photo )
+        public Place(GCoordinate location, string name, string[] types, string imageLocation, string icon, string photo )
         {
             Location = location;
             Name = name;
-            Distance = distance;
+            //Distance = distance;
             Types = types;
             ImageLocation = imageLocation;
             IconLink = icon;
