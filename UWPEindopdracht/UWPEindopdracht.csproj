@@ -99,8 +99,8 @@
     <Compile Include="GPSConnections\GCoordinate.cs" />
     <Compile Include="GPSConnections\GPSHelper.cs" />
     <Compile Include="JSON\GooglePlacesParser.cs" />
-    <Compile Include="MainPage.xaml.cs">
-      <DependentUpon>MainPage.xaml</DependentUpon>
+    <Compile Include="MapPage.xaml.cs">
+      <DependentUpon>MapPage.xaml</DependentUpon>
     </Compile>
     <Compile Include="Places\Place.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -126,7 +126,7 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
-    <Page Include="MainPage.xaml">
+    <Page Include="MapPage.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
