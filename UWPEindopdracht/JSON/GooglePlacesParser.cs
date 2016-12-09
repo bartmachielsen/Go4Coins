@@ -16,12 +16,35 @@ namespace UWPEindopdracht.JSON
     {
         public static Place[] GetPlaces(string response)
         {
+
+            /** BEGIN JSON
+             * De totale json bestaat uit 
+             * - html_attributions ( hoeven we niks mee te doen)
+             * - next_page_token ( deze is nodig omdat er maar een beperkt aantal results kunnen in een json query dus je moet die next_page_token gebruiken om te kijken om de volgende pagina op te halen
+             * - results (hierin staan alle resultaten en dit object is een JArray!)
+             * - status (hierin staat of de query goed is of dat hij iets niet op kan halen!) --> moet OK zijn
+            **/
+            
+            /**
+             * DUS JE MOET DE JARRAY UIT RESULTS HALEN EN DOORLOPEN! DAARUIT KUN JE DE ONDERSTAANDE ONDERDELEN HALEN
+             * een result query bevat de volgende elementen die voor ons van belang zijn!
+             * - geometry ( bevat de locatie en viewport van het punt)
+             *     - location wat de exacte locatie bevat
+             *          -   lat voor de latitude
+             *          -   lng voor de longitude
+             * - icon (bevat de icon van het punt) in de vorm van een url
+             * - name (naam van het object)
+             * - photos
+             *      -   photo_reference voor het later ophalen van een foto
+             * - types wat een array is die zegt wat hij betekent
+             * - vicinity is het adress of plaatsnaam in de vorm van een string
+            **/
             dynamic json = JsonConvert.DeserializeObject(response);
             System.Diagnostics.Debug.WriteLine(response);
             // where is this one created ?
             Place[] placesToSend = null;
 
-            /// why these variables that are used in a lower piece ?
+            // why these variables that are used in a lower piece ?
             var name = "";
             var lati = 0.0;
             var longi = 0.0;
