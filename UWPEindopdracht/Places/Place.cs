@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Runtime.CompilerServices;
 using System.Text;
 using System.Threading.Tasks;
 using Windows.Devices.Geolocation;
@@ -16,28 +17,35 @@ namespace UWPEindopdracht.Places
         /// Gcoordinate of the location of the place
         /// <see cref="GCoordinate"/>
         /// </summary>
-        public GCoordinate location { get; set; }
+        public GCoordinate Location { get; set; }
         /// <summary>
         /// Name of the place
         /// </summary>
-        public string name { get; set; }
+        public string Name { get; set; }
         /// <summary>
         /// Distance to the place (from the google places api)
         /// Warning! is optional and can be NULL
         /// <exception cref="NullReferenceException"> Exception when distance is not set</exception>
         /// </summary>
-        private int? distance { get; set; }
+        private int? Distance { get; set; }
         /// <summary>
         /// The types that the Place has like supermarket, point of interest, point of worship
         /// </summary>
-        private string[] types { get; set; }
+        private string[] Types { get; set; }
         /// <summary>
         /// The image URL of the place location (Google places URL or other URL)
         /// Warning! is optional and can be NULL
         /// <exception cref="NullReferenceException"> Exception when image is not set</exception>
         /// </summary>
-        private string imageLocation { get; set; }
-
+        private string ImageLocation { get; set; }
+        /// <summary>
+        /// The URL to photos belonging to the place
+        /// </summary>
+        private string Photo { get; set; }
+        /// <summary>
+        /// The URL to the icon used for the place
+        /// </summary>
+        private string IconLink { get; set; }
 
         /// <summary>
         /// Base Constructor for making a Place
@@ -47,13 +55,15 @@ namespace UWPEindopdracht.Places
         /// <param name="distance"><see cref="distance"/></param>
         /// <param name="types"><see cref="types"/></param>
         /// <param name="imageLocation"><see cref="imageLocation"/></param>
-        public Place(GCoordinate location, string name, int? distance, string[] types, string imageLocation)
+        public Place(GCoordinate location, string name, int? distance, string[] types, string imageLocation, string icon, string photo )
         {
-            this.location = location;
-            this.name = name;
-            this.distance = distance;
-            this.types = types;
-            this.imageLocation = imageLocation;
+            Location = location;
+            Name = name;
+            Distance = distance;
+            Types = types;
+            ImageLocation = imageLocation;
+            IconLink = icon;
+            Photo = photo;
         }
 
 

@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using UWPEindopdracht.GPSConnections;
+using UWPEindopdracht.JSON;
 using UWPEindopdracht.Places;
 
 namespace UWPEindopdracht.DataConnections
@@ -21,12 +22,13 @@ namespace UWPEindopdracht.DataConnections
         public async Task<Place[]> GetPlaces(int diameter, GCoordinate coordinate)
         {
             Uri uriPlaces = new Uri($"http://maps.googleapis.com/maps/api/place/nearbysearch/json?location={coordinate}&radius={diameter}&key={apiKey}");
-            return JsonConverter(await get(uriPlaces));
+            return GooglePlacesParser.GetPlaces(await get(uriPlaces));
         }
 
-        public Place[] GetPlaces(string City)
+        public async Task<Place[]> GetPlaces(string city)
         {
-            throw new NotImplementedException();
+            Uri uriPlaces = new Uri($"https://maps.googleapis.com/maps/api/place/textsearch/json?query={city}&key={apiKey}");
+            return GooglePlacesParser.GetPlaces(await get(uriPlaces));
         }
     }
 }
