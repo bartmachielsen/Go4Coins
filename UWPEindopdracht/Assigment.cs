@@ -25,6 +25,7 @@ namespace UWPEindopdracht
         public Place target { get; set; }
         public TimeSpan maximumTime { get; set; }
 
+        // TODO IMAGE FOR SHOWING WHEN ASSIGMENT HAS BEEN ANNOUNCED!
 
         public async void fillTarget(Place[] places, GCoordinate currentPosition)
         {
@@ -96,7 +97,7 @@ namespace UWPEindopdracht
     {
         public SearchAssigment()
         {
-            maximumTime = new TimeSpan(0,1,0,0);
+            maximumTime = TimeSpan.FromHours(1);
             maxSpeed = 1000;
             maxDistance = 1000;
             minDistance = 100;
@@ -105,11 +106,12 @@ namespace UWPEindopdracht
 
         public override void fillDescription()
         {
+
             description =
                 "Search the given point!" +
                 $"\n Name: {target.Name}" +
                 $"\n Estimated distance to the target {target.Distance}!" +
-                $"\n Bonus if reached within 60 minutes!" +
+                $"\n Bonus if reached within {maximumTime.TotalMinutes} minutes." +
                 $"\n Maximum score is {totalScore(new TimeSpan())}";
         }
     }
