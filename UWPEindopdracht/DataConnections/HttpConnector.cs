@@ -118,13 +118,13 @@ namespace UWPEindopdracht
     /// <summary>
     /// Class for connecting to the web api from google places
     /// </summary>
-    class GooglePlacesConnector : HttpConnector,ApiKeyConnector
+    class GooglePlacesConnector : HttpConnector, ApiKeyConnector
     {
 
         /// <summary>
         /// <see cref="ApiKeyConnector.apiKey"/>
         /// </summary>
-        public string apiKey { get; set; }
+        public string apiKey { get; set; } = "AIzaSyALNAeJEW5aA8D8AdXE4CDDXX4IYh5o1Ns";
 
 
 
