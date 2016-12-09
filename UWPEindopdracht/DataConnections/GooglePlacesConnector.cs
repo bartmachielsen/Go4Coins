@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using UWPEindopdracht.GPSConnections;
+using UWPEindopdracht.Places;
 
 namespace UWPEindopdracht.DataConnections
 {
@@ -15,15 +17,17 @@ namespace UWPEindopdracht.DataConnections
         /// <see cref="ApiKeyConnector.apiKey"/>
         /// </summary>
         public string apiKey { get; set; } = "AIzaSyALNAeJEW5aA8D8AdXE4CDDXX4IYh5o1Ns";
-    }
 
-    public Place[] GetPlaces(int diameter, GCoordinate coordinate)
-    {
-    
-    }
+        public async Task<Place[]> GetPlaces(int diameter, GCoordinate coordinate)
+        {
+            Uri uriPlaces = new Uri($"http://maps.googleapis.com/maps/api/place/nearbysearch/json?location={coordinate}&radius={diameter}");
+            return JsonParse(await get(uriPlaces));
+        }
 
-    public Place[] GetPlaces(string City)
-    {
-    
+        public Place[] GetPlaces(string City)
+        {
+            throw new NotImplementedException();
+        }
     }
 }
+    
