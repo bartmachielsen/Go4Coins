@@ -51,9 +51,11 @@ namespace UWPEindopdracht
         {
             location = (await GPSHelper.getLocationOriginal()).Coordinate.Point;
             mapControl.Center = location;
-            icon = new MapIcon();
-            icon.Title = "You";
-            icon.Location = location;
+            icon = new MapIcon
+            {
+                Title = "You",
+                Location = location
+            };
             mapControl.MapElements.Add(icon);
         }
         private async void Locator_PositionChanged(Geolocator sender, PositionChangedEventArgs args)
