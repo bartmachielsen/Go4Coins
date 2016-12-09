@@ -20,8 +20,8 @@ namespace UWPEindopdracht.DataConnections
 
         public async Task<Place[]> GetPlaces(int diameter, GCoordinate coordinate)
         {
-            Uri uriPlaces = new Uri($"http://maps.googleapis.com/maps/api/place/nearbysearch/json?location={coordinate}&radius={diameter}");
-            return JsonParse(await get(uriPlaces));
+            Uri uriPlaces = new Uri($"http://maps.googleapis.com/maps/api/place/nearbysearch/json?location={coordinate}&radius={diameter}&key={apiKey}");
+            return JsonConverter(await get(uriPlaces));
         }
 
         public Place[] GetPlaces(string City)
