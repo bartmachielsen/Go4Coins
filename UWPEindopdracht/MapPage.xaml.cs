@@ -1,9 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.IO;
 using System.Linq;
 using System.Runtime.InteropServices.WindowsRuntime;
 using Windows.Devices.Geolocation;
+using Windows.Devices.Geolocation.Geofencing;
 using Windows.Foundation;
 using Windows.Foundation.Collections;
 using Windows.UI.Core;
@@ -16,6 +18,7 @@ using Windows.UI.Xaml.Input;
 using Windows.UI.Xaml.Media;
 using Windows.UI.Xaml.Navigation;
 using UWPEindopdracht.GPSConnections;
+using UWPEindopdracht.Places;
 
 // The Blank Page item template is documented at http://go.microsoft.com/fwlink/?LinkId=402352&clcid=0x409
 
@@ -26,10 +29,8 @@ namespace UWPEindopdracht
     /// </summary>
     public sealed partial class MapPage : Page
     {
-        
-        public Geopoint location { get; set; }
-        public MapIcon icon;
         public bool follow = false;
+        public ObservableCollection<Place> places = new ObservableCollection<Place>() { new Place(new GCoordinate(51.598573733256, 4.70588350628871), "TestObject", null, new string[0], null) };
 
 
 
@@ -38,8 +39,8 @@ namespace UWPEindopdracht
             setLocation();
 
             this.InitializeComponent();
-            
             var locator = new Geolocator() { DesiredAccuracyInMeters = 10, ReportInterval = 100};
+            
             locator.PositionChanged += Locator_PositionChanged;
             
             mapControl.ZoomInteractionMode = MapInteractionMode.GestureAndControl;
@@ -47,36 +48,58 @@ namespace UWPEindopdracht
             
         }
 
+        private void placePinPoints(Geopoint location)
+        {
+            mapControl.MapElements.Clear();
+            mapControl.MapElements.Add(new MapIcon()
+            {
+                Title = "you",
+                Location = location
+            });
+            foreach (var place in places)
+            {
+                mapControl.MapElements.Add(new MapIcon()
+                {
+                    Title = place.name,
+                    Location = GPSHelper.getPointOutLocation(place.location)
+                });
+            }
+        }
         private async void setLocation()
         {
-            location = (await GPSHelper.getLocationOriginal()).Coordinate.Point;
-            mapControl.Center = location;
-            icon = new MapIcon
+            var loc = (await GPSHelper.getLocationOriginal());
+            if (loc != null)
             {
-                Title = "You",
-                Location = location
-            };
-            mapControl.MapElements.Add(icon);
+                mapControl.Center = loc.Coordinate.Point;
+                placePinPoints(mapControl.Center);
+            }
         }
         private async void Locator_PositionChanged(Geolocator sender, PositionChangedEventArgs args)
         {
             
             await Dispatcher.RunAsync(CoreDispatcherPriority.Normal, () =>
             {
-                location = args.Position.Coordinate.Point;
-                if(follow)
-                    mapControl.Center = location;
-                
-                icon.Location = location;
-                
+                var location = args.Position.Coordinate.Point;
+                if (location != null)
+                {
+                    if (follow)
+                        mapControl.Center = location;
+                    placePinPoints(location);
+                }
                 
             });
-            
         }
 
-        
-      
-       
+        private void setGeofence(Geopoint point)
+        {
+            GeofenceMonitor.Current.Geofences.Add(new Geofence("Fence1", new Geocircle(point.Position, 10), MonitoredGeofenceStates.Entered, false, new TimeSpan(5)));
+            GeofenceMonitor.Current.GeofenceStateChanged += geofenceActivated;
+        }
+
+        private void geofenceActivated(GeofenceMonitor sender, object args)
+        {
+            throw new NotImplementedException();
+        }
     }
 
     

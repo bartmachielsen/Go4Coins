@@ -35,6 +35,11 @@ namespace UWPEindopdracht.GPSConnections
             return true;
         }
 
+        public static Geopoint getPointOutLocation(GCoordinate coordinates)
+        {
+            return new Geopoint(new BasicGeoposition() { Latitude = coordinates.lati, Longitude = coordinates.longi});
+        }
+
         public static async Task<Geoposition> getLocationOriginal()
         {
             if (!(await checkGPSState())) return null;
