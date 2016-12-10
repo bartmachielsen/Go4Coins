@@ -8,6 +8,7 @@ using Windows.Devices.Geolocation;
 using Windows.Devices.Geolocation.Geofencing;
 using Windows.Foundation;
 using Windows.Foundation.Collections;
+using Windows.Storage.Streams;
 using Windows.UI.Core;
 using Windows.UI.Popups;
 using Windows.UI.Xaml;
@@ -32,7 +33,7 @@ namespace UWPEindopdracht
     public sealed partial class MapPage : Page
     {
         public bool follow = false;
-        public List<Place> places = new List<Place>() { new Place(new GCoordinate(51.598573733256, 4.70588350628871), "TestObject", new string[0], null, null, null) };
+        public List<Place> places = new List<Place>();
 
 
 
@@ -53,7 +54,7 @@ namespace UWPEindopdracht
 
         }
 
-        private void placePinPoints(Geopoint location)
+        private async void placePinPoints(Geopoint location)
         {
             mapControl.MapElements.Clear();
             mapControl.MapElements.Add(new MapIcon()
@@ -68,7 +69,10 @@ namespace UWPEindopdracht
                     Title = place.Name,
                     Location = GPSHelper.getPointOutLocation(place.Location)
                 });
+                
             }
+           
+            
         }
         private async void setLocation()
         {
@@ -83,6 +87,7 @@ namespace UWPEindopdracht
                             new GooglePlacesConnector().GetPlaces(5000,
                                 new GCoordinate(loc.Coordinate.Point.Position.Latitude,
                                     loc.Coordinate.Point.Position.Longitude)));
+                    System.Diagnostics.Debug.WriteLine($"Loaded {places.Count} points!");
                 }
                 catch (ApiLimitReached)
                 {

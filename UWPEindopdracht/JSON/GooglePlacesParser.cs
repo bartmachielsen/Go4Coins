@@ -25,7 +25,7 @@ namespace UWPEindopdracht.JSON
             return token;
             
         }
-        public static Place[] GetPlaces(string response)
+        public static List<Place> GetPlaces(string response)
         {
             /** BEGIN JSON
              * De totale json bestaat uit 
@@ -74,8 +74,7 @@ namespace UWPEindopdracht.JSON
                     ImageLocation = jsonplace.reference
                 });
             }
-            System.Diagnostics.Debug.WriteLine(placesToSend.Count);
-            return placesToSend.ToArray();
+            return placesToSend;
         }
     }
 }

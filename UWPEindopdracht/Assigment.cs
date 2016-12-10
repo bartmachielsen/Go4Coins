@@ -27,7 +27,7 @@ namespace UWPEindopdracht
 
         // TODO IMAGE FOR SHOWING WHEN ASSIGMENT HAS BEEN ANNOUNCED!
 
-        public async void fillTarget(Place[] places, GCoordinate currentPosition)
+        public async void fillTarget(List<Place> places, GCoordinate currentPosition)
         {
             target = await pickTargetPlace(places, currentPosition);
             maximumTime = (await GPSHelper.calculateRouteBetween(currentPosition, target.Location)).EstimatedDuration;
@@ -41,19 +41,18 @@ namespace UWPEindopdracht
         /// <param name="places"></param>
         /// <param name="currentPosition"></param>
         /// <returns></returns>
-        public async Task<Place> pickTargetPlace(Place[] places, GCoordinate currentPosition)
+        public async Task<Place> pickTargetPlace(List<Place> places, GCoordinate currentPosition)
         {
-            List<Place> sortedPlaces = new List<Place>(places);
-            foreach (var place in sortedPlaces)
+            foreach (var place in places)
                 place.Distance = (await GPSHelper.calculateRouteBetween(currentPosition, place.Location)).LengthInMeters;
 
-            sortedPlaces.RemoveAll((Place place) => place.Distance < minDistance || place.Distance > maxDistance || place.isCity());
-            if (sortedPlaces.Count == 0)
+            places.RemoveAll((Place place) => place.Distance < minDistance || place.Distance > maxDistance || place.isCity());
+            if (places.Count == 0)
                 return null;
-            if (sortedPlaces.Count == 1)
-                return sortedPlaces.ElementAt(0);
+            if (places.Count == 1)
+                return places.ElementAt(0);
             Random random = new Random();
-            return sortedPlaces.ElementAt(random.Next(sortedPlaces.Count));
+            return places.ElementAt(random.Next(places.Count));
         }
 
         /// <summary>
