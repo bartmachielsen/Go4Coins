@@ -13,6 +13,8 @@ namespace UWPEindopdracht.Places
     {
         private Geopoint _geoPoint;
 
+        public double? Distance { get; set; }
+
         /// <summary>
         /// Gcoordinate of the location of the place
         /// <see cref="GCoordinate"/>
@@ -33,13 +35,13 @@ namespace UWPEindopdracht.Places
         /// <summary>
         /// The types that the Place has like supermarket, point of interest, point of worship
         /// </summary>
-        private string[] Types { get; set; }
+        public string[] Types { get; set; }
         /// <summary>
         /// The image URL of the place location (Google places URL or other URL)
         /// Warning! is optional and can be NULL
         /// <exception cref="NullReferenceException"> Exception when image is not set</exception>
         /// </summary>
-        private string ImageLocation { get; set; }
+        public string ImageLocation { get; set; }
         /// <summary>
         /// The URL to photos belonging to the place
         /// </summary>
@@ -47,7 +49,7 @@ namespace UWPEindopdracht.Places
         /// <summary>
         /// The URL to the icon used for the place
         /// </summary>
-        private string IconLink { get; set; }
+        public string IconLink { get; set; }
 
         /// <summary>
         /// Base Constructor for making a Place
@@ -68,6 +70,10 @@ namespace UWPEindopdracht.Places
             Photo = photo;
         }
 
+        public Place()
+        {
+            
+        }
 
         public Boolean isCity()
         {

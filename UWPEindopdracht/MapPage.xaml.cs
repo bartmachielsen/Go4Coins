@@ -9,6 +9,7 @@ using Windows.Devices.Geolocation.Geofencing;
 using Windows.Foundation;
 using Windows.Foundation.Collections;
 using Windows.UI.Core;
+using Windows.UI.Popups;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Controls.Maps;
@@ -31,7 +32,7 @@ namespace UWPEindopdracht
     public sealed partial class MapPage : Page
     {
         public bool follow = false;
-        public ObservableCollection<Place> places = new ObservableCollection<Place>() { new Place(new GCoordinate(51.598573733256, 4.70588350628871), "TestObject", null, new string[0], null, null, null) };
+        public List<Place> places = new List<Place>() { new Place(new GCoordinate(51.598573733256, 4.70588350628871), "TestObject", new string[0], null, null, null) };
 
 
 
@@ -47,8 +48,8 @@ namespace UWPEindopdracht
             mapControl.ZoomInteractionMode = MapInteractionMode.GestureAndControl;
             mapControl.ZoomLevel = 13;
 
-            var connector = new GooglePlacesConnector();
-            connector.GetPlaces(500, new GCoordinate(51.598573733256, 4.70588350628871));
+            
+            
 
         }
 
@@ -75,7 +76,24 @@ namespace UWPEindopdracht
             if (loc != null)
             {
                 mapControl.Center = loc.Coordinate.Point;
+                try
+                {
+                    places.AddRange(
+                        await
+                            new GooglePlacesConnector().GetPlaces(5000,
+                                new GCoordinate(loc.Coordinate.Point.Position.Latitude,
+                                    loc.Coordinate.Point.Position.Longitude)));
+                }
+                catch (ApiLimitReached)
+                {
+                    await new MessageDialog("Api Limit is reached!", "Api Exception").ShowAsync();
+                }
+                catch (InvalidApiKeyException)
+                {
+                    await new MessageDialog("Api key is invalid!", "Api Exception").ShowAsync();
+                }
                 placePinPoints(mapControl.Center);
+
             }
         }
         private async void Locator_PositionChanged(Geolocator sender, PositionChangedEventArgs args)

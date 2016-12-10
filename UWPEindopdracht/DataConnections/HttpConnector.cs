@@ -83,7 +83,7 @@ namespace UWPEindopdracht
                 string cont = await response.Content.ReadAsStringAsync();
                 return cont;
             }
-            catch (Exception e)
+            catch (Exception)
             {
                 return string.Empty;
             }
@@ -126,6 +126,10 @@ namespace UWPEindopdracht
     /// Exception class for exceptions when api key is invalid
     /// </summary>
     class InvalidApiKeyException : Exception
+    {
+
+    }
+    class ApiLimitReached : Exception
     {
 
     }

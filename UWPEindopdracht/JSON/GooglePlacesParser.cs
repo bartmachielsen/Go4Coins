@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.ServiceModel;
-using System.Text;
-using System.Threading.Tasks;
-using Windows.ApplicationModel.Background;
+﻿using System.Collections.Generic;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using UWPEindopdracht.GPSConnections;
@@ -14,6 +8,23 @@ namespace UWPEindopdracht.JSON
 {
     class GooglePlacesParser
     {
+        public static string GetStatus(string response)
+        {
+            dynamic json = JsonConvert.DeserializeObject(response);
+            string token = json.status;
+            if (token == "" || token == " ")
+                return null;
+            return token;
+        }
+        public static string NextPage(string response)
+        {
+            dynamic json = JsonConvert.DeserializeObject(response);
+            string token = json.next_page_token;
+            if (token == "" || token == " ")
+                return null;
+            return token;
+            
+        }
         public static Place[] GetPlaces(string response)
         {
             /** BEGIN JSON
@@ -39,36 +50,31 @@ namespace UWPEindopdracht.JSON
              * - vicinity is het adress of plaatsnaam in de vorm van een string
             **/
             dynamic json = JsonConvert.DeserializeObject(response);
-            System.Diagnostics.Debug.WriteLine(response);
             var placesToSend = new List<Place>();
-            var typeList = new List<string>();
+            
             
             if (!(json is JObject))
             {
-                System.Diagnostics.Debug.WriteLine(response);
                 return null;
             }
-            JObject jsonval = JObject.Parse(json);
-            dynamic jsonplaces = jsonval;
-            foreach (var jsonplace in jsonplaces)
+            foreach (dynamic jsonplace in json.results)
             {
-                var lati = jsonplace.geometry.location.lat;
-                var longi = jsonplace.geometry.location.lng;
-
+                var typeList = new List<string>();
                 foreach (var type in jsonplace.types)
                 {
-                    typeList.Add(type);
+                    typeList.Add((string)type);
                 }
-
-                placesToSend.Add(new Place(
-                    new GCoordinate(lati, longi), 
-                    jsonplace.name, 
-                    typeList.ToArray(), 
-                    $"{lati}, {longi}", 
-                    jsonplace.icon, 
-                    jsonplace.reference)
-                );
+                placesToSend.Add(new Place
+                {
+                    Location = new GCoordinate((double)jsonplace.geometry.location.lat, 
+                                                (double)jsonplace.geometry.location.lng),
+                    Name = (string)jsonplace.name,
+                    Types = typeList.ToArray(),
+                    IconLink = jsonplace.icon,
+                    ImageLocation = jsonplace.reference
+                });
             }
+            System.Diagnostics.Debug.WriteLine(placesToSend.Count);
             return placesToSend.ToArray();
         }
     }
