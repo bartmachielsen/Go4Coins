@@ -11,7 +11,7 @@ namespace UWPEindopdracht
     /// <summary>
     /// class that connects to a http rest api
     /// </summary>
-    class HttpConnector
+    public class HttpConnector
     {
         /// <summary>
         /// Httpclient class for putting the requests to the server

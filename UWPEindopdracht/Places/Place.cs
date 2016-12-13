@@ -16,6 +16,8 @@ namespace UWPEindopdracht.Places
         
         public double? Distance { get; set; }
 
+        public HttpConnector.Priority SourcePriority = HttpConnector.Priority.Normal;
+
         /// <summary>
         /// Gcoordinate of the location of the place
         /// <see cref="GCoordinate"/>
@@ -25,6 +27,8 @@ namespace UWPEindopdracht.Places
         /// Name of the place
         /// </summary>
         public string Name { get; set; }
+
+        public string Id { get; set; }
 
         /// <summary>
         /// Distance to the place (from the google places api)
@@ -44,10 +48,6 @@ namespace UWPEindopdracht.Places
         /// </summary>
         public string ImageLocation { get; set; }
         /// <summary>
-        /// The URL to photos belonging to the place
-        /// </summary>
-        private string Photo { get; set; }
-        /// <summary>
         /// The URL to the icon used for the place
         /// </summary>
         public string IconLink { get; set; }
@@ -60,15 +60,13 @@ namespace UWPEindopdracht.Places
         /// <param name="distance"><see cref="distance"/></param>
         /// <param name="types"><see cref="types"/></param>
         /// <param name="imageLocation"><see cref="imageLocation"/></param>
-        public Place(GCoordinate location, string name, string[] types, string imageLocation, string icon, string photo )
+        public Place(GCoordinate location, string name, string[] types, string imageLocation, string icon)
         {
             Location = location;
             Name = name;
-            //Distance = distance;
             Types = types;
             ImageLocation = imageLocation;
             IconLink = icon;
-            Photo = photo;
         }
 
         public Place()
@@ -90,7 +88,28 @@ namespace UWPEindopdracht.Places
 
         public void MergeInto(Place place)
         {
-            
+            if (SourcePriority > place.SourcePriority)
+            {
+                this.Name = place.Name;
+                this.Distance = place.Distance;
+                if (place.Types.Length >= Types.Length)
+                    Types = place.Types;
+                ImageLocation = place.ImageLocation;
+                IconLink = place.IconLink;
+            }
+            else
+            {
+                if (Name == null)
+                    Name = place.Name;
+                if (Distance == null)
+                    Distance = place.Distance;
+                if (Types == null || place.Types.Length >= Types.Length)
+                    Types = place.Types;
+                if (ImageLocation == null)
+                    ImageLocation = place.ImageLocation;
+                if (IconLink == null)
+                    IconLink = place.IconLink;
+            }
         }
     }
 }
