@@ -78,8 +78,8 @@ namespace UWPEindopdracht
     {
         public MapAssigment()
         {
-            maxDistance = 5000;
-            minDistance = 1000;
+            maxDistance = 3000;
+            minDistance = 800;
             maxSpeed = 40;
         }
 
@@ -98,7 +98,7 @@ namespace UWPEindopdracht
         public SearchAssigment()
         {
             maximumTime = TimeSpan.FromHours(1);
-            maxSpeed = 1000;
+            maxSpeed = null;
             maxDistance = 1000;
             minDistance = 100;
         }

@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using UWPEindopdracht.GPSConnections;
+using UWPEindopdracht.JSON;
 using UWPEindopdracht.Places;
 
 namespace UWPEindopdracht.DataConnections
@@ -17,10 +18,9 @@ namespace UWPEindopdracht.DataConnections
 
         public async Task<List<Place>> GetPlaces(int diameter, GCoordinate coordinate)
         {
-           Uri uri = new Uri($"{host}action=query&list=geosearch&gscoord={coordinate.longi}%7C{coordinate.lati}gsradius={diameter}&format=json");
+            var uri = new Uri($"{host}action=query&list=geosearch&gscoord={coordinate.lati}%7C{coordinate.longi}&gsradius={diameter}&format=json");
             var response = await get(uri);
-            System.Diagnostics.Debug.WriteLine(response);
-            throw new NotImplementedException();
+            return response == null ? new List<Place>() : WikipediaParser.GetPlaces(response);
         }
     }
 }

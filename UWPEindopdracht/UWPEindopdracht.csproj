@@ -102,6 +102,7 @@
     <Compile Include="GPSConnections\GCoordinate.cs" />
     <Compile Include="GPSConnections\GPSHelper.cs" />
     <Compile Include="JSON\GooglePlacesParser.cs" />
+    <Compile Include="JSON\WikipediaParser.cs" />
     <Compile Include="MapPage.xaml.cs">
       <DependentUpon>MapPage.xaml</DependentUpon>
     </Compile>

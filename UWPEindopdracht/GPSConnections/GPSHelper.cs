@@ -101,9 +101,9 @@ namespace UWPEindopdracht.GPSConnections
             return (await MapRouteFinder.GetWalkingRouteAsync(getPointOutLocation(start),getPointOutLocation(end))).Route;
         }
 
-        public static GCoordinate getGcoordinate(Geopoint mapControlCenter)
+        public static GCoordinate getGcoordinate(Geopoint center)
         {
-            throw new NotImplementedException();
+            return new GCoordinate(center.Position.Latitude, center.Position.Longitude);
         }
     }
 

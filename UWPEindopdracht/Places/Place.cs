@@ -11,7 +11,7 @@ namespace UWPEindopdracht.Places
 {
     public class Place
     {
-        private const double DistanceOffset = 0.4;
+        private const double DistanceOffset = 0.00000001;
        
         
         public double? Distance { get; set; }
