@@ -46,12 +46,13 @@ namespace UWPEindopdracht
             foreach (var place in places)
                 place.Distance = (await GPSHelper.calculateRouteBetween(currentPosition, place.Location)).LengthInMeters;
 
-            places.RemoveAll((Place place) => place.Distance < minDistance || place.Distance > maxDistance || place.isCity());
+            places.RemoveAll((Place place) => place.Distance < minDistance || place.Distance > maxDistance || place.IsCity());
             if (places.Count == 0)
                 return null;
             if (places.Count == 1)
                 return places.ElementAt(0);
             Random random = new Random();
+            // TODO SELECT BASED ON COUNT VISITED
             return places.ElementAt(random.Next(places.Count));
         }
 

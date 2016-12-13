@@ -11,8 +11,9 @@ namespace UWPEindopdracht.Places
 {
     public class Place
     {
-        private Geopoint _geoPoint;
-
+        private const double DistanceOffset = 0.4;
+       
+        
         public double? Distance { get; set; }
 
         /// <summary>
@@ -75,10 +76,21 @@ namespace UWPEindopdracht.Places
             
         }
 
-        public Boolean isCity()
+        public bool IsCity()
         {
             List<string> types = new List<string>(Types);
             return types.Contains("locality") && types.Contains("political");
+        }
+
+
+        public bool IsSamePlace(Place place)
+        {
+            return Math.Abs(place.Location.lati - Location.lati) < DistanceOffset && Math.Abs(place.Location.longi - Location.longi) < DistanceOffset;
+        }
+
+        public void MergeInto(Place place)
+        {
+            
         }
     }
 }

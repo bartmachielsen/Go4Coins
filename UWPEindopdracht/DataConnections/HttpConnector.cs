@@ -18,6 +18,13 @@ namespace UWPEindopdracht
         /// </summary>
         private HttpClient client;
 
+
+        public enum Priority
+        {
+            High, Normal, Low, Outdated
+        }
+
+        public Priority SourcePriority;
         /// <summary>
         /// the host address of the target server
         /// default: localhost
@@ -34,11 +41,12 @@ namespace UWPEindopdracht
         /// </summary>
         /// <param name="host">target host <seealso cref="host"/></param>
         /// <param name="port">target port of the server<seealso cref="port"/></param>
-        public HttpConnector(string host = "localhost", int port = 80)
+        public HttpConnector(string host = "localhost", int port = 80, Priority SourcePriority = Priority.Normal)
         {
             this.host = host;
             this.port = port;
             client = new HttpClient();
+            this.SourcePriority = SourcePriority;
         }
 
         /// <summary>

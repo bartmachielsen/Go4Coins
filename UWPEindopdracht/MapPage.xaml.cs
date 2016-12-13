@@ -39,18 +39,18 @@ namespace UWPEindopdracht
 
         public MapPage()
         {
-            setLocation();
+            
 
             this.InitializeComponent();
             var locator = new Geolocator() { DesiredAccuracyInMeters = 10, ReportInterval = 100};
             
             locator.PositionChanged += Locator_PositionChanged;
             
+            
+
+            setLocation();
             mapControl.ZoomInteractionMode = MapInteractionMode.GestureAndControl;
             mapControl.ZoomLevel = 13;
-
-            
-            
 
         }
 

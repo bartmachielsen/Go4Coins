@@ -64,6 +64,7 @@ namespace UWPEindopdracht.JSON
                 {
                     typeList.Add((string)type);
                 }
+                // TODO Get place ID from Google Places response.
                 placesToSend.Add(new Place
                 {
                     Location = new GCoordinate((double)jsonplace.geometry.location.lat, 

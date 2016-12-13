@@ -12,13 +12,17 @@
     <Page.Resources>
         <x:String x:Key="ServiceToken">lWHRVMLzpv4UN9sbLdWx~hNvI_vu_saL-3qfub6XS2Q~AoNKRTbwwZIUv9lISeVAgmaNaPSTg9-HTI7qDUxqaUQbByHUgUDlWFYEffRXCjwl</x:String>
     </Page.Resources>
-    <Grid Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
-
+    <Grid 
+        BorderBrush="Transparent"
+        BorderThickness="10"
+        Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
+       
         <Maps:MapControl
             Name="mapControl"
             Center="{ Binding location, Mode=TwoWay}"
             MapServiceToken="{StaticResource ServiceToken}">
+            <Button Content="Dont Click me"/>
         </Maps:MapControl>
-
+       
     </Grid>
 </Page>
