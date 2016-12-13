@@ -39,6 +39,10 @@ namespace UWPEindopdracht
                     source.Add(addedPlace);
                 }
             }
+            foreach (var sour in source)
+            {
+                System.Diagnostics.Debug.WriteLine($"{sour.Name} - {sour.Distance}");
+            }
             return source;
         }
         
