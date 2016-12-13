@@ -21,7 +21,43 @@
             Name="mapControl"
             Center="{ Binding location, Mode=TwoWay}"
             MapServiceToken="{StaticResource ServiceToken}">
-            <Button Content="Dont Click me"/>
+            <Grid Background="Transparent" Margin="10,530">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="100"/>
+                    <ColumnDefinition Width="100"></ColumnDefinition>
+                </Grid.ColumnDefinitions>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="40"/>
+                    <RowDefinition Height="40"></RowDefinition>
+                </Grid.RowDefinitions>
+
+                <TextBlock
+                    Text="Distance: " 
+                    FontSize="27"
+                    Foreground="Blue"
+                    />
+                <TextBlock
+                    Grid.Column="1"
+                    Grid.Row="0"
+                    Text="3,10 km"
+                    FontSize="27"
+                    Foreground="Blue"
+                    />
+                <TextBlock
+                    Grid.Row="1"
+                    Grid.Column="0"
+                    Text="Time: "
+                    FontSize="27"
+                    Foreground="Blue"
+                    />
+                <TextBlock
+                    Grid.Row="1"
+                    Grid.Column="1"
+                    Text="2:30"
+                    Foreground="Blue"
+                    />
+            </Grid>
+            
         </Maps:MapControl>
        
     </Grid>
