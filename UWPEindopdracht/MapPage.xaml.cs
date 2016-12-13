@@ -22,6 +22,7 @@ using Windows.UI.Xaml.Media;
 using Windows.UI.Xaml.Navigation;
 using UWPEindopdracht.DataConnections;
 using UWPEindopdracht.GPSConnections;
+using UWPEindopdracht.Multiplayer;
 using UWPEindopdracht.Places;
 
 // The Blank Page item template is documented at http://go.microsoft.com/fwlink/?LinkId=402352&clcid=0x409
@@ -36,7 +37,7 @@ namespace UWPEindopdracht
         public bool Follow = false;
         private string _distanceText { get; set; } = "0 km";
         private string _timeText { get; set; } = "00:00";
-
+        private User _user = new User(null, "TestUser", new GCoordinate(0, 0));
         private Assignment _assignment;
 
 
@@ -45,6 +46,7 @@ namespace UWPEindopdracht
 
         public MapPage()
         {
+            LoadMultiplayerDetails();
             this.InitializeComponent();
             _assignment = new MapAssignment();
             var locator = new Geolocator() { DesiredAccuracyInMeters = 10, ReportInterval = 100};
@@ -54,7 +56,35 @@ namespace UWPEindopdracht
             SetLocation();
             mapControl.ZoomInteractionMode = MapInteractionMode.GestureAndControl;
             mapControl.ZoomLevel = 13;
+
+
             
+        }
+
+        private async void LoadMultiplayerDetails()
+        {
+            var db = new RestDBConnector();
+            Windows.Storage.ApplicationDataContainer localSettings =
+                Windows.Storage.ApplicationData.Current.LocalSettings;
+
+            if (!localSettings.Values.ContainsKey("multiplayerID"))
+            {
+                _user = await db.UploadUser(_user);
+                localSettings.Values["multiplayerID"] = _user.id;
+            }
+            else
+            {
+                _user.id = (string)localSettings.Values["multiplayerID"];
+            }
+            //List<User> users = await db.GetUsers();
+        }
+
+        private async void UpdateMultiplayerServer(GCoordinate coordinate)
+        {
+            var db = new RestDBConnector();
+            _user.location = coordinate;
+            System.Diagnostics.Debug.WriteLine("UPDATING USER COORDINATS IN MULTIPLAYER SERVER");
+            db.UpdateUser(_user);
         }
 
         private void PlacePinPoints(Geopoint location)
@@ -153,7 +183,7 @@ namespace UWPEindopdracht
 
         private async void Locator_PositionChanged(Geolocator sender, PositionChangedEventArgs args)
         {
-            
+            UpdateMultiplayerServer(GPSHelper.GetGcoordinate(args.Position.Coordinate.Point));
             await Dispatcher.RunAsync(CoreDispatcherPriority.Normal, () =>
             {
                 var location = args.Position.Coordinate.Point;
