@@ -98,13 +98,14 @@
     <Compile Include="Assigment.cs" />
     <Compile Include="DataConnections\GooglePlacesConnector.cs" />
     <Compile Include="DataConnections\HttpConnector.cs" />
+    <Compile Include="DataConnections\WikipediaConnector.cs" />
     <Compile Include="GPSConnections\GCoordinate.cs" />
     <Compile Include="GPSConnections\GPSHelper.cs" />
     <Compile Include="JSON\GooglePlacesParser.cs" />
     <Compile Include="MapPage.xaml.cs">
       <DependentUpon>MapPage.xaml</DependentUpon>
     </Compile>
-    <Compile Include="PlaceLoader.cs" />
+    <Compile Include="DataConnections\PlaceLoader.cs" />
     <Compile Include="Places\Place.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>

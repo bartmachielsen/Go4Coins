@@ -49,12 +49,5 @@ namespace UWPEindopdracht.DataConnections
             list.AddRange(await GetPlaces(diameter, coordinate, nextPage, firstToken));
             return list;
         }
-
-
-        public async Task<List<Place>> GetPlaces(string city)
-        {
-            var uriPlaces = new Uri($"{host}/maps/api/place/textsearch/json?query={city}&key={apiKey}");
-            return GooglePlacesParser.GetPlaces(await get(uriPlaces));
-        }
     }
 }
