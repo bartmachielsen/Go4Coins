@@ -81,11 +81,14 @@ namespace UWPEindopdracht
         }
 
 
-        public async Task<string[]> GetRouteInformation(GCoordinate currentPoint)
+        public async Task<string[]> GetRouteInformation(GCoordinate currentPoint, bool wantRoute = true)
         {
+            TimeSpan span = MaximumTime - DateTime.Now.Subtract(start);
+            if (!wantRoute)
+            {
+                return new string[] {$"{span.Minutes}:{span.Seconds}"};
+            }
             MapRoute route = await GPSHelper.calculateRouteBetween(currentPoint, Target.Location);
-            TimeSpan span = MaximumTime-DateTime.Now.Subtract(start);
-        
             return new string[] {$"{span.Minutes}:{span.Seconds}", route.LengthInMeters/1000.0 + " km"};
         }
     }
