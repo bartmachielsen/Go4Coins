@@ -11,7 +11,7 @@
     
     <Page.Resources>
         <x:String x:Key="ServiceToken">lWHRVMLzpv4UN9sbLdWx~hNvI_vu_saL-3qfub6XS2Q~AoNKRTbwwZIUv9lISeVAgmaNaPSTg9-HTI7qDUxqaUQbByHUgUDlWFYEffRXCjwl</x:String>
-        <Style x:Key="buttonStyle" TargetType="Button">
+        <Style x:Key="ButtonStyle" TargetType="Button">
             <Setter Property="Template">
                 <Setter.Value>
                     <ControlTemplate TargetType="Button">
@@ -33,13 +33,13 @@
             Name="mapControl"
             Center="{ Binding location, Mode=TwoWay}"
             MapServiceToken="{StaticResource ServiceToken}">
-            <Button Height="70" Width="70" Background="Transparent">
+            <Button Height="70" Width="70" Background="Transparent" Style="{StaticResource ButtonStyle}">
                 <Image Source="Assets/location.png"></Image>
             </Button>
             <Grid Background="Transparent" Margin="10,530">
                 
                 <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="100"/>
+                    <ColumnDefinition Width="110"/>
                     <ColumnDefinition Width="100"></ColumnDefinition>
                 </Grid.ColumnDefinitions>
                 <Grid.RowDefinitions>
@@ -55,7 +55,7 @@
                 <TextBlock
                     Grid.Column="1"
                     Grid.Row="0"
-                    Text="{x:Bind _distanceText, Mode=TwoWay}"
+                    Text="0 km"
                     FontSize="24"
                     Foreground="Blue"
                     />
@@ -69,7 +69,7 @@
                 <TextBlock
                     Grid.Row="1"
                     Grid.Column="1"
-                    Text="{x:Bind _timeText, Mode=TwoWay}"
+                    Text="0:00"
                     FontSize="24"
                     Foreground="Blue"
                     />
