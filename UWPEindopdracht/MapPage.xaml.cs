@@ -132,6 +132,7 @@ namespace UWPEindopdracht
             {
                 string[] information = await _assignment.GetRouteInformation(current);
                 _distanceText = information[1];
+                DistanceTextBlock.Text = _distanceText;
                 System.Diagnostics.Debug.WriteLine($"Changed information {_distanceText}");
             }
         }
@@ -142,6 +143,10 @@ namespace UWPEindopdracht
             {
                 string[] information = await _assignment.GetRouteInformation(null, false);
                 _timeText = information[0];
+                await Dispatcher.RunAsync(CoreDispatcherPriority.Normal, () =>
+                {
+                    TimeTextBlock.Text = _timeText;
+                });
                 System.Diagnostics.Debug.WriteLine($"Changed information {_timeText}");
             }
         }
