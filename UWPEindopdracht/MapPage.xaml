@@ -5,23 +5,25 @@
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:Maps="using:Windows.UI.Xaml.Controls.Maps"
-    
     xmlns:places="using:UWPEindopdracht.Places"
     x:Class="UWPEindopdracht.MapPage"
     mc:Ignorable="d">
+    
     <Page.Resources>
         <x:String x:Key="ServiceToken">lWHRVMLzpv4UN9sbLdWx~hNvI_vu_saL-3qfub6XS2Q~AoNKRTbwwZIUv9lISeVAgmaNaPSTg9-HTI7qDUxqaUQbByHUgUDlWFYEffRXCjwl</x:String>
     </Page.Resources>
+    
     <Grid 
         BorderBrush="Transparent"
         BorderThickness="10"
-        Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
-       
+        Background="{ThemeResource ApplicationPageBackgroundThemeBrush}"
+        >
         <Maps:MapControl
             Name="mapControl"
             Center="{ Binding location, Mode=TwoWay}"
             MapServiceToken="{StaticResource ServiceToken}">
             <Grid Background="Transparent" Margin="10,530">
+                
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="100"/>
                     <ColumnDefinition Width="100"></ColumnDefinition>
@@ -33,32 +35,31 @@
 
                 <TextBlock
                     Text="Distance: " 
-                    FontSize="27"
+                    FontSize="24"
                     Foreground="Blue"
                     />
                 <TextBlock
                     Grid.Column="1"
                     Grid.Row="0"
                     Text="3,10 km"
-                    FontSize="27"
+                    FontSize="24"
                     Foreground="Blue"
                     />
                 <TextBlock
                     Grid.Row="1"
                     Grid.Column="0"
                     Text="Time: "
-                    FontSize="27"
+                    FontSize="24"
                     Foreground="Blue"
                     />
                 <TextBlock
                     Grid.Row="1"
                     Grid.Column="1"
                     Text="2:30"
+                    FontSize="24"
                     Foreground="Blue"
                     />
             </Grid>
-            
         </Maps:MapControl>
-       
     </Grid>
 </Page>

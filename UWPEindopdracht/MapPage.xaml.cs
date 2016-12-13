@@ -32,29 +32,22 @@ namespace UWPEindopdracht
     /// </summary>
     public sealed partial class MapPage : Page
     {
-        public bool follow = false;
-        public List<Place> places = new List<Place>();
-
-
-
+        public bool Follow = false;
+        public List<Place> Places = new List<Place>();
+        
         public MapPage()
         {
-            
-
             this.InitializeComponent();
             var locator = new Geolocator() { DesiredAccuracyInMeters = 10, ReportInterval = 100};
             
             locator.PositionChanged += Locator_PositionChanged;
             
-            
-
-            setLocation();
+            SetLocation();
             mapControl.ZoomInteractionMode = MapInteractionMode.GestureAndControl;
             mapControl.ZoomLevel = 13;
-
         }
 
-        private async void placePinPoints(Geopoint location)
+        private async void PlacePinPoints(Geopoint location)
         {
             mapControl.MapElements.Clear();
             mapControl.MapElements.Add(new MapIcon()
@@ -62,19 +55,17 @@ namespace UWPEindopdracht
                 Title = "you",
                 Location = location
             });
-            foreach (var place in places)
+            foreach (var place in Places)
             {
                 mapControl.MapElements.Add(new MapIcon()
                 {
                     Title = place.Name,
                     Location = GPSHelper.getPointOutLocation(place.Location)
                 });
-                
             }
-           
-            
         }
-        private async void setLocation()
+
+        private async void SetLocation()
         {
             var loc = (await GPSHelper.getLocationOriginal());
             if (loc != null)
@@ -82,8 +73,8 @@ namespace UWPEindopdracht
                 mapControl.Center = loc.Coordinate.Point;
                 try
                 {
-                    places = await PlaceLoader.getPlaces(GPSHelper.getGcoordinate(mapControl.Center));
-                    System.Diagnostics.Debug.WriteLine($"Loaded {places.Count} points!");
+                    Places = await PlaceLoader.GetPlaces(GPSHelper.GetGcoordinate(mapControl.Center));
+                    System.Diagnostics.Debug.WriteLine($"Loaded {Places.Count} points!");
                 }
                 catch (ApiLimitReached)
                 {
@@ -93,10 +84,11 @@ namespace UWPEindopdracht
                 {
                     await new MessageDialog("Api key is invalid!", "Api Exception").ShowAsync();
                 }
-                placePinPoints(mapControl.Center);
+                PlacePinPoints(mapControl.Center);
 
             }
         }
+
         private async void Locator_PositionChanged(Geolocator sender, PositionChangedEventArgs args)
         {
             
@@ -105,21 +97,21 @@ namespace UWPEindopdracht
                 var location = args.Position.Coordinate.Point;
                 if (location != null)
                 {
-                    if (follow)
+                    if (Follow)
                         mapControl.Center = location;
-                    placePinPoints(location);
+                    PlacePinPoints(location);
                 }
                 
             });
         }
 
-        private void setGeofence(Geopoint point)
+        private void SetGeofence(Geopoint point)
         {
             GeofenceMonitor.Current.Geofences.Add(new Geofence("Fence1", new Geocircle(point.Position, 10), MonitoredGeofenceStates.Entered, false, new TimeSpan(5)));
-            GeofenceMonitor.Current.GeofenceStateChanged += geofenceActivated;
+            GeofenceMonitor.Current.GeofenceStateChanged += GeofenceActivated;
         }
 
-        private void geofenceActivated(GeofenceMonitor sender, object args)
+        private void GeofenceActivated(GeofenceMonitor sender, object args)
         {
             throw new NotImplementedException();
         }

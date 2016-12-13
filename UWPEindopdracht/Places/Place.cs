@@ -52,6 +52,8 @@ namespace UWPEindopdracht.Places
         /// </summary>
         public string IconLink { get; set; }
 
+        public string PlaceId { get; set; }
+
         /// <summary>
         /// Base Constructor for making a Place
         /// </summary>
@@ -60,8 +62,9 @@ namespace UWPEindopdracht.Places
         /// <param name="distance"><see cref="distance"/></param>
         /// <param name="types"><see cref="types"/></param>
         /// <param name="imageLocation"><see cref="imageLocation"/></param>
-        public Place(GCoordinate location, string name, string[] types, string imageLocation, string icon)
+        public Place(string placeId, GCoordinate location, string name, string[] types, string imageLocation, string icon)
         {
+            PlaceId = placeId;
             Location = location;
             Name = name;
             Types = types;
