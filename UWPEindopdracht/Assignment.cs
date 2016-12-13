@@ -47,20 +47,41 @@ namespace UWPEindopdracht
         /// <returns></returns>
         public async Task<Place> PickTargetPlace(List<Place> places, GCoordinate currentPosition)
         {
-            foreach (var place in places)
-            {
-                if (place.Distance != null)
-                    place.Distance =
-                        (await GPSHelper.calculateRouteBetween(currentPosition, place.Location)).LengthInMeters;
-            }
 
-            places.RemoveAll((Place place) => place.Distance < MinDistance || place.Distance > MaxDistance || place.IsCity());
+            /**foreach (var place in places)
+            {
+                if (place.Distance == null)
+                {
+                    var route = await GPSHelper.calculateRouteBetween(currentPosition, place.Location);
+                    if(route != null)
+                        place.Distance = route.LengthInMeters;
+                }
+            }
+            
+            places.RemoveAll((Place place) => place.Distance == null || place.Distance < MinDistance || place.Distance > MaxDistance || place.IsCity());
             if (places.Count == 0)
                 return null;
             if (places.Count == 1)
                 return places.ElementAt(0);
             Random random = new Random();
+            System.Diagnostics.Debug.WriteLine($"Filtered the places to {places.Count} Places!");
             return places.ElementAt(random.Next(places.Count));
+            **/
+            Random random = new Random();
+            List<Place> removed = new List<Place>(places);
+            while (removed.Count > 0)
+            {
+                Place place = removed.ElementAt(random.Next(removed.Count));
+                removed.Remove(place);
+                var route = await GPSHelper.calculateRouteBetween(currentPosition, place.Location);
+                if (route != null)
+                    place.Distance = route.LengthInMeters;
+                if (place.Distance >= MinDistance && place.Distance <= MaxDistance)
+                {
+                    return place;
+                }
+            }
+            return null;
         }
 
         /// <summary>
@@ -86,7 +107,7 @@ namespace UWPEindopdracht
             TimeSpan span = MaximumTime - DateTime.Now.Subtract(start);
             if (!wantRoute)
             {
-                return new string[] {$"{span.Minutes}:{span.Seconds}"};
+                return new string[] {$"{span}"};
             }
             MapRoute route = await GPSHelper.calculateRouteBetween(currentPoint, Target.Location);
             return new string[] {$"{span.Minutes}:{span.Seconds}", route.LengthInMeters/1000.0 + " km"};
