@@ -55,7 +55,7 @@
                 <TextBlock
                     Grid.Row="1"
                     Grid.Column="1"
-                    Text="{x:Bind _timeText, Mode=TwoWay}"
+                    Text="{x:Bind timeText, Mode=TwoWay}"
                     FontSize="24"
                     Foreground="Blue"
                     />

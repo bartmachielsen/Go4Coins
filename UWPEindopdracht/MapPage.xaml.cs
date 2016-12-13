@@ -92,7 +92,26 @@ namespace UWPEindopdracht
                     var Places = await PlaceLoader.GetPlaces(GPSHelper.GetGcoordinate(loc.Coordinate.Point));
                     System.Diagnostics.Debug.WriteLine($"Loaded {Places.Count} points!");
                     await _assignment.FillTarget(Places, GPSHelper.GetGcoordinate(loc.Coordinate.Point));
-                    changeTimeAndDistance(GPSHelper.GetGcoordinate(loc.Coordinate.Point));
+                    changeDistance(GPSHelper.GetGcoordinate(loc.Coordinate.Point));
+                    changeTime();
+
+                    //start time change timer
+                    var timer = new DispatcherTimer()
+                    {
+                        Interval = TimeSpan.FromSeconds(1)
+                    };
+                    timer.Tick += delegate(object sender, object o) 
+                    {
+                        if (_assignment != null)
+                        {
+                            changeTime();
+                        }
+                        else
+                        {
+                            timer.Stop();
+                        }
+                    };
+                    timer.Start();
                 }
                 catch (ApiLimitReached)
                 {
@@ -107,17 +126,26 @@ namespace UWPEindopdracht
             }
         }
 
-        private async void changeTimeAndDistance(GCoordinate current)
+        private async void changeDistance(GCoordinate current)
         {
             if (_assignment != null && _assignment.Target != null)
             {
                 string[] information = await _assignment.GetRouteInformation(current);
-                _distanceText = information[0];
-                _timeText = information[1];
-                
-                System.Diagnostics.Debug.WriteLine($"Changed information {_timeText} {_distanceText}");
+                _distanceText = information[1];
+                System.Diagnostics.Debug.WriteLine($"Changed information {_distanceText}");
             }
         }
+
+        private async void changeTime()
+        {
+            if (_assignment != null && _assignment.Target != null)
+            {
+                string[] information = await _assignment.GetRouteInformation(null, false);
+                _timeText = information[0];
+                System.Diagnostics.Debug.WriteLine($"Changed information {_timeText}");
+            }
+        }
+
         private async void Locator_PositionChanged(Geolocator sender, PositionChangedEventArgs args)
         {
             
@@ -129,7 +157,7 @@ namespace UWPEindopdracht
                     if (Follow)
                         mapControl.Center = location;
                     PlacePinPoints(location);
-                    changeTimeAndDistance(GPSHelper.GetGcoordinate(location));
+                    changeDistance(GPSHelper.GetGcoordinate(location));
                 }
                 
             });
