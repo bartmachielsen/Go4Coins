@@ -79,6 +79,8 @@ namespace UWPEindopdracht.Places
 
         public bool IsCity()
         {
+            if (Types == null)
+                return false;
             List<string> types = new List<string>(Types);
             return types.Contains("locality") && types.Contains("political");
         }

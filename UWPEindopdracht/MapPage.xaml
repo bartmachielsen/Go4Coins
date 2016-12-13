@@ -55,7 +55,7 @@
                 <TextBlock
                     Grid.Column="1"
                     Grid.Row="0"
-                    Text="3,10 km"
+                    Text="{x:Bind _distanceText, Mode=TwoWay}"
                     FontSize="24"
                     Foreground="Blue"
                     />
@@ -69,7 +69,7 @@
                 <TextBlock
                     Grid.Row="1"
                     Grid.Column="1"
-                    Text="2:30"
+                    Text="{x:Bind _timeText, Mode=TwoWay}"
                     FontSize="24"
                     Foreground="Blue"
                     />
