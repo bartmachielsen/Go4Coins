@@ -18,6 +18,7 @@ namespace UWPEindopdracht
 
             List<Place> wikiPlaces = await new WikipediaConnector().GetPlaces(_maxDistanceToPlace, coordinate);
             places = AddPlaces(places, wikiPlaces);
+            return places;
         }
 
         public static List<Place> AddPlaces(List<Place> source, List<Place> additions )
@@ -32,10 +33,10 @@ namespace UWPEindopdracht
                         existing = true;
                         sourcePlace.MergeInto(addedPlace);
                     }
-                    if (!existing)
-                    {
-                        source.Add(addedPlace);
-                    }
+                }
+                if (!existing)
+                {
+                    source.Add(addedPlace);
                 }
             }
             return source;
