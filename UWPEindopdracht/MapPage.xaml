@@ -53,6 +53,7 @@
                     Foreground="Blue"
                     />
                 <TextBlock
+                    x:Name="DistanceTextBlock"
                     Grid.Column="1"
                     Grid.Row="0"
                     Text="0 km"
@@ -67,6 +68,7 @@
                     Foreground="Blue"
                     />
                 <TextBlock
+                    x:Name="TimeTextBlock"
                     Grid.Row="1"
                     Grid.Column="1"
                     Text="0:00"
