@@ -11,6 +11,17 @@
     
     <Page.Resources>
         <x:String x:Key="ServiceToken">lWHRVMLzpv4UN9sbLdWx~hNvI_vu_saL-3qfub6XS2Q~AoNKRTbwwZIUv9lISeVAgmaNaPSTg9-HTI7qDUxqaUQbByHUgUDlWFYEffRXCjwl</x:String>
+        <Style x:Key="buttonStyle" TargetType="Button">
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="Button">
+                        <Grid Background="{TemplateBinding Background}">
+                            <ContentPresenter />
+                        </Grid>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
     </Page.Resources>
     
     <Grid 
@@ -22,6 +33,9 @@
             Name="mapControl"
             Center="{ Binding location, Mode=TwoWay}"
             MapServiceToken="{StaticResource ServiceToken}">
+            <Button Height="70" Width="70" Background="Transparent">
+                <Image Source="Assets/location.png"></Image>
+            </Button>
             <Grid Background="Transparent" Margin="10,530">
                 
                 <Grid.ColumnDefinitions>
