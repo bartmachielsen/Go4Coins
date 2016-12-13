@@ -82,11 +82,7 @@ namespace UWPEindopdracht
                 mapControl.Center = loc.Coordinate.Point;
                 try
                 {
-                    places.AddRange(
-                        await
-                            new GooglePlacesConnector().GetPlaces(5000,
-                                new GCoordinate(loc.Coordinate.Point.Position.Latitude,
-                                    loc.Coordinate.Point.Position.Longitude)));
+                    places = await PlaceLoader.getPlaces(GPSHelper.getGcoordinate(mapControl.Center));
                     System.Diagnostics.Debug.WriteLine($"Loaded {places.Count} points!");
                 }
                 catch (ApiLimitReached)

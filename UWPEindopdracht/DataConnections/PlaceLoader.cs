@@ -15,8 +15,8 @@ namespace UWPEindopdracht
         public static async Task<List<Place>> getPlaces(GCoordinate coordinate)
         {
             List<Place> places = await new GooglePlacesConnector().GetPlaces(_maxDistanceToPlace,coordinate);
-            
-            List<Place> wikiPlaces = new List<Place>(); // TODO Implement wikipedia api
+
+            List<Place> wikiPlaces = await new WikipediaConnector().GetPlaces(_maxDistanceToPlace, coordinate);
             places = AddPlaces(places, wikiPlaces);
         }
 

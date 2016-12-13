@@ -101,6 +101,10 @@ namespace UWPEindopdracht.GPSConnections
             return (await MapRouteFinder.GetWalkingRouteAsync(getPointOutLocation(start),getPointOutLocation(end))).Route;
         }
 
+        public static GCoordinate getGcoordinate(Geopoint mapControlCenter)
+        {
+            throw new NotImplementedException();
+        }
     }
 
 

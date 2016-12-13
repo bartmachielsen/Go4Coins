@@ -90,12 +90,18 @@ namespace UWPEindopdracht.Places
         {
             if (SourcePriority > place.SourcePriority)
             {
-                this.Name = place.Name;
-                this.Distance = place.Distance;
+                if(place.Name != null)
+                    Name = place.Name;
+                if(place.Id != null)
+                    Id = place.Id;
+                if(place.Distance != null)
+                    Distance = place.Distance;
                 if (place.Types.Length >= Types.Length)
                     Types = place.Types;
-                ImageLocation = place.ImageLocation;
-                IconLink = place.IconLink;
+                if(place.ImageLocation != null)
+                    ImageLocation = place.ImageLocation;
+                if(place.IconLink != null)
+                    IconLink = place.IconLink;
             }
             else
             {
