@@ -12,7 +12,7 @@ namespace UWPEindopdracht
     class PlaceLoader
     {
         private static int _maxDistanceToPlace = 5000;
-        public static async Task<List<Place>> getPlaces(GCoordinate coordinate)
+        public static async Task<List<Place>> GetPlaces(GCoordinate coordinate)
         {
             List<Place> places = await new GooglePlacesConnector().GetPlaces(_maxDistanceToPlace,coordinate);
 

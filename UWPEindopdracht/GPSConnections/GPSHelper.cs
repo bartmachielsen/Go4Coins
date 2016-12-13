@@ -26,7 +26,7 @@ namespace UWPEindopdracht.GPSConnections
         {
             if (!(await checkGPSState())) return null;
             var locator = new Geolocator() {DesiredAccuracyInMeters = desiredAccuracy};
-            return getGCoordinate(await locator.GetGeopositionAsync());
+            return GetGCoordinate(await locator.GetGeopositionAsync());
         }
         /// <summary>
         /// Method for checking if gps receiver is working and the system has granted acces
@@ -67,7 +67,7 @@ namespace UWPEindopdracht.GPSConnections
         /// </summary>
         /// <param name="coordinate">the position in form of <see cref="Geoposition"/></param>
         /// <returns>returns the location converted to <see cref="GCoordinate"/> or <see cref="CivilCoordinate"/></returns>
-        private static GCoordinate getGCoordinate(Geoposition coordinate)
+        private static GCoordinate GetGCoordinate(Geoposition coordinate)
         {
             if (coordinate.CivicAddress != null)
             {
@@ -101,7 +101,7 @@ namespace UWPEindopdracht.GPSConnections
             return (await MapRouteFinder.GetWalkingRouteAsync(getPointOutLocation(start),getPointOutLocation(end))).Route;
         }
 
-        public static GCoordinate getGcoordinate(Geopoint center)
+        public static GCoordinate GetGcoordinate(Geopoint center)
         {
             return new GCoordinate(center.Position.Latitude, center.Position.Longitude);
         }

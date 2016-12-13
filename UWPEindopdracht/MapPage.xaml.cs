@@ -8,6 +8,7 @@ using Windows.Devices.Geolocation;
 using Windows.Devices.Geolocation.Geofencing;
 using Windows.Foundation;
 using Windows.Foundation.Collections;
+using Windows.Services.Maps;
 using Windows.Storage.Streams;
 using Windows.UI.Core;
 using Windows.UI.Popups;
@@ -33,11 +34,19 @@ namespace UWPEindopdracht
     public sealed partial class MapPage : Page
     {
         public bool Follow = false;
-        public List<Place> Places = new List<Place>();
-        
+        private string _distanceText { get; set; } = "0 km";
+        private string _timeText { get; set; } = "00:00";
+
+        private Assignment _assignment;
+
+
+        private MapIcon _userLocation;
+        private MapIcon _targetLocation;
+
         public MapPage()
         {
             this.InitializeComponent();
+            _assignment = new MapAssignment();
             var locator = new Geolocator() { DesiredAccuracyInMeters = 10, ReportInterval = 100};
             
             locator.PositionChanged += Locator_PositionChanged;
@@ -45,24 +54,31 @@ namespace UWPEindopdracht
             SetLocation();
             mapControl.ZoomInteractionMode = MapInteractionMode.GestureAndControl;
             mapControl.ZoomLevel = 13;
+            
         }
 
-        private async void PlacePinPoints(Geopoint location)
+        private void PlacePinPoints(Geopoint location)
         {
-            mapControl.MapElements.Clear();
-            mapControl.MapElements.Add(new MapIcon()
+            if (_userLocation == null)
             {
-                Title = "you",
-                Location = location
-            });
-            foreach (var place in Places)
-            {
-                mapControl.MapElements.Add(new MapIcon()
-                {
-                    Title = place.Name,
-                    Location = GPSHelper.getPointOutLocation(place.Location)
-                });
+                _userLocation = new MapIcon() {Title = "you"};
+                mapControl.MapElements.Add(_userLocation);
             }
+            if (_targetLocation == null && _assignment?.Target != null && _assignment.ShowPinPoint)
+            {
+                _targetLocation = new MapIcon()
+                {
+                    Title = _assignment.Target.Name,
+                    Location =  GPSHelper.getPointOutLocation(_assignment.Target.Location)
+                };
+                mapControl.MapElements.Add(_targetLocation);
+            }else if (_assignment?.Target != null && _assignment.ShowPinPoint && _targetLocation != null)
+            {
+                _targetLocation.Location = GPSHelper.getPointOutLocation(_assignment.Target.Location);
+            }
+            
+            _userLocation.Location = location;
+            
         }
 
         private async void SetLocation()
@@ -73,8 +89,10 @@ namespace UWPEindopdracht
                 mapControl.Center = loc.Coordinate.Point;
                 try
                 {
-                    Places = await PlaceLoader.GetPlaces(GPSHelper.GetGcoordinate(mapControl.Center));
+                    var Places = await PlaceLoader.GetPlaces(GPSHelper.GetGcoordinate(loc.Coordinate.Point));
                     System.Diagnostics.Debug.WriteLine($"Loaded {Places.Count} points!");
+                    await _assignment.FillTarget(Places, GPSHelper.GetGcoordinate(loc.Coordinate.Point));
+                    changeTimeAndDistance(GPSHelper.GetGcoordinate(loc.Coordinate.Point));
                 }
                 catch (ApiLimitReached)
                 {
@@ -89,6 +107,17 @@ namespace UWPEindopdracht
             }
         }
 
+        private async void changeTimeAndDistance(GCoordinate current)
+        {
+            if (_assignment != null && _assignment.Target != null)
+            {
+                string[] information = await _assignment.GetRouteInformation(current);
+                _distanceText = information[0];
+                _timeText = information[1];
+                
+                System.Diagnostics.Debug.WriteLine($"Changed information {_timeText} {_distanceText}");
+            }
+        }
         private async void Locator_PositionChanged(Geolocator sender, PositionChangedEventArgs args)
         {
             
@@ -100,6 +129,7 @@ namespace UWPEindopdracht
                     if (Follow)
                         mapControl.Center = location;
                     PlacePinPoints(location);
+                    changeTimeAndDistance(GPSHelper.GetGcoordinate(location));
                 }
                 
             });

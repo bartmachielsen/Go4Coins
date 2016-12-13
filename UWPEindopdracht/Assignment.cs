@@ -19,15 +19,23 @@ namespace UWPEindopdracht
         public int? MaxSpeed { get; set; }
         public string Description { get; set; }
         public Place Target { get; set; }
+
+        protected double TimeMultiplier { get; set; } = 1;
+
+        protected DateTime start;
+
+        public bool ShowPinPoint { get; set; } = true;
         public TimeSpan MaximumTime { get; set; }
 
         // TODO IMAGE FOR SHOWING WHEN ASSIGNMENT HAS BEEN ANNOUNCED!
 
-        public async void FillTarget(List<Place> places, GCoordinate currentPosition)
+        public virtual async Task FillTarget(List<Place> places, GCoordinate currentPosition)
         {
             Target = await PickTargetPlace(places, currentPosition);
-            MaximumTime = (await GPSHelper.calculateRouteBetween(currentPosition, Target.Location)).EstimatedDuration;
+            MaximumTime = TimeSpan.FromMinutes((await GPSHelper.calculateRouteBetween(currentPosition, Target.Location)).EstimatedDuration.TotalMinutes*TimeMultiplier);
             FillDescription();
+            start = DateTime.Now;
+            
         }
 
         public abstract void FillDescription();
@@ -40,7 +48,11 @@ namespace UWPEindopdracht
         public async Task<Place> PickTargetPlace(List<Place> places, GCoordinate currentPosition)
         {
             foreach (var place in places)
-                place.Distance = (await GPSHelper.calculateRouteBetween(currentPosition, place.Location)).LengthInMeters;
+            {
+                if (place.Distance != null)
+                    place.Distance =
+                        (await GPSHelper.calculateRouteBetween(currentPosition, place.Location)).LengthInMeters;
+            }
 
             places.RemoveAll((Place place) => place.Distance < MinDistance || place.Distance > MaxDistance || place.IsCity());
             if (places.Count == 0)
@@ -48,7 +60,6 @@ namespace UWPEindopdracht
             if (places.Count == 1)
                 return places.ElementAt(0);
             Random random = new Random();
-            // TODO SELECT BASED ON COUNT VISITED
             return places.ElementAt(random.Next(places.Count));
         }
 
@@ -68,6 +79,15 @@ namespace UWPEindopdracht
 
             return distance * 10 + timebonus * 15;
         }
+
+
+        public async Task<string[]> GetRouteInformation(GCoordinate currentPoint)
+        {
+            MapRoute route = await GPSHelper.calculateRouteBetween(currentPoint, Target.Location);
+            TimeSpan span = MaximumTime-DateTime.Now.Subtract(start);
+        
+            return new string[] {$"{span.Minutes}:{span.Seconds}", route.LengthInMeters/1000.0 + " km"};
+        }
     }
 
     class MapAssignment : Assignment
@@ -77,8 +97,9 @@ namespace UWPEindopdracht
             MaxDistance = 3000;
             MinDistance = 800;
             MaxSpeed = 40;
+            TimeMultiplier = 0.9;
         }
-
+        
         public override void FillDescription()
         {
             Description =
@@ -86,6 +107,7 @@ namespace UWPEindopdracht
                 $"\n Bonus if reached within {MaximumTime.TotalMinutes} minutes." +
                 $"\n total score could be {TotalScore(new TimeSpan())}!";
         }
+
     }
 
 
@@ -97,8 +119,11 @@ namespace UWPEindopdracht
             MaxSpeed = null;
             MaxDistance = 1000;
             MinDistance = 100;
+            ShowPinPoint = false;
+            TimeMultiplier = 1.5;
         }
 
+       
 
         public override void FillDescription()
         {
