@@ -109,6 +109,7 @@
       <DependentUpon>MapPage.xaml</DependentUpon>
     </Compile>
     <Compile Include="DataConnections\PlaceLoader.cs" />
+    <Compile Include="Multiplayer\Reward.cs" />
     <Compile Include="Multiplayer\User.cs" />
     <Compile Include="Places\Place.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

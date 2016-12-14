@@ -52,5 +52,22 @@ namespace UWPEindopdracht.DataConnections
             string response = await put(uri, new HttpStringContent(RestDBHelper.ConvertUsername(user), UnicodeEncoding.Utf8, "application/json"));
         }
 
+        public async void UploadReward(Reward reward)
+        {
+            Uri uri = new Uri($"{host}/rewards?apikey={apiKey}");
+            string response =
+                await
+                    post(uri,
+                        new HttpStringContent(RestDBHelper.ConvertReward(reward), UnicodeEncoding.Utf8,
+                            "application/json"));
+        }
+
+        public async Task<List<Reward>> GetRewards()
+        {
+            Uri uri = new Uri($"{host}/rewards?apikey={apiKey}");
+            string response = await get(uri);
+            RestDBHelper.CheckErrors(response);
+            return RestDBHelper.GetRewards(response);
+        }
     }
 }

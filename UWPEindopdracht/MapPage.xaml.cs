@@ -40,6 +40,7 @@ namespace UWPEindopdracht
 
         public MapPage()
         {
+            LoadRewards();
             LoadMultiplayerDetails();
             InitializeComponent();
             _assignment = new MapAssignment();
@@ -55,8 +56,15 @@ namespace UWPEindopdracht
         private string _distanceText { get; set; } = "0 km";
         private string _timeText { get; set; } = "00:00";
 
+        private async void LoadRewards()
+        {
+            var rewards = await _db.GetRewards();
+            System.Diagnostics.Debug.WriteLine(rewards.Count);
+        }
+
         private async void LoadMultiplayerDetails()
         {
+           
             var localSettings =
                 ApplicationData.Current.LocalSettings;
             if (_user == null || _db == null)
