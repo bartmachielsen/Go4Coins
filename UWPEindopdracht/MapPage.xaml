@@ -6,6 +6,7 @@
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:Maps="using:Windows.UI.Xaml.Controls.Maps"
     xmlns:places="using:UWPEindopdracht.Places"
+    xmlns:xamlAnimatedGif="using:XamlAnimatedGif"
     x:Class="UWPEindopdracht.MapPage"
     mc:Ignorable="d">
     
@@ -15,6 +16,7 @@
             <Setter Property="Width" Value="55"/>
             <Setter Property="Height" Value="55"/>
             <Setter Property="Background" Value="Transparent"/>
+            <Setter Property="IsEnabled" Value="False"></Setter>
             <Setter Property="Template">
                 <Setter.Value>
                     <ControlTemplate TargetType="Button">
@@ -31,8 +33,10 @@
         <Maps:MapControl
             Name="MapControl"
             Center="{ Binding location, Mode=TwoWay}"
-            MapServiceToken="{StaticResource ServiceToken}">
-
+            MapServiceToken="{StaticResource ServiceToken}"
+            PanInteractionMode="Disabled"
+            ZoomInteractionMode="Disabled"
+            >    
             <Grid>
                 <Grid.Resources>
                     <Storyboard x:Name="OnTargetErrorAnimation">
@@ -53,7 +57,21 @@
                     <RowDefinition Height="610"></RowDefinition>
                 </Grid.RowDefinitions>
 
+                <Image 
+                    xamlAnimatedGif:AnimationBehavior.SourceUri="Assets/Loading-Top-Wallpapers.gif" 
+                    x:Name="LoadingAnimation" 
+                    Height="80"
+                    Width="80"/>
+                <TextBlock 
+                    x:Name="LoadingText"
+                    Text="LOADING TARGET"
+                    Margin="0,80,0,0"
+                    HorizontalAlignment="Center"
+                    VerticalAlignment="Center"
+                    FontSize="15"
+                    Foreground="Blue"/>
                 <Button 
+                    x:Name="OnTargetButton"
                     Margin="10,10" 
                     VerticalAlignment="Top"
                     Style="{StaticResource ButtonStyle}"
@@ -72,6 +90,7 @@
                     <Image Source="Assets/mp.png"/>
                 </Button>
                 <Button
+                    x:Name="GoToAlbumButton"
                     Margin="10,0,0,0"
                     VerticalAlignment="Bottom"
                     Style="{StaticResource ButtonStyle}"
@@ -80,6 +99,7 @@
                     <Image Source="Assets/album.png"/>
                 </Button>
                 <Button
+                    x:Name="GoToShopButton"
                     Margin="0,0,10,0"
                     VerticalAlignment="Bottom"
                     HorizontalAlignment="Right"

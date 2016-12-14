@@ -57,8 +57,8 @@ namespace UWPEindopdracht
             MapControl.ZoomLevel = 13;
         }
 
-        private string _distanceText { get; set; } = "0 km";
-        private string _timeText { get; set; } = "00:00";
+        private string DistanceText { get; set; } = "0 km";
+        private string TimeText { get; set; } = "00:00";
 
         private async Task LoadRewards()
         {
@@ -237,6 +237,14 @@ namespace UWPEindopdracht
                         if (!string.IsNullOrEmpty(target.IconLink))
                             target.Icon.Image = RandomAccessStreamReference.CreateFromUri(new Uri(target.IconLink));
                         MapControl.MapElements.Add(target.Icon);
+                        LoadingAnimation.Visibility = Visibility.Collapsed;
+                        LoadingText.Visibility = Visibility.Collapsed;
+                        MultiplayerToggleButton.IsEnabled = true;
+                        GoToAlbumButton.IsEnabled = true;
+                        GoToShopButton.IsEnabled = true;
+                        OnTargetButton.IsEnabled = true;
+                        MapControl.PanInteractionMode = MapPanInteractionMode.Auto;
+                        MapControl.ZoomInteractionMode = MapInteractionMode.Auto;
                     }
                 }
             }
@@ -306,8 +314,8 @@ namespace UWPEindopdracht
             if ((_assignment != null) && (_assignment.Target != null))
             {
                 var information = await _assignment.GetRouteInformation(current);
-                _distanceText = information[1];
-                DistanceTextBlock.Text = _distanceText;
+                DistanceText = information[1];
+                DistanceTextBlock.Text = DistanceText;
                 
             }
         }
@@ -317,8 +325,8 @@ namespace UWPEindopdracht
             if ((_assignment != null) && (_assignment.Target != null))
             {
                 var information = await _assignment.GetRouteInformation(null, false);
-                _timeText = information[0];
-                await Dispatcher.RunAsync(CoreDispatcherPriority.Normal, () => { TimeTextBlock.Text = _timeText; });
+                TimeText = information[0];
+                await Dispatcher.RunAsync(CoreDispatcherPriority.Normal, () => { TimeTextBlock.Text = TimeText; });
             }
         }
 
@@ -376,6 +384,11 @@ namespace UWPEindopdracht
         {
             var s = new ShopDialog();
             await s.ShowAsync();
+        }
+
+        private void MapControl_OnZoomLevelChanged(MapControl sender, object args)
+        {
+            MapControl.ZoomLevel = 50;
         }
     }
 }
