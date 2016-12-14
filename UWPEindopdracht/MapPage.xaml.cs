@@ -39,7 +39,7 @@ namespace UWPEindopdracht
         private string _timeText { get; set; } = "00:00";
         private User _user = new User(null, "TestUser", new GCoordinate(0, 0));
         private Assignment _assignment;
-
+        private List<User> _users = new List<User>();
 
         private MapIcon _userLocation;
         private MapIcon _targetLocation;
@@ -76,7 +76,20 @@ namespace UWPEindopdracht
             {
                 _user.id = (string)localSettings.Values["multiplayerID"];
             }
-            //List<User> users = await db.GetUsers();
+            List<User> users = await db.GetUsers();
+            foreach (var user in users)
+            {
+                if (user.id != _user.id)
+                {
+                    var geopoint = GPSHelper.getPointOutLocation(user.location);
+                    MapIcon icon = new MapIcon()
+                    {
+                        Location = geopoint,
+                        Title = user.Name
+                    };
+                    mapControl.MapElements.Add(icon);
+                }
+            }
         }
 
         private async void UpdateMultiplayerServer(GCoordinate coordinate)

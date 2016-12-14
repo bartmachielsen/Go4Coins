@@ -25,7 +25,7 @@ namespace UWPEindopdracht.JSON
             {
                 if (((JToken) jsonelement)["data"] != null)
                 {
-                    users.Add(new User((string)jsonelement._id, (string)jsonelement.data.Name, new GCoordinate((double)jsonelement.data.location.longi, (double)jsonelement.data.location.lati))
+                    users.Add(new User((string)jsonelement._id, (string)jsonelement.data.Name, new GCoordinate((double)jsonelement.data.location.lati, (double)jsonelement.data.location.longi))
                     {
                         lastSynced = DateTime.Parse((string)jsonelement.data.lastSynced)
                     });
