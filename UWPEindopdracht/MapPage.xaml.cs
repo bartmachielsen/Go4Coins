@@ -26,10 +26,12 @@ namespace UWPEindopdracht
         private readonly Assignment _assignment;
         private MapIcon _targetLocation;
         private User _user = new User(null, "TestUser", new GCoordinate(0, 0));
-        private RestDBConnector _db = new RestDBConnector();
+        private readonly RestDBConnector _db = new RestDBConnector();
         private MapIcon _userLocation;
         private List<User> _users = new List<User>();
-        public bool Follow = false;
+        private bool _follow = false;
+        private int _serverTimeOut = 4000;
+        private DateTime _lastLocationSync = DateTime.Now;
 
         public MapPage()
         {
@@ -73,7 +75,7 @@ namespace UWPEindopdracht
             
             while (true)
             {
-                await Task.Delay(4000);
+                await Task.Delay(_serverTimeOut);
                 await UpdateUserDetails();
             }
         }
@@ -90,6 +92,16 @@ namespace UWPEindopdracht
                 if (user.id != _user.id)
                 {
                     var geopoint = GPSHelper.getPointOutLocation(user.location);
+                    if (DateTime.Now - user.lastSynced > TimeSpan.FromSeconds(_serverTimeOut*4))
+                    {
+                        if (user.Icon != null)
+                        {
+                            mapControl.MapElements.Remove(user.Icon);
+                            user.Icon = null;
+                        }
+                        continue;
+                        
+                    }
                     if (user.Icon == null)
                     {
                         user.Icon = new MapIcon
@@ -108,6 +120,7 @@ namespace UWPEindopdracht
 
         private async void UpdateMultiplayerServer(GCoordinate coordinate)
         {
+            _lastLocationSync = DateTime.Now;
             _user.location = coordinate;
             Debug.WriteLine("UPDATING USER COORDINATS IN MULTIPLAYER SERVER");
             _db.UpdateUser(_user);
@@ -202,13 +215,18 @@ namespace UWPEindopdracht
 
         private async void Locator_PositionChanged(Geolocator sender, PositionChangedEventArgs args)
         {
-            UpdateMultiplayerServer(GPSHelper.GetGcoordinate(args.Position.Coordinate.Point));
+            if (DateTime.Now - _lastLocationSync <= TimeSpan.FromSeconds(_serverTimeOut))
+                UpdateMultiplayerServer(GPSHelper.GetGcoordinate(args.Position.Coordinate.Point));
+                
+
+                
+            
             await Dispatcher.RunAsync(CoreDispatcherPriority.Normal, () =>
             {
                 var location = args.Position.Coordinate.Point;
                 if (location != null)
                 {
-                    if (Follow)
+                    if (_follow)
                         mapControl.Center = location;
                     PlacePinPoints(location);
                     changeDistance(GPSHelper.GetGcoordinate(location));
