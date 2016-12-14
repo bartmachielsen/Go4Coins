@@ -73,8 +73,18 @@
                 >
                 <Image Source="Assets/album.png"/>
             </Button>
+            <Button
+                Height="55"
+                Width="55"
+                Margin="280, 530"
+                Background="Transparent"
+                Style="{StaticResource ButtonStyle}"
+                Click="GoToAlbumButton_Click"
+                >
+                <Image Source="Assets/store.png"/>
+            </Button>
             
-            <Grid Background="Transparent" Margin="100,530">
+            <Grid Background="Transparent" Margin="93,530">
 
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="85"/>
@@ -87,7 +97,7 @@
 
                 <TextBlock
                     Text="Distance: " 
-                    FontSize="20"
+                    FontSize="19"
                     Foreground="Blue"
                     />
                 <TextBlock
@@ -95,14 +105,14 @@
                     Grid.Column="1"
                     Grid.Row="0"
                     Text="0 km"
-                    FontSize="20"
+                    FontSize="19"
                     Foreground="Blue"
                     />
                 <TextBlock
                     Grid.Row="1"
                     Grid.Column="0"
                     Text="Time: "
-                    FontSize="20"
+                    FontSize="19"
                     Foreground="Blue"
                     />
                 <TextBlock
@@ -110,7 +120,7 @@
                     Grid.Row="1"
                     Grid.Column="1"
                     Text="0:00"
-                    FontSize="20"
+                    FontSize="19"
                     Foreground="Blue"
                     />
             </Grid>
