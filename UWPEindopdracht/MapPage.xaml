@@ -56,7 +56,7 @@
             <Button
                 Height="50"
                 Width="50"
-                Margin="320,0"
+                Margin="290,0"
                 Background="Transparent"
                 Style="{StaticResource ButtonStyle}"
                 Click="MultiplayerToggleButton_Click"
