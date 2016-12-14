@@ -43,7 +43,7 @@ namespace UWPEindopdracht.JSON
                     typeList.Add((string)type);
                 }
                 
-                placesToSend.Add(new Place
+                var place = new Place
                 {
                     PlaceId = (string)jsonplace.id,
                     Location = new GCoordinate((double)jsonplace.geometry.location.lat, 
@@ -52,7 +52,19 @@ namespace UWPEindopdracht.JSON
                     Types = typeList.ToArray(),
                     IconLink = jsonplace.icon,
                     ImageLocation = jsonplace.reference
-                });
+                };
+                if (jsonplace.geometry.viewport != null)
+                {
+                    var viewports = (JObject) jsonplace.geometry.viewport;
+                    place.Viewports = new GCoordinate[viewports.Count];
+                    int index = 0;
+                    foreach (var viewport in viewports)
+                    {
+                        place.Viewports[index] = new GCoordinate((double)((dynamic)viewport.Value).lat, (double)((dynamic)viewport.Value).lng);
+                        index++;
+                    }
+                }
+                placesToSend.Add(place);
             }
             return placesToSend;
         }

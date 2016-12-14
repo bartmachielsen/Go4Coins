@@ -15,16 +15,22 @@ using UWPEindopdracht.DataConnections;
 using UWPEindopdracht.GPSConnections;
 using UWPEindopdracht.JSON;
 using UWPEindopdracht.Multiplayer;
+using UWPEindopdracht.Places;
+
+// The Blank Page item template is documented at http://go.microsoft.com/fwlink/?LinkId=402352&clcid=0x409
 
 namespace UWPEindopdracht
 {
+    /// <summary>
+    ///     An empty page that can be used on its own or navigated to within a Frame.
+    /// </summary>
     public sealed partial class MapPage : Page
     {
         private static bool _follow = false;
         private static int _serverTimeOut = 3;
 
 
-        private readonly Assignment _assignment;
+        private Assignment _assignment;
         private User _user = new User(null, "TestUser", new GCoordinate(0, 0));
         private readonly RestDBConnector _db = new RestDBConnector();
         private MapIcon _userLocation;
@@ -47,12 +53,12 @@ namespace UWPEindopdracht
             locator.PositionChanged += Locator_PositionChanged;
 
             SetLocation();
-            MapControl.ZoomInteractionMode = MapInteractionMode.GestureAndControl;
-            MapControl.ZoomLevel = 13;
+            mapControl.ZoomInteractionMode = MapInteractionMode.GestureAndControl;
+            mapControl.ZoomLevel = 13;
         }
 
-        private string DistanceText { get; set; } = "0 km";
-        private string TimeText { get; set; } = "00:00";
+        private string _distanceText { get; set; } = "0 km";
+        private string _timeText { get; set; } = "00:00";
 
         private async Task LoadRewards()
         {
@@ -85,7 +91,7 @@ namespace UWPEindopdracht
                 }
                 catch (Exception e)
                 {
-                    Debug.WriteLine(e);
+                    System.Diagnostics.Debug.WriteLine(e);
                 }
             }
             else
@@ -146,7 +152,7 @@ namespace UWPEindopdracht
             }
             catch (NoResponseException)
             {
-                Debug.WriteLine("Got no response from database! but continue because shit happens");
+                System.Diagnostics.Debug.WriteLine("Got no response from database! but continue because shit happens");
             }
 
             if (_users == null)
@@ -161,14 +167,14 @@ namespace UWPEindopdracht
                     {
                         if (user.Icon != null)
                         {
-                            MapControl.MapElements.Remove(user.Icon);
+                            mapControl.MapElements.Remove(user.Icon);
                             user.Icon = null;
                         }
 
                     }
                     else
                     {
-                        Debug.WriteLine($"{user.id} is loaded! {DateTime.Now-user.lastSynced}");
+                        System.Diagnostics.Debug.WriteLine($"{user.id} is loaded! {DateTime.Now-user.lastSynced}");
                         if (user.Icon == null)
                         {
                             user.Icon = new MapIcon
@@ -176,7 +182,7 @@ namespace UWPEindopdracht
                                 Location = geopoint,
                                 Title = user.Name
                             };
-                            MapControl.MapElements.Add(user.Icon);
+                            mapControl.MapElements.Add(user.Icon);
                         }
                         else
                         {
@@ -215,7 +221,7 @@ namespace UWPEindopdracht
             if (_userLocation == null)
             {
                 _userLocation = new MapIcon {Title = "Your Location"};
-                MapControl.MapElements.Add(_userLocation);
+                mapControl.MapElements.Add(_userLocation);
             }
             if ((_assignment?.Target != null) && _assignment.ShowPinPoint)
             {
@@ -230,7 +236,7 @@ namespace UWPEindopdracht
                         };
                         if (!string.IsNullOrEmpty(target.IconLink))
                             target.Icon.Image = RandomAccessStreamReference.CreateFromUri(new Uri(target.IconLink));
-                        MapControl.MapElements.Add(target.Icon);
+                        mapControl.MapElements.Add(target.Icon);
                     }
                 }
             }
@@ -244,14 +250,24 @@ namespace UWPEindopdracht
             var loc = await GPSHelper.getLocationOriginal();
             if (loc != null)
             {
-                MapControl.Center = loc.Coordinate.Point;
+                mapControl.Center = loc.Coordinate.Point;
                 try
                 {
                     var places = await PlaceLoader.GetPlaces(GPSHelper.GetGcoordinate(loc.Coordinate.Point));
+                    await new GoogleStreetviewConnector().GetURLToSavePicture(places[0]);
                     Debug.WriteLine($"Loaded {places.Count} points!");
-                    await _assignment.FillTarget(places, GPSHelper.GetGcoordinate(loc.Coordinate.Point));
-                    ChangeDistance(GPSHelper.GetGcoordinate(loc.Coordinate.Point));
-                    ChangeTime();
+                    try
+                    {
+                        await _assignment.FillTarget(places, GPSHelper.GetGcoordinate(loc.Coordinate.Point));
+                    }
+                    catch (NoTargetAvailable)
+                    {
+                        await new MessageDialog("Move to another area! (move +5KM)", "Not enough targets!").ShowAsync();
+                        _assignment = null;
+                        return;
+                    }
+                    changeDistance(GPSHelper.GetGcoordinate(loc.Coordinate.Point));
+                    changeTime();
 
                     //start time change timer
                     var timer = new DispatcherTimer
@@ -261,7 +277,7 @@ namespace UWPEindopdracht
                     timer.Tick += delegate
                     {
                         if (_assignment != null)
-                            ChangeTime();
+                            changeTime();
                         else
                             timer.Stop();
                     };
@@ -275,7 +291,7 @@ namespace UWPEindopdracht
                 {
                     await new MessageDialog("Api key is invalid!", "Api Exception").ShowAsync();
                 }
-                PlacePinPoints(MapControl.Center);
+                PlacePinPoints(mapControl.Center);
             }
             else
             {
@@ -285,24 +301,24 @@ namespace UWPEindopdracht
             }
         }
 
-        private async void ChangeDistance(GCoordinate current)
+        private async void changeDistance(GCoordinate current)
         {
             if ((_assignment != null) && (_assignment.Target != null))
             {
                 var information = await _assignment.GetRouteInformation(current);
-                DistanceText = information[1];
-                DistanceTextBlock.Text = DistanceText;
+                _distanceText = information[1];
+                DistanceTextBlock.Text = _distanceText;
                 
             }
         }
 
-        private async void ChangeTime()
+        private async void changeTime()
         {
             if ((_assignment != null) && (_assignment.Target != null))
             {
                 var information = await _assignment.GetRouteInformation(null, false);
-                TimeText = information[0];
-                await Dispatcher.RunAsync(CoreDispatcherPriority.Normal, () => { TimeTextBlock.Text = TimeText; });
+                _timeText = information[0];
+                await Dispatcher.RunAsync(CoreDispatcherPriority.Normal, () => { TimeTextBlock.Text = _timeText; });
             }
         }
 
@@ -311,15 +327,18 @@ namespace UWPEindopdracht
             if (DateTime.Now - _lastLocationSync > TimeSpan.FromSeconds(_serverTimeOut))
                 UpdateMultiplayerServer(GPSHelper.GetGcoordinate(args.Position.Coordinate.Point));
                 
+
+                
+            
             await Dispatcher.RunAsync(CoreDispatcherPriority.Normal, () =>
             {
                 var location = args.Position.Coordinate.Point;
                 if (location != null)
                 {
                     if (_follow)
-                        MapControl.Center = location;
+                        mapControl.Center = location;
                     PlacePinPoints(location);
-                    ChangeDistance(GPSHelper.GetGcoordinate(location));
+                    changeDistance(GPSHelper.GetGcoordinate(location));
                 }
             });
         }
@@ -338,12 +357,16 @@ namespace UWPEindopdracht
 
         private void OnTargetButton_Click(object sender, RoutedEventArgs e)
         {
-            OnTargetText.Opacity = 1.0;
-            OnTargetErrorAnimation.Begin();
+            if (!_onTargetNotificationTimer.IsEnabled)
+            {
+                _onTargetNotificationTimer.Start();
+                OnTargetText.Visibility = Visibility.Visible;
+            }
         }
 
         private void MultiplayerToggleButton_Click(object sender, RoutedEventArgs e)
         {
+
         }
 
         private async void GoToAlbumButton_Click(object sender, RoutedEventArgs e)

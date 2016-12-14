@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net;
 using System.Runtime.InteropServices;
 using System.Text;
 using System.Threading;
@@ -81,21 +82,27 @@ namespace UWPEindopdracht
         /// <returns>returns response string from the targeted server</returns>
         protected async Task<string> get(Uri link)
         {
+            return await (await getHeaders(link)).Content.ReadAsStringAsync();
+        }
+        /// <summary>
+        /// Method for getting header of the response from the server
+        /// </summary>
+        /// <param name="link"></param>
+        /// <returns></returns>
+        protected async Task<HttpResponseMessage> getHeaders(Uri link)
+        {
             var cts = new CancellationTokenSource();
             cts.CancelAfter(1000);
             try
             {
                 var response = await client.GetAsync(link);
-                if (response == null || !response.IsSuccessStatusCode)
-                    return string.Empty;
-
-                string cont = await response.Content.ReadAsStringAsync();
-                return cont;
+                return response;
             }
             catch (COMException e)
             {
                 throw new NoInternetException();
             }
+
         }
 
         /// <summary>

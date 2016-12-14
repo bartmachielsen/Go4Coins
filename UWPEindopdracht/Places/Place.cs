@@ -30,6 +30,9 @@ namespace UWPEindopdracht.Places
         /// </summary>
         public string Name { get; set; }
 
+        public GCoordinate[] Viewports { get; set; }
+
+
         public string Id { get; set; }
 
         /// <summary>

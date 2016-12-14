@@ -81,7 +81,7 @@ namespace UWPEindopdracht
                     return new[] { place};
                 }
             }
-            return null;
+            throw new NoTargetAvailable();
         }
 
         /// <summary>
@@ -169,6 +169,13 @@ namespace UWPEindopdracht
                 $"\n Estimated distance to the target {Target[0].Distance}!" +
                 $"\n Bonus if reached within {MaximumTime.TotalMinutes} minutes." +
                 $"\n Maximum score is {TotalScore(new TimeSpan())}";
+        }
+    }
+
+    class NoTargetAvailable : Exception
+    {
+        public NoTargetAvailable() : base("No available targets!")
+        {
         }
     }
 }
