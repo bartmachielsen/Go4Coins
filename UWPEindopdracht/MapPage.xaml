@@ -33,7 +33,7 @@
             Name="mapControl"
             Center="{ Binding location, Mode=TwoWay}"
             MapServiceToken="{StaticResource ServiceToken}">
-            
+
             <Button 
                 Height="65" 
                 Width="65" 
@@ -42,7 +42,7 @@
                 Style="{StaticResource ButtonStyle}"
                 Click="OnTargetButton_Click"
                 >
-                <Image Source="Assets/location.png"></Image>
+                <Image Source="Assets/location.png"/>
             </Button>
             <TextBlock 
                 x:Name="OnTargetText"
@@ -53,6 +53,16 @@
                 Foreground="Red" 
                 Visibility="Collapsed"
                 />
+            <Button
+                Height="50"
+                Width="50"
+                Margin="320,0"
+                Background="Transparent"
+                Style="{StaticResource ButtonStyle}"
+                Click="MultiplayerToggleButton_Click"
+                >
+                <Image Source="Assets/mp.png"/>
+            </Button>
             
             <Grid Background="Transparent" Margin="10,530">
 
