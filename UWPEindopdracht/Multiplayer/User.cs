@@ -21,7 +21,7 @@ namespace UWPEindopdracht.Multiplayer
         [JsonIgnore]
         public MapIcon Icon { get; set; }
 
-        public List<Reward> Rewards { get; set; }
+        public List<string> Rewards { get; set; }
         public User(string id, string name, GCoordinate location)
         {
             this.id = id;
