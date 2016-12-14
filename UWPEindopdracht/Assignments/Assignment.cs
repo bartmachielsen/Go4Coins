@@ -14,18 +14,18 @@ namespace UWPEindopdracht
 
     internal abstract class Assignment
     {
-        public int MaxDistance { get; set; }
-        public int MinDistance { get; set; }
-        public int? MaxSpeed { get; set; }
-        public string Description { get; set; }
-        public Place[] Target { get; set; }
+        protected int MaxDistance { get; set; }
+        protected int MinDistance { get; set; }
+        protected int? MaxSpeed { get; set; }
+        protected string Description { get; set; }
+        public Place[] Target { get; private set; }
 
-        protected double TimeMultiplier { get; set; } = 1;
+        protected double TimeMultiplier { private get; set; } = 1;
 
-        protected DateTime start;
+        private DateTime _start;
 
-        public bool ShowPinPoint { get; set; } = true;
-        public TimeSpan MaximumTime { get; set; }
+        public bool ShowPinPoint { get; protected set; } = true;
+        protected TimeSpan MaximumTime { get; set; }
 
         // TODO IMAGE FOR SHOWING WHEN ASSIGNMENT HAS BEEN ANNOUNCED!
 
@@ -34,7 +34,7 @@ namespace UWPEindopdracht
             Target = await PickTargetPlace(places, currentPosition);
             MaximumTime = TimeSpan.FromMinutes((await GPSHelper.calculateRouteBetween(currentPosition, Target[0].Location)).EstimatedDuration.TotalMinutes*TimeMultiplier);
             FillDescription();
-            start = DateTime.Now;
+            _start = DateTime.Now;
             
         }
 
@@ -104,13 +104,24 @@ namespace UWPEindopdracht
 
         public async Task<string[]> GetRouteInformation(GCoordinate currentPoint, bool wantRoute = true)
         {
-            TimeSpan span = MaximumTime - DateTime.Now.Subtract(start);
+            TimeSpan span = MaximumTime - DateTime.Now.Subtract(_start);
             if (!wantRoute)
             {
-                return new string[] {$"{span}"};
+                string hours = "";
+                if (span.Hours > 0)
+                    hours = span.Hours + ":";
+                if (hours.Length < 3 && span.Hours > 0)
+                    hours = "0" + hours;
+                string minutes = span.Minutes + "";
+                if (minutes.Length < 2)
+                    minutes = "0" + minutes;
+                string seconds = span.Seconds + "";
+                if (seconds.Length < 2)
+                    seconds = "0" + seconds;
+                return new string[] {$"{hours}{minutes}:{seconds}"};
             }
             MapRoute route = await GPSHelper.calculateRouteBetween(currentPoint, Target[0].Location);
-            return new string[] {$"{span.Minutes}:{span.Seconds}", route.LengthInMeters/1000.0 + " km"};
+            return new string[] {$"", route.LengthInMeters/1000.0 + " km"};
         }
     }
 
