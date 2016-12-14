@@ -19,11 +19,20 @@ namespace UWPEindopdracht.DataConnections
             
         }
 
-        public async Task<List<User>> GetUsers()
+        public async Task<List<User>> GetUsers(List<User> current )
         {
             Uri uri = new Uri($"{host}/multiplayer?apikey={apiKey}");
             string response = await get(uri);
-            return RestDBHelper.getUsernames(response);
+            try
+            {
+                RestDBHelper.CheckErrors(response);
+                return RestDBHelper.getUsernames(response, current);
+            }
+            catch (Exception)
+            {
+                System.Diagnostics.Debug.WriteLine("Getting users failed safely!");
+            }
+            return current;
         }
 
         public async Task<User> UploadUser(User user)
@@ -31,16 +40,35 @@ namespace UWPEindopdracht.DataConnections
             user.lastSynced = DateTime.Now;
             Uri uri = new Uri($"{host}/multiplayer?apikey={apiKey}");
             string response = await post(uri, new HttpStringContent(RestDBHelper.ConvertUsername(user), UnicodeEncoding.Utf8, "application/json"));
+            RestDBHelper.CheckErrors(response);
             user.id = RestDBHelper.getID(response);
             return user;
         }
 
-        public async void UpdateUser(User user)
+        public async Task UpdateUser(User user)
         {
             user.lastSynced = DateTime.Now;
             Uri uri = new Uri($"{host}/multiplayer/{user.id}?apikey={apiKey}");
             string response = await put(uri, new HttpStringContent(RestDBHelper.ConvertUsername(user), UnicodeEncoding.Utf8, "application/json"));
+            RestDBHelper.CheckErrors(response);
         }
 
+        public async void UploadReward(Reward reward)
+        {
+            Uri uri = new Uri($"{host}/rewards?apikey={apiKey}");
+            string response =
+                await
+                    post(uri,
+                        new HttpStringContent(RestDBHelper.ConvertReward(reward), UnicodeEncoding.Utf8,
+                            "application/json"));
+        }
+
+        public async Task<List<Reward>> GetRewards()
+        {
+            Uri uri = new Uri($"{host}/rewards?apikey={apiKey}");
+            string response = await get(uri);
+            RestDBHelper.CheckErrors(response);
+            return RestDBHelper.GetRewards(response);
+        }
     }
 }

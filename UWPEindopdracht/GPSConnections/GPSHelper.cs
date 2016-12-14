@@ -57,7 +57,14 @@ namespace UWPEindopdracht.GPSConnections
         {
             if (!(await checkGPSState())) return null;
             var locator = new Geolocator() { DesiredAccuracyInMeters = desiredAccuracy };
-            return await locator.GetGeopositionAsync();
+            try
+            {
+                return await locator.GetGeopositionAsync();
+            }
+            catch (Exception)
+            {
+                return null;
+            }
         }
 
         /// <summary>

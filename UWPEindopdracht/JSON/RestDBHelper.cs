@@ -13,22 +13,52 @@ namespace UWPEindopdracht.JSON
         {
             return JsonConvert.SerializeObject(new
             {
-              data = JsonConvert.SerializeObject(user)
+                data = JsonConvert.SerializeObject(user)
             });
         }
 
-        public static List<User> getUsernames(string response)
+        public static List<User> getUsernames(string response, List<User> users)
         {
-            List<User> users = new List<User>();
             dynamic json = JsonConvert.DeserializeObject(response);
             foreach (var jsonelement in json)
             {
                 if (((JToken) jsonelement)["data"] != null)
                 {
-                    users.Add(new User((string)jsonelement._id, (string)jsonelement.data.Name, new GCoordinate((double)jsonelement.data.location.longi, (double)jsonelement.data.location.lati))
+                    var user = new User(
+                        (string) jsonelement._id,
+                        (string) jsonelement.data.Name,
+                        new GCoordinate((double) jsonelement.data.location.lati,
+                            (double) jsonelement.data.location.longi));
+                    DateTime time;
+                    if (DateTime.TryParse((string) jsonelement.data.lastSynced, out time))
+                        user.lastSynced = time;
+                    else
                     {
-                        lastSynced = DateTime.Parse((string)jsonelement.data.lastSynced)
-                    });
+                        try
+                        {
+                            user.lastSynced = (DateTime) jsonelement.data.lastSynced;
+                        }
+                        catch (Exception)
+                        {
+                        }
+                    }
+                    if(jsonelement.data.rewards != null)
+                        user.Rewards = (List<string>)jsonelement.data.rewards;
+                    
+                    bool exists = false;
+                    foreach (var existuser in users)
+                    {
+                        if (existuser.id == user.id)
+                        {
+                            exists = true;
+                            existuser.location = user.location;
+                            existuser.Name = user.Name;
+                            existuser.lastSynced = user.lastSynced;
+                            // TODO add changeble things
+                        }
+                    }
+                    if (!exists)
+                        users.Add(user);
                 }
             }
             return users;
@@ -39,5 +69,54 @@ namespace UWPEindopdracht.JSON
             dynamic json = JsonConvert.DeserializeObject(response);
             return json._id;
         }
+
+        public static bool CheckErrors(string response)
+        {
+            if (response == null)
+                throw new NoResponseException();
+
+            dynamic json = JsonConvert.DeserializeObject(response);
+
+            if (json.GetType() == typeof(JToken))
+            {
+                if (((JToken) json)["message"] != null)
+                {
+                    string message = (string) json.message;
+                    if (message == "API-key is not valid")
+                        throw new InvalidApiKeyException();
+                    if(message == "Nothing was updated. Check Query.") 
+                        throw new CannotUploadException();
+                }
+                if (!((JObject) json).HasValues)
+                    throw new NoResponseException();
+            }
+            return true;
+        }
+
+        public static string ConvertReward(Reward reward)
+        {
+            return JsonConvert.SerializeObject(reward);
+        }
+
+        public static List<Reward> GetRewards(string response)
+        {
+            List<Reward> rewards = new List<Reward>();
+            dynamic json = JsonConvert.DeserializeObject(response);
+            foreach (var jsonelement in json)
+            {
+                rewards.Add(new Reward(
+                    (string)jsonelement._id, 
+                    (string)jsonelement.Name, 
+                    (string)jsonelement.ImageLocation,
+                    (string)jsonelement.Description, 
+                    (RewardValue)jsonelement.Value));
+            }
+            return rewards;
+        }
+    }
+
+    class CannotUploadException : Exception
+    {
+        
     }
 }
