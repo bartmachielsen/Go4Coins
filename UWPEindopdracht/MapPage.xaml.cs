@@ -36,7 +36,7 @@ namespace UWPEindopdracht
         
 
         private DateTime _lastLocationSync = DateTime.Now;
-        private DispatcherTimer _onTargetNotificationTimer;
+        private DispatcherTimer _onTargetNotificationTimer = new DispatcherTimer();
 
         public MapPage()
         {
@@ -258,8 +258,16 @@ namespace UWPEindopdracht
 
         private void OnTargetButton_Click(object sender, RoutedEventArgs e)
         {
-            //if(_onTargetNotificationTimer)
-            //_onTargetNotificationTimer.Start();
+            if (!_onTargetNotificationTimer.IsEnabled)
+            {
+                _onTargetNotificationTimer.Start();
+                OnTargetText.Visibility = Visibility.Visible;
+            }
+        }
+
+        private void MultiplayerToggleButton_Click(object sender, RoutedEventArgs e)
+        {
+
         }
     }
 }
