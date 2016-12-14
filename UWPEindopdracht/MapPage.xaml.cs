@@ -319,9 +319,16 @@ namespace UWPEindopdracht
 
         }
 
-        private void GoToAlbumButton_Click(object sender, RoutedEventArgs e)
+        private async void GoToAlbumButton_Click(object sender, RoutedEventArgs e)
         {
-            
+            var a = new AlbumDialog();
+            await a.ShowAsync();
+        }
+
+        private async void GoToShopButton_Click(object sender, RoutedEventArgs e)
+        {
+            var s = new ShopDialog();
+            await s.ShowAsync();
         }
     }
 }

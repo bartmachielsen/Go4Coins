@@ -27,11 +27,7 @@
         </Style>
     </Page.Resources>
     
-    <Grid 
-        BorderBrush="Transparent"
-        BorderThickness="10"
-        Background="{ThemeResource ApplicationPageBackgroundThemeBrush}"
-        >
+    <Grid Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
         <Maps:MapControl
             Name="mapControl"
             Center="{ Binding location, Mode=TwoWay}"
@@ -39,11 +35,11 @@
 
             <Grid>
                 <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="342"></ColumnDefinition>
+                    <ColumnDefinition Width="360"></ColumnDefinition>
                 </Grid.ColumnDefinitions>
 
                 <Grid.RowDefinitions>
-                    <RowDefinition Height="595"></RowDefinition>
+                    <RowDefinition Height="610"></RowDefinition>
                 </Grid.RowDefinitions>
             
                 <Button 
@@ -76,15 +72,15 @@
                     VerticalAlignment="Bottom"
                     HorizontalAlignment="Right"
                     Style="{StaticResource ButtonStyle}"
-                    Click="GoToAlbumButton_Click"
+                    Click="GoToShopButton_Click"
                     >
                     <Image Source="Assets/store.png"/>
                 </Button>
                 <TextBlock 
                     x:Name="OnTargetText"
                     Text="Not close enough" 
+                    Margin="75,25"
                     FontSize="18" 
-                    Margin="75,25" 
                     FontStyle="Italic" 
                     Foreground="Red" 
                     Visibility="Collapsed"
@@ -136,6 +132,7 @@
                 </Grid>
             </Grid>
         </Maps:MapControl>
+        <Frame Name="MapFrame"/>
     </Grid>
 </Page>
 

@@ -1,0 +1,50 @@
+﻿<ContentDialog
+    x:Class="UWPEindopdracht.ShopDialog"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:local="using:UWPEindopdracht"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    mc:Ignorable="d"
+    Title=""
+    IsPrimaryButtonEnabled="False"
+    IsSecondaryButtonEnabled="False"
+    Height="600"
+    Margin="0,10,0,0">
+
+    <Grid>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="*"/>
+        </Grid.ColumnDefinitions>
+
+        <Grid.RowDefinitions>
+            <RowDefinition Height="60"/>
+            <RowDefinition Height="440"/>
+            <RowDefinition Height="60"/>
+        </Grid.RowDefinitions>
+
+        <TextBlock 
+                Text="SHOP"
+                Foreground="Blue"
+                FontSize="40"
+                HorizontalAlignment="Center"
+                />
+
+        <GridView 
+                Grid.Row="1"
+                >
+        </GridView>
+
+        <Button 
+                Grid.Row="2"
+                Content="BACK TO MAP"
+                FontSize="23"
+                BorderBrush="Blue"
+                BorderThickness="2"
+                HorizontalAlignment="Center"
+                Background="White"
+                Foreground="Blue"
+                Click="BackButton_Click"
+                />
+    </Grid>
+</ContentDialog>
