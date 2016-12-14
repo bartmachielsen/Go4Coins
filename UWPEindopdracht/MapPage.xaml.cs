@@ -15,6 +15,7 @@ using UWPEindopdracht.DataConnections;
 using UWPEindopdracht.GPSConnections;
 using UWPEindopdracht.JSON;
 using UWPEindopdracht.Multiplayer;
+using UWPEindopdracht.Places;
 
 // The Blank Page item template is documented at http://go.microsoft.com/fwlink/?LinkId=402352&clcid=0x409
 
@@ -29,7 +30,7 @@ namespace UWPEindopdracht
         private static int _serverTimeOut = 3;
 
 
-        private readonly Assignment _assignment;
+        private Assignment _assignment;
         private User _user = new User(null, "TestUser", new GCoordinate(0, 0));
         private readonly RestDBConnector _db = new RestDBConnector();
         private MapIcon _userLocation;
@@ -253,8 +254,18 @@ namespace UWPEindopdracht
                 try
                 {
                     var places = await PlaceLoader.GetPlaces(GPSHelper.GetGcoordinate(loc.Coordinate.Point));
+                    await new GoogleStreetviewConnector().GetURLToSavePicture(places[0]);
                     Debug.WriteLine($"Loaded {places.Count} points!");
-                    await _assignment.FillTarget(places, GPSHelper.GetGcoordinate(loc.Coordinate.Point));
+                    try
+                    {
+                        await _assignment.FillTarget(places, GPSHelper.GetGcoordinate(loc.Coordinate.Point));
+                    }
+                    catch (NoTargetAvailable)
+                    {
+                        await new MessageDialog("Move to another area! (move +5KM)", "Not enough targets!").ShowAsync();
+                        _assignment = null;
+                        return;
+                    }
                     changeDistance(GPSHelper.GetGcoordinate(loc.Coordinate.Point));
                     changeTime();
 
