@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using Windows.Devices.Geolocation;
 using Windows.Devices.Geolocation.Geofencing;
 using Windows.Storage;
+using Windows.Storage.Streams;
 using Windows.UI.Core;
 using Windows.UI.Popups;
 using Windows.UI.Xaml;
@@ -23,14 +24,17 @@ namespace UWPEindopdracht
     /// </summary>
     public sealed partial class MapPage : Page
     {
+        private static bool _follow = false;
+        private static int _serverTimeOut = 3;
+
+
         private readonly Assignment _assignment;
-        private MapIcon _targetLocation;
         private User _user = new User(null, "TestUser", new GCoordinate(0, 0));
         private readonly RestDBConnector _db = new RestDBConnector();
         private MapIcon _userLocation;
         private List<User> _users = new List<User>();
-        private bool _follow = false;
-        private int _serverTimeOut = 3;
+        
+
         private DateTime _lastLocationSync = DateTime.Now;
         private DispatcherTimer _onTargetNotificationTimer = new DispatcherTimer();
 
@@ -86,17 +90,14 @@ namespace UWPEindopdracht
             _users = await _db.GetUsers(_users);
             if (_users == null)
             {
-                System.Diagnostics.Debug.WriteLine("_USERS IS NULL");
                 return;
             }
             foreach (var user in _users)
                 if (user.id != _user.id)
                 {
                     var geopoint = GPSHelper.getPointOutLocation(user.location);
-                    //System.Diagnostics.Debug.WriteLine(DateTime.Now-user.lastSynced);
-                    if ((DateTime.Now - user.lastSynced) >= TimeSpan.FromSeconds(_serverTimeOut*4))
+                    if ((DateTime.Now - user.lastSynced) >= TimeSpan.FromSeconds(_serverTimeOut*5))
                     {
-                        System.Diagnostics.Debug.WriteLine(DateTime.Now - user.lastSynced);
                         if (user.Icon != null)
                         {
                             mapControl.MapElements.Remove(user.Icon);
@@ -128,7 +129,6 @@ namespace UWPEindopdracht
         {
             _lastLocationSync = DateTime.Now;
             _user.location = coordinate;
-            Debug.WriteLine("UPDATING USER COORDINATS IN MULTIPLAYER SERVER");
             _db.UpdateUser(_user);
             
         }
@@ -137,22 +137,27 @@ namespace UWPEindopdracht
         {
             if (_userLocation == null)
             {
-                _userLocation = new MapIcon {Title = "you"};
+                _userLocation = new MapIcon {Title = "Your Location"};
                 mapControl.MapElements.Add(_userLocation);
             }
-            if ((_targetLocation == null) && (_assignment?.Target != null) && _assignment.ShowPinPoint)
+            if ((_assignment?.Target != null) && _assignment.ShowPinPoint)
             {
-                _targetLocation = new MapIcon
+                foreach (var target in _assignment.Target)
                 {
-                    Title = _assignment.Target.Name,
-                    Location = GPSHelper.getPointOutLocation(_assignment.Target.Location)
-                };
-                mapControl.MapElements.Add(_targetLocation);
+                    if (target.Icon == null)
+                    {
+                        target.Icon = new MapIcon()
+                        {
+                            Title = target.Name,
+                            Location = GPSHelper.getPointOutLocation(target.Location)
+                        };
+                        if (!string.IsNullOrEmpty(target.IconLink))
+                            target.Icon.Image = RandomAccessStreamReference.CreateFromUri(new Uri(target.IconLink));
+                        mapControl.MapElements.Add(target.Icon);
+                    }
+                }
             }
-            else if ((_assignment?.Target != null) && _assignment.ShowPinPoint && (_targetLocation != null))
-            {
-                _targetLocation.Location = GPSHelper.getPointOutLocation(_assignment.Target.Location);
-            }
+            
 
             _userLocation.Location = location;
         }
@@ -204,7 +209,7 @@ namespace UWPEindopdracht
                 var information = await _assignment.GetRouteInformation(current);
                 _distanceText = information[1];
                 DistanceTextBlock.Text = _distanceText;
-                Debug.WriteLine($"Changed information {_distanceText}");
+                
             }
         }
 
@@ -215,7 +220,6 @@ namespace UWPEindopdracht
                 var information = await _assignment.GetRouteInformation(null, false);
                 _timeText = information[0];
                 await Dispatcher.RunAsync(CoreDispatcherPriority.Normal, () => { TimeTextBlock.Text = _timeText; });
-                Debug.WriteLine($"Changed information {_timeText}");
             }
         }
 
