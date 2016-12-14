@@ -5,6 +5,8 @@ using System.Runtime.CompilerServices;
 using System.Text;
 using System.Threading.Tasks;
 using Windows.Devices.Geolocation;
+using Windows.UI.Xaml.Controls.Maps;
+using Newtonsoft.Json;
 using UWPEindopdracht.GPSConnections;
 
 namespace UWPEindopdracht.Places
@@ -53,6 +55,9 @@ namespace UWPEindopdracht.Places
         public string IconLink { get; set; }
 
         public string PlaceId { get; set; }
+
+        [JsonIgnore]
+        public MapIcon Icon { get; set; }
 
         /// <summary>
         /// Base Constructor for making a Place

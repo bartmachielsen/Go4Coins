@@ -18,7 +18,7 @@ namespace UWPEindopdracht
         public int MinDistance { get; set; }
         public int? MaxSpeed { get; set; }
         public string Description { get; set; }
-        public Place Target { get; set; }
+        public Place[] Target { get; set; }
 
         protected double TimeMultiplier { get; set; } = 1;
 
@@ -32,7 +32,7 @@ namespace UWPEindopdracht
         public virtual async Task FillTarget(List<Place> places, GCoordinate currentPosition)
         {
             Target = await PickTargetPlace(places, currentPosition);
-            MaximumTime = TimeSpan.FromMinutes((await GPSHelper.calculateRouteBetween(currentPosition, Target.Location)).EstimatedDuration.TotalMinutes*TimeMultiplier);
+            MaximumTime = TimeSpan.FromMinutes((await GPSHelper.calculateRouteBetween(currentPosition, Target[0].Location)).EstimatedDuration.TotalMinutes*TimeMultiplier);
             FillDescription();
             start = DateTime.Now;
             
@@ -45,7 +45,7 @@ namespace UWPEindopdracht
         /// <param name="places"></param>
         /// <param name="currentPosition"></param>
         /// <returns></returns>
-        public async Task<Place> PickTargetPlace(List<Place> places, GCoordinate currentPosition)
+        public async Task<Place[]> PickTargetPlace(List<Place> places, GCoordinate currentPosition)
         {
 
             /**foreach (var place in places)
@@ -78,7 +78,7 @@ namespace UWPEindopdracht
                     place.Distance = route.LengthInMeters;
                 if (place.Distance >= MinDistance && place.Distance <= MaxDistance)
                 {
-                    return place;
+                    return new[] { place};
                 }
             }
             return null;
@@ -93,8 +93,8 @@ namespace UWPEindopdracht
         {
             double distance = 0;
             double timebonus = 0;
-            if (Target.Distance != null)
-                distance = (double)Target.Distance;
+            if (Target[0].Distance != null)
+                distance = (double)Target[0].Distance;
             if (currentTimeSpent.TotalSeconds < MaximumTime.TotalSeconds)
                 timebonus = MaximumTime.TotalSeconds - currentTimeSpent.TotalSeconds;
 
@@ -109,7 +109,7 @@ namespace UWPEindopdracht
             {
                 return new string[] {$"{span}"};
             }
-            MapRoute route = await GPSHelper.calculateRouteBetween(currentPoint, Target.Location);
+            MapRoute route = await GPSHelper.calculateRouteBetween(currentPoint, Target[0].Location);
             return new string[] {$"{span.Minutes}:{span.Seconds}", route.LengthInMeters/1000.0 + " km"};
         }
     }
@@ -154,8 +154,8 @@ namespace UWPEindopdracht
 
             Description =
                 "Search the given point!" +
-                $"\n Name: {Target.Name}" +
-                $"\n Estimated distance to the target {Target.Distance}!" +
+                $"\n Name: {Target[0].Name}" +
+                $"\n Estimated distance to the target {Target[0].Distance}!" +
                 $"\n Bonus if reached within {MaximumTime.TotalMinutes} minutes." +
                 $"\n Maximum score is {TotalScore(new TimeSpan())}";
         }
