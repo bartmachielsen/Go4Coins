@@ -13,28 +13,24 @@ namespace UWPEindopdracht.JSON
         {
             return JsonConvert.SerializeObject(new
             {
-              data = JsonConvert.SerializeObject(user)
+                data = JsonConvert.SerializeObject(user)
             });
         }
 
         public static List<User> getUsernames(string response, List<User> users)
         {
             dynamic json = JsonConvert.DeserializeObject(response);
-            if (json == null)
-            {
-                return users;
-            }
             foreach (var jsonelement in json)
             {
                 if (((JToken) jsonelement)["data"] != null)
                 {
                     var user = new User(
-                        (string)jsonelement._id,
-                        (string)jsonelement.data.Name,
-                        new GCoordinate((double)jsonelement.data.location.lati, 
-                                        (double)jsonelement.data.location.longi));
+                        (string) jsonelement._id,
+                        (string) jsonelement.data.Name,
+                        new GCoordinate((double) jsonelement.data.location.lati,
+                            (double) jsonelement.data.location.longi));
                     DateTime time;
-                    if(DateTime.TryParse((string)jsonelement.data.lastSynced, out time))
+                    if (DateTime.TryParse((string) jsonelement.data.lastSynced, out time))
                         user.lastSynced = time;
                     else
                     {
@@ -42,7 +38,9 @@ namespace UWPEindopdracht.JSON
                         {
                             user.lastSynced = (DateTime) jsonelement.data.lastSynced;
                         }
-                        catch (Exception) { }
+                        catch (Exception)
+                        {
+                        }
                     }
                     System.Diagnostics.Debug.WriteLine(user.lastSynced);
                     bool exists = false;
@@ -57,7 +55,7 @@ namespace UWPEindopdracht.JSON
                             // TODO add changeble things
                         }
                     }
-                    if(!exists)
+                    if (!exists)
                         users.Add(user);
                 }
             }
@@ -68,6 +66,48 @@ namespace UWPEindopdracht.JSON
         {
             dynamic json = JsonConvert.DeserializeObject(response);
             return json._id;
+        }
+
+        public static bool CheckErrors(string response)
+        {
+            if (response == null)
+                throw new NoResponseException();
+
+            dynamic json = JsonConvert.DeserializeObject(response);
+
+            if (json.GetType() == typeof(JToken))
+            {
+                if (((JToken) json)["message"] != null)
+                {
+                    string message = (string) json.message;
+                    if (message == "API-key is not valid")
+                        throw new InvalidApiKeyException();
+                }
+                if (!((JObject) json).HasValues)
+                    throw new NoResponseException();
+            }
+            return true;
+        }
+
+        public static string ConvertReward(Reward reward)
+        {
+            return JsonConvert.SerializeObject(reward);
+        }
+
+        public static List<Reward> GetRewards(string response)
+        {
+            List<Reward> rewards = new List<Reward>();
+            dynamic json = JsonConvert.DeserializeObject(response);
+            foreach (var jsonelement in json)
+            {
+                rewards.Add(new Reward(
+                    (string)jsonelement._id, 
+                    (string)jsonelement.Name, 
+                    (string)jsonelement.ImageLocation,
+                    (string)jsonelement.Description, 
+                    (RewardValue)jsonelement.Value));
+            }
+            return rewards;
         }
     }
 }
