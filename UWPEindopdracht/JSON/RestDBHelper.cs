@@ -32,11 +32,19 @@ namespace UWPEindopdracht.JSON
                         (string)jsonelement._id,
                         (string)jsonelement.data.Name,
                         new GCoordinate((double)jsonelement.data.location.lati, 
-                                        (double)jsonelement.data.location.longi))
+                                        (double)jsonelement.data.location.longi));
+                    DateTime time;
+                    if(DateTime.TryParse((string)jsonelement.data.lastSynced, out time))
+                        user.lastSynced = time;
+                    else
                     {
-                        lastSynced = DateTime.Parse((string)jsonelement.data.lastSynced)
-                    };
-
+                        try
+                        {
+                            user.lastSynced = (DateTime) jsonelement.data.lastSynced;
+                        }
+                        catch (Exception) { }
+                    }
+                    System.Diagnostics.Debug.WriteLine(user.lastSynced);
                     bool exists = false;
                     foreach (var existuser in users)
                     {

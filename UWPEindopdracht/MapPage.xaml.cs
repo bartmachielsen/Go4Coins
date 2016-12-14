@@ -30,7 +30,7 @@ namespace UWPEindopdracht
         private MapIcon _userLocation;
         private List<User> _users = new List<User>();
         private bool _follow = false;
-        private int _serverTimeOut = 4000;
+        private int _serverTimeOut = 4;
         private DateTime _lastLocationSync = DateTime.Now;
 
         public MapPage()
@@ -215,7 +215,7 @@ namespace UWPEindopdracht
 
         private async void Locator_PositionChanged(Geolocator sender, PositionChangedEventArgs args)
         {
-            if (DateTime.Now - _lastLocationSync <= TimeSpan.FromSeconds(_serverTimeOut))
+            if (DateTime.Now - _lastLocationSync > TimeSpan.FromSeconds(_serverTimeOut))
                 UpdateMultiplayerServer(GPSHelper.GetGcoordinate(args.Position.Coordinate.Point));
                 
 
