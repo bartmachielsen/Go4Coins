@@ -17,18 +17,36 @@ namespace UWPEindopdracht.JSON
             });
         }
 
-        public static List<User> getUsernames(string response)
+        public static List<User> getUsernames(string response, List<User> users)
         {
-            List<User> users = new List<User>();
             dynamic json = JsonConvert.DeserializeObject(response);
             foreach (var jsonelement in json)
             {
                 if (((JToken) jsonelement)["data"] != null)
                 {
-                    users.Add(new User((string)jsonelement._id, (string)jsonelement.data.Name, new GCoordinate((double)jsonelement.data.location.lati, (double)jsonelement.data.location.longi))
+                    var user = new User(
+                        (string)jsonelement._id,
+                        (string)jsonelement.data.Name,
+                        new GCoordinate((double)jsonelement.data.location.lati, 
+                                        (double)jsonelement.data.location.longi))
                     {
                         lastSynced = DateTime.Parse((string)jsonelement.data.lastSynced)
-                    });
+                    };
+
+                    bool exists = false;
+                    foreach (var existuser in users)
+                    {
+                        if (existuser.id == user.id)
+                        {
+                            exists = true;
+                            existuser.location = user.location;
+                            existuser.Name = user.Name;
+                            existuser.lastSynced = user.lastSynced;
+                            // TODO add changeble things
+                        }
+                    }
+                    if(!exists)
+                        users.Add(user);
                 }
             }
             return users;

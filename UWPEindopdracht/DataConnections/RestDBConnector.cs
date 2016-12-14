@@ -19,11 +19,11 @@ namespace UWPEindopdracht.DataConnections
             
         }
 
-        public async Task<List<User>> GetUsers()
+        public async Task<List<User>> GetUsers(List<User> current )
         {
             Uri uri = new Uri($"{host}/multiplayer?apikey={apiKey}");
             string response = await get(uri);
-            return RestDBHelper.getUsernames(response);
+            return RestDBHelper.getUsernames(response, current);
         }
 
         public async Task<User> UploadUser(User user)
