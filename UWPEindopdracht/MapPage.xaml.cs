@@ -53,8 +53,8 @@ namespace UWPEindopdracht
             locator.PositionChanged += Locator_PositionChanged;
 
             SetLocation();
-            mapControl.ZoomInteractionMode = MapInteractionMode.GestureAndControl;
-            mapControl.ZoomLevel = 13;
+            MapControl.ZoomInteractionMode = MapInteractionMode.GestureAndControl;
+            MapControl.ZoomLevel = 13;
         }
 
         private string _distanceText { get; set; } = "0 km";
@@ -167,7 +167,7 @@ namespace UWPEindopdracht
                     {
                         if (user.Icon != null)
                         {
-                            mapControl.MapElements.Remove(user.Icon);
+                            MapControl.MapElements.Remove(user.Icon);
                             user.Icon = null;
                         }
 
@@ -182,7 +182,7 @@ namespace UWPEindopdracht
                                 Location = geopoint,
                                 Title = user.Name
                             };
-                            mapControl.MapElements.Add(user.Icon);
+                            MapControl.MapElements.Add(user.Icon);
                         }
                         else
                         {
@@ -221,7 +221,7 @@ namespace UWPEindopdracht
             if (_userLocation == null)
             {
                 _userLocation = new MapIcon {Title = "Your Location"};
-                mapControl.MapElements.Add(_userLocation);
+                MapControl.MapElements.Add(_userLocation);
             }
             if ((_assignment?.Target != null) && _assignment.ShowPinPoint)
             {
@@ -236,7 +236,7 @@ namespace UWPEindopdracht
                         };
                         if (!string.IsNullOrEmpty(target.IconLink))
                             target.Icon.Image = RandomAccessStreamReference.CreateFromUri(new Uri(target.IconLink));
-                        mapControl.MapElements.Add(target.Icon);
+                        MapControl.MapElements.Add(target.Icon);
                     }
                 }
             }
@@ -250,7 +250,7 @@ namespace UWPEindopdracht
             var loc = await GPSHelper.getLocationOriginal();
             if (loc != null)
             {
-                mapControl.Center = loc.Coordinate.Point;
+                MapControl.Center = loc.Coordinate.Point;
                 try
                 {
                     var places = await PlaceLoader.GetPlaces(GPSHelper.GetGcoordinate(loc.Coordinate.Point));
@@ -266,8 +266,8 @@ namespace UWPEindopdracht
                         _assignment = null;
                         return;
                     }
-                    changeDistance(GPSHelper.GetGcoordinate(loc.Coordinate.Point));
-                    changeTime();
+                    ChangeDistance(GPSHelper.GetGcoordinate(loc.Coordinate.Point));
+                    ChangeTime();
 
                     //start time change timer
                     var timer = new DispatcherTimer
@@ -277,7 +277,7 @@ namespace UWPEindopdracht
                     timer.Tick += delegate
                     {
                         if (_assignment != null)
-                            changeTime();
+                            ChangeTime();
                         else
                             timer.Stop();
                     };
@@ -291,7 +291,7 @@ namespace UWPEindopdracht
                 {
                     await new MessageDialog("Api key is invalid!", "Api Exception").ShowAsync();
                 }
-                PlacePinPoints(mapControl.Center);
+                PlacePinPoints(MapControl.Center);
             }
             else
             {
@@ -301,7 +301,7 @@ namespace UWPEindopdracht
             }
         }
 
-        private async void changeDistance(GCoordinate current)
+        private async void ChangeDistance(GCoordinate current)
         {
             if ((_assignment != null) && (_assignment.Target != null))
             {
@@ -312,7 +312,7 @@ namespace UWPEindopdracht
             }
         }
 
-        private async void changeTime()
+        private async void ChangeTime()
         {
             if ((_assignment != null) && (_assignment.Target != null))
             {
@@ -336,9 +336,9 @@ namespace UWPEindopdracht
                 if (location != null)
                 {
                     if (_follow)
-                        mapControl.Center = location;
+                        MapControl.Center = location;
                     PlacePinPoints(location);
-                    changeDistance(GPSHelper.GetGcoordinate(location));
+                    ChangeDistance(GPSHelper.GetGcoordinate(location));
                 }
             });
         }
@@ -357,11 +357,8 @@ namespace UWPEindopdracht
 
         private void OnTargetButton_Click(object sender, RoutedEventArgs e)
         {
-            if (!_onTargetNotificationTimer.IsEnabled)
-            {
-                _onTargetNotificationTimer.Start();
-                OnTargetText.Visibility = Visibility.Visible;
-            }
+            OnTargetText.Opacity = 1.0;
+            OnTargetErrorAnimation.Begin();
         }
 
         private void MultiplayerToggleButton_Click(object sender, RoutedEventArgs e)
