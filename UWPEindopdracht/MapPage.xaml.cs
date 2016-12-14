@@ -310,5 +310,10 @@ namespace UWPEindopdracht
         {
 
         }
+
+        private void GoToAlbumButton_Click(object sender, RoutedEventArgs e)
+        {
+            
+        }
     }
 }

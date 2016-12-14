@@ -35,8 +35,8 @@
             MapServiceToken="{StaticResource ServiceToken}">
 
             <Button 
-                Height="65" 
-                Width="65" 
+                Height="55" 
+                Width="55" 
                 Margin="10,10"
                 Background="Transparent" 
                 Style="{StaticResource ButtonStyle}"
@@ -46,38 +46,58 @@
             </Button>
             <TextBlock 
                 x:Name="OnTargetText"
-                Text="You are not close enough to the target" 
+                Text="Not close enough" 
                 FontSize="18" 
-                Margin="90,20" 
+                Margin="75,25" 
                 FontStyle="Italic" 
                 Foreground="Red" 
                 Visibility="Collapsed"
                 />
             <Button
-                Height="50"
-                Width="50"
-                Margin="320,0"
+                Height="55"
+                Width="55"
+                Margin="280,10"
                 Background="Transparent"
                 Style="{StaticResource ButtonStyle}"
                 Click="MultiplayerToggleButton_Click"
                 >
                 <Image Source="Assets/mp.png"/>
             </Button>
+            <Button
+                Height="55"
+                Width="55"
+                Margin="10, 530"
+                Background="Transparent"
+                Style="{StaticResource ButtonStyle}"
+                Click="GoToAlbumButton_Click"
+                >
+                <Image Source="Assets/album.png"/>
+            </Button>
+            <Button
+                Height="55"
+                Width="55"
+                Margin="280, 530"
+                Background="Transparent"
+                Style="{StaticResource ButtonStyle}"
+                Click="GoToAlbumButton_Click"
+                >
+                <Image Source="Assets/store.png"/>
+            </Button>
             
-            <Grid Background="Transparent" Margin="10,530">
+            <Grid Background="Transparent" Margin="93,530">
 
                 <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="110"/>
-                    <ColumnDefinition Width="100"></ColumnDefinition>
+                    <ColumnDefinition Width="85"/>
+                    <ColumnDefinition Width="75"></ColumnDefinition>
                 </Grid.ColumnDefinitions>
                 <Grid.RowDefinitions>
-                    <RowDefinition Height="40"/>
-                    <RowDefinition Height="40"></RowDefinition>
+                    <RowDefinition Height="30"/>
+                    <RowDefinition Height="30"></RowDefinition>
                 </Grid.RowDefinitions>
 
                 <TextBlock
                     Text="Distance: " 
-                    FontSize="24"
+                    FontSize="19"
                     Foreground="Blue"
                     />
                 <TextBlock
@@ -85,14 +105,14 @@
                     Grid.Column="1"
                     Grid.Row="0"
                     Text="0 km"
-                    FontSize="24"
+                    FontSize="19"
                     Foreground="Blue"
                     />
                 <TextBlock
                     Grid.Row="1"
                     Grid.Column="0"
                     Text="Time: "
-                    FontSize="24"
+                    FontSize="19"
                     Foreground="Blue"
                     />
                 <TextBlock
@@ -100,7 +120,7 @@
                     Grid.Row="1"
                     Grid.Column="1"
                     Text="0:00"
-                    FontSize="24"
+                    FontSize="19"
                     Foreground="Blue"
                     />
             </Grid>
