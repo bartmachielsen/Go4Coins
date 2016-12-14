@@ -16,13 +16,8 @@ using UWPEindopdracht.GPSConnections;
 using UWPEindopdracht.JSON;
 using UWPEindopdracht.Multiplayer;
 
-// The Blank Page item template is documented at http://go.microsoft.com/fwlink/?LinkId=402352&clcid=0x409
-
 namespace UWPEindopdracht
 {
-    /// <summary>
-    ///     An empty page that can be used on its own or navigated to within a Frame.
-    /// </summary>
     public sealed partial class MapPage : Page
     {
         private static bool _follow = false;
@@ -52,12 +47,12 @@ namespace UWPEindopdracht
             locator.PositionChanged += Locator_PositionChanged;
 
             SetLocation();
-            mapControl.ZoomInteractionMode = MapInteractionMode.GestureAndControl;
-            mapControl.ZoomLevel = 13;
+            MapControl.ZoomInteractionMode = MapInteractionMode.GestureAndControl;
+            MapControl.ZoomLevel = 13;
         }
 
-        private string _distanceText { get; set; } = "0 km";
-        private string _timeText { get; set; } = "00:00";
+        private string DistanceText { get; set; } = "0 km";
+        private string TimeText { get; set; } = "00:00";
 
         private async Task LoadRewards()
         {
@@ -90,7 +85,7 @@ namespace UWPEindopdracht
                 }
                 catch (Exception e)
                 {
-                    System.Diagnostics.Debug.WriteLine(e);
+                    Debug.WriteLine(e);
                 }
             }
             else
@@ -151,7 +146,7 @@ namespace UWPEindopdracht
             }
             catch (NoResponseException)
             {
-                System.Diagnostics.Debug.WriteLine("Got no response from database! but continue because shit happens");
+                Debug.WriteLine("Got no response from database! but continue because shit happens");
             }
 
             if (_users == null)
@@ -166,14 +161,14 @@ namespace UWPEindopdracht
                     {
                         if (user.Icon != null)
                         {
-                            mapControl.MapElements.Remove(user.Icon);
+                            MapControl.MapElements.Remove(user.Icon);
                             user.Icon = null;
                         }
 
                     }
                     else
                     {
-                        System.Diagnostics.Debug.WriteLine($"{user.id} is loaded! {DateTime.Now-user.lastSynced}");
+                        Debug.WriteLine($"{user.id} is loaded! {DateTime.Now-user.lastSynced}");
                         if (user.Icon == null)
                         {
                             user.Icon = new MapIcon
@@ -181,7 +176,7 @@ namespace UWPEindopdracht
                                 Location = geopoint,
                                 Title = user.Name
                             };
-                            mapControl.MapElements.Add(user.Icon);
+                            MapControl.MapElements.Add(user.Icon);
                         }
                         else
                         {
@@ -220,7 +215,7 @@ namespace UWPEindopdracht
             if (_userLocation == null)
             {
                 _userLocation = new MapIcon {Title = "Your Location"};
-                mapControl.MapElements.Add(_userLocation);
+                MapControl.MapElements.Add(_userLocation);
             }
             if ((_assignment?.Target != null) && _assignment.ShowPinPoint)
             {
@@ -235,7 +230,7 @@ namespace UWPEindopdracht
                         };
                         if (!string.IsNullOrEmpty(target.IconLink))
                             target.Icon.Image = RandomAccessStreamReference.CreateFromUri(new Uri(target.IconLink));
-                        mapControl.MapElements.Add(target.Icon);
+                        MapControl.MapElements.Add(target.Icon);
                     }
                 }
             }
@@ -249,14 +244,14 @@ namespace UWPEindopdracht
             var loc = await GPSHelper.getLocationOriginal();
             if (loc != null)
             {
-                mapControl.Center = loc.Coordinate.Point;
+                MapControl.Center = loc.Coordinate.Point;
                 try
                 {
                     var places = await PlaceLoader.GetPlaces(GPSHelper.GetGcoordinate(loc.Coordinate.Point));
                     Debug.WriteLine($"Loaded {places.Count} points!");
                     await _assignment.FillTarget(places, GPSHelper.GetGcoordinate(loc.Coordinate.Point));
-                    changeDistance(GPSHelper.GetGcoordinate(loc.Coordinate.Point));
-                    changeTime();
+                    ChangeDistance(GPSHelper.GetGcoordinate(loc.Coordinate.Point));
+                    ChangeTime();
 
                     //start time change timer
                     var timer = new DispatcherTimer
@@ -266,7 +261,7 @@ namespace UWPEindopdracht
                     timer.Tick += delegate
                     {
                         if (_assignment != null)
-                            changeTime();
+                            ChangeTime();
                         else
                             timer.Stop();
                     };
@@ -280,7 +275,7 @@ namespace UWPEindopdracht
                 {
                     await new MessageDialog("Api key is invalid!", "Api Exception").ShowAsync();
                 }
-                PlacePinPoints(mapControl.Center);
+                PlacePinPoints(MapControl.Center);
             }
             else
             {
@@ -290,24 +285,24 @@ namespace UWPEindopdracht
             }
         }
 
-        private async void changeDistance(GCoordinate current)
+        private async void ChangeDistance(GCoordinate current)
         {
             if ((_assignment != null) && (_assignment.Target != null))
             {
                 var information = await _assignment.GetRouteInformation(current);
-                _distanceText = information[1];
-                DistanceTextBlock.Text = _distanceText;
+                DistanceText = information[1];
+                DistanceTextBlock.Text = DistanceText;
                 
             }
         }
 
-        private async void changeTime()
+        private async void ChangeTime()
         {
             if ((_assignment != null) && (_assignment.Target != null))
             {
                 var information = await _assignment.GetRouteInformation(null, false);
-                _timeText = information[0];
-                await Dispatcher.RunAsync(CoreDispatcherPriority.Normal, () => { TimeTextBlock.Text = _timeText; });
+                TimeText = information[0];
+                await Dispatcher.RunAsync(CoreDispatcherPriority.Normal, () => { TimeTextBlock.Text = TimeText; });
             }
         }
 
@@ -316,18 +311,15 @@ namespace UWPEindopdracht
             if (DateTime.Now - _lastLocationSync > TimeSpan.FromSeconds(_serverTimeOut))
                 UpdateMultiplayerServer(GPSHelper.GetGcoordinate(args.Position.Coordinate.Point));
                 
-
-                
-            
             await Dispatcher.RunAsync(CoreDispatcherPriority.Normal, () =>
             {
                 var location = args.Position.Coordinate.Point;
                 if (location != null)
                 {
                     if (_follow)
-                        mapControl.Center = location;
+                        MapControl.Center = location;
                     PlacePinPoints(location);
-                    changeDistance(GPSHelper.GetGcoordinate(location));
+                    ChangeDistance(GPSHelper.GetGcoordinate(location));
                 }
             });
         }
@@ -346,16 +338,12 @@ namespace UWPEindopdracht
 
         private void OnTargetButton_Click(object sender, RoutedEventArgs e)
         {
-            if (!_onTargetNotificationTimer.IsEnabled)
-            {
-                _onTargetNotificationTimer.Start();
-                OnTargetText.Visibility = Visibility.Visible;
-            }
+            OnTargetText.Opacity = 1.0;
+            OnTargetErrorAnimation.Begin();
         }
 
         private void MultiplayerToggleButton_Click(object sender, RoutedEventArgs e)
         {
-
         }
 
         private async void GoToAlbumButton_Click(object sender, RoutedEventArgs e)

@@ -19,27 +19,25 @@
         </Grid.ColumnDefinitions>
 
         <Grid.RowDefinitions>
-            <RowDefinition Height="60"/>
-            <RowDefinition Height="440"/>
-            <RowDefinition Height="60"/>
+            <RowDefinition Height="30"/>
+            <RowDefinition Height="485"/>
+            <RowDefinition Height="45"/>
         </Grid.RowDefinitions>
 
         <TextBlock 
                 Text="ALBUM"
                 Foreground="Blue"
-                FontSize="40"
+                FontSize="21"
                 HorizontalAlignment="Center"
                 />
-
         <GridView 
                 Grid.Row="1"
                 >
         </GridView>
-
         <Button 
                 Grid.Row="2"
                 Content="BACK TO MAP"
-                FontSize="23"
+                FontSize="18"
                 BorderBrush="Blue"
                 BorderThickness="2"
                 HorizontalAlignment="Center"
