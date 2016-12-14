@@ -13,6 +13,7 @@ using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Controls.Maps;
 using UWPEindopdracht.DataConnections;
 using UWPEindopdracht.GPSConnections;
+using UWPEindopdracht.JSON;
 using UWPEindopdracht.Multiplayer;
 
 // The Blank Page item template is documented at http://go.microsoft.com/fwlink/?LinkId=402352&clcid=0x409
@@ -33,15 +34,17 @@ namespace UWPEindopdracht
         private readonly RestDBConnector _db = new RestDBConnector();
         private MapIcon _userLocation;
         private List<User> _users = new List<User>();
+        private List<Reward> _rewards;
         private bool _noInternetConfirmed = false;
-
+        
         private DateTime _lastLocationSync = DateTime.Now;
-        private DispatcherTimer _onTargetNotificationTimer = new DispatcherTimer();
+        private readonly DispatcherTimer _onTargetNotificationTimer = new DispatcherTimer();
 
         public MapPage()
         {
-            LoadRewards();
+            
             LoadMultiplayerDetails();
+
             InitializeComponent();
             _assignment = new MapAssignment();
             var locator = new Geolocator {DesiredAccuracyInMeters = 10};
@@ -56,10 +59,17 @@ namespace UWPEindopdracht
         private string _distanceText { get; set; } = "0 km";
         private string _timeText { get; set; } = "00:00";
 
-        private async void LoadRewards()
+        private async Task LoadRewards()
         {
-            var rewards = await _db.GetRewards();
-            System.Diagnostics.Debug.WriteLine(rewards.Count);
+            try
+            {
+                _rewards = await _db.GetRewards();
+                _noInternetConfirmed = false;
+            }
+            catch (NoInternetException)
+            {
+                InternetException();
+            }
         }
 
         private async void LoadMultiplayerDetails()
@@ -86,10 +96,27 @@ namespace UWPEindopdracht
             else
             {
                 _user.id = (string) localSettings.Values["multiplayerID"];
+                try
+                {
+                    await _db.UpdateUser(_user);
+                    _noInternetConfirmed = false;
+                }
+                catch (NoResponseException)
+                {
+                    _user.id = null;
+                    _user = await _db.UploadUser(_user);
+                    localSettings.Values["multiplayerID"] = _user.id;
+                }
+                catch (NoInternetException)
+                {
+                    InternetException();
+                }
             }
             _user.Self = true;
             _users.Add(_user);
-            
+
+            await LoadRewards();
+
             LiveUpdateUser();
         }
 
@@ -120,8 +147,13 @@ namespace UWPEindopdracht
             }
             catch (NoInternetException)
             {
-               InternetException();
+                InternetException();
             }
+            catch (NoResponseException)
+            {
+                System.Diagnostics.Debug.WriteLine("Got no response from database! but continue because shit happens");
+            }
+
             if (_users == null)
             {
                 return;
@@ -165,12 +197,19 @@ namespace UWPEindopdracht
             _user.location = coordinate;
             try
             {
-                _db.UpdateUser(_user);
+                await _db.UpdateUser(_user);
                 _noInternetConfirmed = false;
+            }
+            catch (NoResponseException)
+            {
+                var localSettings =
+                ApplicationData.Current.LocalSettings;
+                _user.id = null;
+                _user = await _db.UploadUser(_user);
+                localSettings.Values["multiplayerID"] = _user.id;
             }
             catch (NoInternetException)
             {
-                //System.Diagnostics.Debug.WriteLine(e);
                 InternetException();
             }
 

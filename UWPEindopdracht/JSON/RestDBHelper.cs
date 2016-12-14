@@ -42,7 +42,9 @@ namespace UWPEindopdracht.JSON
                         {
                         }
                     }
-                    System.Diagnostics.Debug.WriteLine(user.lastSynced);
+                    if(jsonelement.data.rewards != null)
+                        user.Rewards = (List<string>)jsonelement.data.rewards;
+                    
                     bool exists = false;
                     foreach (var existuser in users)
                     {
@@ -82,6 +84,8 @@ namespace UWPEindopdracht.JSON
                     string message = (string) json.message;
                     if (message == "API-key is not valid")
                         throw new InvalidApiKeyException();
+                    if(message == "Nothing was updated. Check Query.") 
+                        throw new CannotUploadException();
                 }
                 if (!((JObject) json).HasValues)
                     throw new NoResponseException();
@@ -109,5 +113,10 @@ namespace UWPEindopdracht.JSON
             }
             return rewards;
         }
+    }
+
+    class CannotUploadException : Exception
+    {
+        
     }
 }

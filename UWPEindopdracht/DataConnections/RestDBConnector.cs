@@ -45,11 +45,12 @@ namespace UWPEindopdracht.DataConnections
             return user;
         }
 
-        public async void UpdateUser(User user)
+        public async Task UpdateUser(User user)
         {
             user.lastSynced = DateTime.Now;
             Uri uri = new Uri($"{host}/multiplayer/{user.id}?apikey={apiKey}");
             string response = await put(uri, new HttpStringContent(RestDBHelper.ConvertUsername(user), UnicodeEncoding.Utf8, "application/json"));
+            RestDBHelper.CheckErrors(response);
         }
 
         public async void UploadReward(Reward reward)
