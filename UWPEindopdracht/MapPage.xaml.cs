@@ -73,7 +73,7 @@ namespace UWPEindopdracht
             
             while (true)
             {
-                await Task.Delay(2000);
+                await Task.Delay(4000);
                 await UpdateUserDetails();
             }
         }
@@ -81,6 +81,11 @@ namespace UWPEindopdracht
         private async Task UpdateUserDetails()
         {
             _users = await _db.GetUsers(_users);
+            if (_users == null)
+            {
+                System.Diagnostics.Debug.WriteLine("_USERS IS NULL");
+                return;
+            }
             foreach (var user in _users)
                 if (user.id != _user.id)
                 {

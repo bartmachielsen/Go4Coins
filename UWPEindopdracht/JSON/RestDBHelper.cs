@@ -20,6 +20,10 @@ namespace UWPEindopdracht.JSON
         public static List<User> getUsernames(string response, List<User> users)
         {
             dynamic json = JsonConvert.DeserializeObject(response);
+            if (json == null)
+            {
+                return users;
+            }
             foreach (var jsonelement in json)
             {
                 if (((JToken) jsonelement)["data"] != null)
