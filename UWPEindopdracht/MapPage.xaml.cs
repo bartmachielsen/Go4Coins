@@ -33,7 +33,7 @@ namespace UWPEindopdracht
         private readonly RestDBConnector _db = new RestDBConnector();
         private MapIcon _userLocation;
         private List<User> _users = new List<User>();
-        
+        private bool _noInternetConfirmed = false;
 
         private DateTime _lastLocationSync = DateTime.Now;
         private DispatcherTimer _onTargetNotificationTimer = new DispatcherTimer();
@@ -59,11 +59,21 @@ namespace UWPEindopdracht
         {
             var localSettings =
                 ApplicationData.Current.LocalSettings;
-
+            if (_user == null || _db == null)
+            {
+                return;
+            }
             if (!localSettings.Values.ContainsKey("multiplayerID"))
             {
-                _user = await _db.UploadUser(_user);
-                localSettings.Values["multiplayerID"] = _user.id;
+                try
+                {
+                    _user = await _db.UploadUser(_user);
+                    localSettings.Values["multiplayerID"] = _user.id;
+                }
+                catch (Exception e)
+                {
+                    System.Diagnostics.Debug.WriteLine(e);
+                }
             }
             else
             {
@@ -85,9 +95,25 @@ namespace UWPEindopdracht
             }
         }
 
+        private async void InternetException()
+        {
+            if (!_noInternetConfirmed)
+            {
+                await new MessageDialog("No internet connection found", "Internet connection error").ShowAsync();
+                _noInternetConfirmed = true;
+            }
+        }
         private async Task UpdateUserDetails()
         {
-            _users = await _db.GetUsers(_users);
+            try
+            {
+                _users = await _db.GetUsers(_users);
+                _noInternetConfirmed = false;
+            }
+            catch (NoInternetException)
+            {
+               InternetException();
+            }
             if (_users == null)
             {
                 return;
@@ -129,8 +155,17 @@ namespace UWPEindopdracht
         {
             _lastLocationSync = DateTime.Now;
             _user.location = coordinate;
-            _db.UpdateUser(_user);
-            
+            try
+            {
+                _db.UpdateUser(_user);
+                _noInternetConfirmed = false;
+            }
+            catch (NoInternetException)
+            {
+                //System.Diagnostics.Debug.WriteLine(e);
+                InternetException();
+            }
+
         }
 
         private void PlacePinPoints(Geopoint location)
@@ -170,9 +205,9 @@ namespace UWPEindopdracht
                 mapControl.Center = loc.Coordinate.Point;
                 try
                 {
-                    var Places = await PlaceLoader.GetPlaces(GPSHelper.GetGcoordinate(loc.Coordinate.Point));
-                    Debug.WriteLine($"Loaded {Places.Count} points!");
-                    await _assignment.FillTarget(Places, GPSHelper.GetGcoordinate(loc.Coordinate.Point));
+                    var places = await PlaceLoader.GetPlaces(GPSHelper.GetGcoordinate(loc.Coordinate.Point));
+                    Debug.WriteLine($"Loaded {places.Count} points!");
+                    await _assignment.FillTarget(places, GPSHelper.GetGcoordinate(loc.Coordinate.Point));
                     changeDistance(GPSHelper.GetGcoordinate(loc.Coordinate.Point));
                     changeTime();
 
@@ -199,6 +234,12 @@ namespace UWPEindopdracht
                     await new MessageDialog("Api key is invalid!", "Api Exception").ShowAsync();
                 }
                 PlacePinPoints(mapControl.Center);
+            }
+            else
+            {
+                await new MessageDialog("No GPS connection!", "Can't get your location").ShowAsync();
+                //SetLocation();
+                // TODO EXIT APPLICATION BECAUSE NO GPS SIGNAL OR TRY AGAIN A FEW TIMES
             }
         }
 

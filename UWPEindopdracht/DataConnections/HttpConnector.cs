@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Runtime.InteropServices;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
@@ -91,9 +92,9 @@ namespace UWPEindopdracht
                 string cont = await response.Content.ReadAsStringAsync();
                 return cont;
             }
-            catch (Exception)
+            catch (COMException e)
             {
-                return string.Empty;
+                throw new NoInternetException();
             }
         }
 
@@ -115,9 +116,9 @@ namespace UWPEindopdracht
                 string jsonResponse = await response.Content.ReadAsStringAsync();
                 return jsonResponse;
             }
-            catch (Exception)
+            catch (COMException e)
             {
-                return null;
+                throw new NoInternetException();
             }
         }
     }
@@ -140,5 +141,15 @@ namespace UWPEindopdracht
     class ApiLimitReached : Exception
     {
 
+    }
+
+    class NoResponseException : Exception
+    {
+        
+    }
+
+    class NoInternetException : Exception
+    {
+        
     }
 }

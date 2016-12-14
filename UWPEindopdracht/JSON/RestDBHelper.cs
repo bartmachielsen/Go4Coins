@@ -69,5 +69,23 @@ namespace UWPEindopdracht.JSON
             dynamic json = JsonConvert.DeserializeObject(response);
             return json._id;
         }
+
+        public static bool CheckErrors(string response)
+        {
+            if (response == null)
+                throw new NoResponseException();
+
+            dynamic json = JsonConvert.DeserializeObject(response);
+            if (json.message != null)
+            {
+                string message = (string) json.message;
+                if(message == "API-key is not valid")
+                    throw new InvalidApiKeyException();
+            }
+            if(!((JObject)json).HasValues)
+                throw new NoResponseException();
+
+            return true;
+        }
     }
 }

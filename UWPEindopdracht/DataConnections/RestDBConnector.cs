@@ -23,7 +23,16 @@ namespace UWPEindopdracht.DataConnections
         {
             Uri uri = new Uri($"{host}/multiplayer?apikey={apiKey}");
             string response = await get(uri);
-            return RestDBHelper.getUsernames(response, current);
+            try
+            {
+                RestDBHelper.CheckErrors(response);
+                return RestDBHelper.getUsernames(response, current);
+            }
+            catch (Exception)
+            {
+                System.Diagnostics.Debug.WriteLine("Getting users failed safely!");
+            }
+            return current;
         }
 
         public async Task<User> UploadUser(User user)
@@ -31,6 +40,7 @@ namespace UWPEindopdracht.DataConnections
             user.lastSynced = DateTime.Now;
             Uri uri = new Uri($"{host}/multiplayer?apikey={apiKey}");
             string response = await post(uri, new HttpStringContent(RestDBHelper.ConvertUsername(user), UnicodeEncoding.Utf8, "application/json"));
+            RestDBHelper.CheckErrors(response);
             user.id = RestDBHelper.getID(response);
             return user;
         }
