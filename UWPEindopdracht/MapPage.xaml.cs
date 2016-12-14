@@ -36,6 +36,7 @@ namespace UWPEindopdracht
         
 
         private DateTime _lastLocationSync = DateTime.Now;
+        private DispatcherTimer _onTargetNotificationTimer;
 
         public MapPage()
         {
@@ -253,6 +254,12 @@ namespace UWPEindopdracht
         private void GeofenceActivated(GeofenceMonitor sender, object args)
         {
             throw new NotImplementedException();
+        }
+
+        private void OnTargetButton_Click(object sender, RoutedEventArgs e)
+        {
+            //if(_onTargetNotificationTimer)
+            //_onTargetNotificationTimer.Start();
         }
     }
 }

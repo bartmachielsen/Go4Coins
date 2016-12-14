@@ -33,11 +33,29 @@
             Name="mapControl"
             Center="{ Binding location, Mode=TwoWay}"
             MapServiceToken="{StaticResource ServiceToken}">
-            <Button Height="70" Width="70" Background="Transparent" Style="{StaticResource ButtonStyle}">
+            
+            <Button 
+                Height="65" 
+                Width="65" 
+                Margin="10,10"
+                Background="Transparent" 
+                Style="{StaticResource ButtonStyle}"
+                Click="OnTargetButton_Click"
+                >
                 <Image Source="Assets/location.png"></Image>
             </Button>
+            <TextBlock 
+                x:Name="OnTargetText"
+                Text="You are not close enough to the target" 
+                FontSize="18" 
+                Margin="90,20" 
+                FontStyle="Italic" 
+                Foreground="Red" 
+                Visibility="Collapsed"
+                />
+            
             <Grid Background="Transparent" Margin="10,530">
-                
+
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="110"/>
                     <ColumnDefinition Width="100"></ColumnDefinition>
