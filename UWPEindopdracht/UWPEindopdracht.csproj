@@ -120,6 +120,7 @@
     <None Include="UWPEindopdracht_TemporaryKey.pfx" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include="Assets\album.png" />
     <Content Include="Assets\location.png" />
     <Content Include="Assets\mp.png" />
     <Content Include="Properties\Default.rd.xml" />
