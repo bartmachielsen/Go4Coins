@@ -30,7 +30,7 @@ namespace UWPEindopdracht
         private MapIcon _userLocation;
         private List<User> _users = new List<User>();
         private bool _follow = false;
-        private int _serverTimeOut = 4;
+        private int _serverTimeOut = 3;
         private DateTime _lastLocationSync = DateTime.Now;
 
         public MapPage()
@@ -38,7 +38,7 @@ namespace UWPEindopdracht
             LoadMultiplayerDetails();
             InitializeComponent();
             _assignment = new MapAssignment();
-            var locator = new Geolocator {DesiredAccuracyInMeters = 10, ReportInterval = 100};
+            var locator = new Geolocator {DesiredAccuracyInMeters = 10};
 
             locator.PositionChanged += Locator_PositionChanged;
 
@@ -75,7 +75,7 @@ namespace UWPEindopdracht
             
             while (true)
             {
-                await Task.Delay(_serverTimeOut);
+                await Task.Delay(_serverTimeOut*1000);
                 await UpdateUserDetails();
             }
         }
@@ -92,28 +92,33 @@ namespace UWPEindopdracht
                 if (user.id != _user.id)
                 {
                     var geopoint = GPSHelper.getPointOutLocation(user.location);
-                    if (DateTime.Now - user.lastSynced > TimeSpan.FromSeconds(_serverTimeOut*4))
+                    //System.Diagnostics.Debug.WriteLine(DateTime.Now-user.lastSynced);
+                    if ((DateTime.Now - user.lastSynced) >= TimeSpan.FromSeconds(_serverTimeOut*4))
                     {
+                        System.Diagnostics.Debug.WriteLine(DateTime.Now - user.lastSynced);
                         if (user.Icon != null)
                         {
                             mapControl.MapElements.Remove(user.Icon);
                             user.Icon = null;
                         }
-                        continue;
-                        
-                    }
-                    if (user.Icon == null)
-                    {
-                        user.Icon = new MapIcon
-                        {
-                            Location = geopoint,
-                            Title = user.Name
-                        };
-                        mapControl.MapElements.Add(user.Icon);
+
                     }
                     else
                     {
-                        user.Icon.Location = geopoint;
+                        System.Diagnostics.Debug.WriteLine($"{user.id} is loaded! {DateTime.Now-user.lastSynced}");
+                        if (user.Icon == null)
+                        {
+                            user.Icon = new MapIcon
+                            {
+                                Location = geopoint,
+                                Title = user.Name
+                            };
+                            mapControl.MapElements.Add(user.Icon);
+                        }
+                        else
+                        {
+                            user.Icon.Location = geopoint;
+                        }
                     }
                 }
         }
