@@ -134,6 +134,7 @@ namespace UWPEindopdracht
             {
                 await Task.Delay(_serverTimeOut*1000);
                 await UpdateUserDetails();
+                CheckIfLocationUpdate(null);
             }
         }
 
@@ -213,11 +214,11 @@ namespace UWPEindopdracht
             }
             catch (NoResponseException)
             {
-                var localSettings =
-                ApplicationData.Current.LocalSettings;
-                _user.id = null;
-                _user = await _db.UploadUser(_user);
-                localSettings.Values["multiplayerID"] = _user.id;
+                //var localSettings =
+                //ApplicationData.Current.LocalSettings;
+                //_user.id = null;
+                //_user = await _db.UploadUser(_user);
+                //localSettings.Values["multiplayerID"] = _user.id;
             }
             catch (NoInternetException)
             {
@@ -347,10 +348,20 @@ namespace UWPEindopdracht
             }
         }
 
-        private async void Locator_PositionChanged(Geolocator sender, PositionChangedEventArgs args)
+        private async void CheckIfLocationUpdate(Geopoint point)
         {
             if (DateTime.Now - _lastLocationSync > TimeSpan.FromSeconds(_serverTimeOut))
-                UpdateMultiplayerServer(GPSHelper.GetGcoordinate(args.Position.Coordinate.Point));
+            {
+                if (point == null)
+                    point = (await GPSHelper.getLocationOriginal()).Coordinate.Point;
+                UpdateMultiplayerServer(GPSHelper.GetGcoordinate(point));
+            }
+
+        }
+
+        private async void Locator_PositionChanged(Geolocator sender, PositionChangedEventArgs args)
+        {
+            CheckIfLocationUpdate(args.Position.Coordinate.Point);
                 
 
                 

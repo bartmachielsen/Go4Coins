@@ -15,7 +15,7 @@ namespace UWPEindopdracht
         protected int MaxDistance { get; set; }
         protected int MinDistance { get; set; }
         protected int? MaxSpeed { get; set; }
-        protected string Description { get; set; }
+        public string Description { get; set; }
         public Place[] Target { get; private set; }
 
         protected double TimeMultiplier { private get; set; } = 1;

@@ -29,24 +29,31 @@ namespace UWPEindopdracht
             IsPrimaryButtonEnabled = false;
             IsSecondaryButtonEnabled = false;
             LoadImage();
-            IsPrimaryButtonEnabled = true;
-            IsSecondaryButtonEnabled = true;
+            LoadDetails();
+        }
+
+        private void LoadDetails()
+        {
+            AssignDetails.Text = _assignment.Description;
+            Title = _assignment.Target[0].Name;
         }
 
         private async void LoadImage()
         {
             if (_assignment.Target[0].ImageLocation != null)
             {
-                string url = await new GooglePlacesConnector().GetImageURL(_assignment.Target[0]);
-                if (url != null)
+                string url = await new GooglePlacesConnector().GetImageURL(_assignment.Target[0], (int)((this.ActualWidth/4.0)*3.0));
+                if (url != null) { 
                     AssignmentImage.Source = new BitmapImage(new Uri(url));
+                    return;
+                }
             }
-            else
-            {
-                var urls = await new GoogleStreetviewConnector().GetURLToSavePicture(_assignment.Target[0]);
-                if (urls.Count > 0)
-                    AssignmentImage.Source = new BitmapImage(new Uri(urls.ElementAt(0)));
-            }
+            var urls = await new GoogleStreetviewConnector().GetURLToSavePicture(_assignment.Target[0]);
+            if (urls.Count > 0)
+                AssignmentImage.Source = new BitmapImage(new Uri(urls.ElementAt(0)));
+            
+            IsPrimaryButtonEnabled = true;
+            IsSecondaryButtonEnabled = true;
         }
        
         private void ContentDialog_PrimaryButtonClick(ContentDialog sender, ContentDialogButtonClickEventArgs args)

@@ -16,7 +16,7 @@
         <StackPanel>
             <Image Name="AssignmentImage"/>
             <TextBlock Text="AssignmentDetails:"/>
-            <TextBlock Text="In this assignment you must walk to the given point on the map
+            <TextBlock Name="AssignDetails" Text="In this assignment you must walk to the given point on the map
                        marked with the point" TextWrapping="Wrap"
                        />
         </StackPanel>
