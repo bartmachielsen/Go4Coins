@@ -17,6 +17,8 @@ namespace UWPEindopdracht.Multiplayer
         public GCoordinate location { get; set; }
         public DateTime lastSynced { get; set; }
         [JsonIgnore]
+        public LastState LastState;
+        [JsonIgnore]
         public bool Self { get; set; }
         [JsonIgnore]
         public MapIcon Icon { get; set; }
@@ -29,5 +31,10 @@ namespace UWPEindopdracht.Multiplayer
             this.location = location;
         }
 
+    }
+
+    public enum LastState
+    {
+        Online, Offline, Updated
     }
 }

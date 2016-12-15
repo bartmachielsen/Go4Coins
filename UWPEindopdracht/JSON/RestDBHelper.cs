@@ -51,14 +51,17 @@ namespace UWPEindopdracht.JSON
                         if (existuser.id == user.id)
                         {
                             exists = true;
+                            existuser.LastState = LastState.Updated;
                             existuser.location = user.location;
                             existuser.Name = user.Name;
                             existuser.lastSynced = user.lastSynced;
-                            // TODO add changeble things
                         }
                     }
                     if (!exists)
+                    {
+                        user.LastState = LastState.Online;
                         users.Add(user);
+                    }
                 }
             }
             return users;

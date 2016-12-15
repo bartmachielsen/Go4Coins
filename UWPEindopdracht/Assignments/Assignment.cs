@@ -10,9 +10,7 @@ using UWPEindopdracht.Places;
 
 namespace UWPEindopdracht
 {
-    
-
-    internal abstract class Assignment
+    public abstract class Assignment
     {
         protected int MaxDistance { get; set; }
         protected int MinDistance { get; set; }

@@ -36,6 +36,7 @@ namespace UWPEindopdracht
         private MapIcon _userLocation;
         private List<User> _users = new List<User>();
         private List<Reward> _rewards;
+
         private bool _noInternetConfirmed = false;
         
         private DateTime _lastLocationSync = DateTime.Now;
@@ -88,6 +89,11 @@ namespace UWPEindopdracht
                 {
                     _user = await _db.UploadUser(_user);
                     localSettings.Values["multiplayerID"] = _user.id;
+                    _noInternetConfirmed = false;
+                }
+                catch (NoInternetException)
+                {
+                    InternetException();
                 }
                 catch (Exception e)
                 {
@@ -170,7 +176,6 @@ namespace UWPEindopdracht
                             MapControl.MapElements.Remove(user.Icon);
                             user.Icon = null;
                         }
-
                     }
                     else
                     {
@@ -183,6 +188,11 @@ namespace UWPEindopdracht
                                 Title = user.Name
                             };
                             MapControl.MapElements.Add(user.Icon);
+
+                            if (user.LastState == LastState.Online)
+                            {
+                                new MessageDialog("New user has come online!", "User has entered this world!").ShowAsync();
+                            }
                         }
                         else
                         {
@@ -253,53 +263,60 @@ namespace UWPEindopdracht
             _userLocation.Location = location;
         }
 
+        private async void SetAssignment(Geoposition loc)
+        {
+            try
+            {
+                var places = await PlaceLoader.GetPlaces(GPSHelper.GetGcoordinate(loc.Coordinate.Point));
+                await new GoogleStreetviewConnector().GetURLToSavePicture(places[0]);
+                Debug.WriteLine($"Loaded {places.Count} points!");
+                try
+                {
+                    await _assignment.FillTarget(places, GPSHelper.GetGcoordinate(loc.Coordinate.Point));
+                }
+                catch (NoTargetAvailable)
+                {
+                    await new MessageDialog("Move to another area! (move +5KM)", "Not enough targets!").ShowAsync();
+                    _assignment = null;
+                    return;
+                }
+                new AssignmentDialog(_assignment).ShowAsync();
+                ChangeDistance(GPSHelper.GetGcoordinate(loc.Coordinate.Point));
+                ChangeTime();
+
+                //start time change timer
+                var timer = new DispatcherTimer
+                {
+                    Interval = TimeSpan.FromSeconds(1)
+                };
+                timer.Tick += delegate
+                {
+                    if (_assignment != null)
+                        ChangeTime();
+                    else
+                        timer.Stop();
+                };
+                timer.Start();
+            }
+            catch (ApiLimitReached)
+            {
+                await new MessageDialog("Api Limit is reached!", "Api Exception").ShowAsync();
+            }
+            catch (InvalidApiKeyException)
+            {
+                await new MessageDialog("Api key is invalid!", "Api Exception").ShowAsync();
+            }
+            /// remove pinpoints!
+            PlacePinPoints(loc.Coordinate.Point);
+        }
+
         private async void SetLocation()
         {
             var loc = await GPSHelper.getLocationOriginal();
             if (loc != null)
             {
                 MapControl.Center = loc.Coordinate.Point;
-                try
-                {
-                    var places = await PlaceLoader.GetPlaces(GPSHelper.GetGcoordinate(loc.Coordinate.Point));
-                    await new GoogleStreetviewConnector().GetURLToSavePicture(places[0]);
-                    Debug.WriteLine($"Loaded {places.Count} points!");
-                    try
-                    {
-                        await _assignment.FillTarget(places, GPSHelper.GetGcoordinate(loc.Coordinate.Point));
-                    }
-                    catch (NoTargetAvailable)
-                    {
-                        await new MessageDialog("Move to another area! (move +5KM)", "Not enough targets!").ShowAsync();
-                        _assignment = null;
-                        return;
-                    }
-                    ChangeDistance(GPSHelper.GetGcoordinate(loc.Coordinate.Point));
-                    ChangeTime();
-
-                    //start time change timer
-                    var timer = new DispatcherTimer
-                    {
-                        Interval = TimeSpan.FromSeconds(1)
-                    };
-                    timer.Tick += delegate
-                    {
-                        if (_assignment != null)
-                            ChangeTime();
-                        else
-                            timer.Stop();
-                    };
-                    timer.Start();
-                }
-                catch (ApiLimitReached)
-                {
-                    await new MessageDialog("Api Limit is reached!", "Api Exception").ShowAsync();
-                }
-                catch (InvalidApiKeyException)
-                {
-                    await new MessageDialog("Api key is invalid!", "Api Exception").ShowAsync();
-                }
-                PlacePinPoints(MapControl.Center);
+                SetAssignment(loc);
             }
             else
             {
