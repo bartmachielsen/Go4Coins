@@ -130,10 +130,8 @@
     <None Include="UWPEindopdracht_TemporaryKey.pfx" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="..\..\..\..\Pictures\School\UWP\Loading-Top-Wallpapers.gif">
-      <Link>Assets\Loading-Top-Wallpapers.gif</Link>
-    </Content>
     <Content Include="Assets\album.png" />
+    <Content Include="Assets\Loading-Top-Wallpapers.gif" />
     <Content Include="Assets\location.png" />
     <Content Include="Assets\mp.png" />
     <Content Include="Assets\store.png" />
