@@ -22,46 +22,54 @@ namespace UWPEindopdracht.JSON
             dynamic json = JsonConvert.DeserializeObject(response);
             foreach (var jsonelement in json)
             {
-                if (((JToken) jsonelement)["data"] != null)
+                try
                 {
-                    var user = new User(
-                        (string) jsonelement._id,
-                        (string) jsonelement.data.Name,
-                        new GCoordinate((double) jsonelement.data.location.lati,
-                            (double) jsonelement.data.location.longi));
-                    DateTime time;
-                    if (DateTime.TryParse((string) jsonelement.data.lastSynced, out time))
-                        user.lastSynced = time;
-                    else
+                    if (((JToken) jsonelement)["data"] != null)
                     {
-                        try
+
+                        var user = new User(
+                            (string) jsonelement._id,
+                            (string) jsonelement.data.Name,
+                            new GCoordinate((double) jsonelement.data.location.lati,
+                                (double) jsonelement.data.location.longi));
+                        DateTime time;
+                        if (DateTime.TryParse((string) jsonelement.data.lastSynced, out time))
+                            user.lastSynced = time;
+                        else
                         {
-                            user.lastSynced = (DateTime) jsonelement.data.lastSynced;
+                            try
+                            {
+                                user.lastSynced = (DateTime) jsonelement.data.lastSynced;
+                            }
+                            catch (Exception)
+                            {
+                            }
                         }
-                        catch (Exception)
+                        if (jsonelement.data.rewards != null)
+                            user.Rewards = (List<string>) jsonelement.data.rewards;
+
+                        bool exists = false;
+                        foreach (var existuser in users)
                         {
+                            if (existuser.id == user.id)
+                            {
+                                exists = true;
+                                existuser.LastState = LastState.Updated;
+                                existuser.location = user.location;
+                                existuser.Name = user.Name;
+                                existuser.lastSynced = user.lastSynced;
+                            }
+                        }
+                        if (!exists)
+                        {
+                            user.LastState = LastState.Online;
+                            users.Add(user);
                         }
                     }
-                    if(jsonelement.data.rewards != null)
-                        user.Rewards = (List<string>)jsonelement.data.rewards;
+                }
+                catch (Exception e)
+                {
                     
-                    bool exists = false;
-                    foreach (var existuser in users)
-                    {
-                        if (existuser.id == user.id)
-                        {
-                            exists = true;
-                            existuser.LastState = LastState.Updated;
-                            existuser.location = user.location;
-                            existuser.Name = user.Name;
-                            existuser.lastSynced = user.lastSynced;
-                        }
-                    }
-                    if (!exists)
-                    {
-                        user.LastState = LastState.Online;
-                        users.Add(user);
-                    }
                 }
             }
             return users;

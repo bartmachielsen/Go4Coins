@@ -111,8 +111,15 @@ namespace UWPEindopdracht
                 catch (NoResponseException)
                 {
                     _user.id = null;
-                    _user = await _db.UploadUser(_user);
-                    localSettings.Values["multiplayerID"] = _user.id;
+                    try
+                    {
+                        _user = await _db.UploadUser(_user);
+                        localSettings.Values["multiplayerID"] = _user.id;
+                    }
+                    catch (Exception)
+                    {
+                        
+                    }
                 }
                 catch (NoInternetException)
                 {
