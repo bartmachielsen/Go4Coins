@@ -14,7 +14,7 @@ namespace UWPEindopdracht.DataConnections
     {
         private static int waitingTime = 4000;
 
-        public GooglePlacesConnector() : base("https://maps.googleapis.com")
+        public GooglePlacesConnector() : base("https://maps.googleapis.com/maps/api/place")
         {
             SourcePriority = Priority.High;
         }
@@ -29,9 +29,9 @@ namespace UWPEindopdracht.DataConnections
         {
             var uriPlaces =
                 new Uri(
-                    $"{host}/maps/api/place/nearbysearch/json?location={coordinate.lati},{coordinate.longi}&radius={diameter}&key={apiKey}");
+                    $"{host}/nearbysearch/json?location={coordinate.lati},{coordinate.longi}&radius={diameter}&key={apiKey}");
             if (pagetoken != null)
-                uriPlaces = new Uri($"{host}/maps/api/place/nearbysearch/json?pagetoken={pagetoken}&key={apiKey}");
+                uriPlaces = new Uri($"{host}/nearbysearch/json?pagetoken={pagetoken}&key={apiKey}");
             var response = await get(uriPlaces);
             switch (GooglePlacesParser.GetStatus(response))
             {
@@ -40,6 +40,10 @@ namespace UWPEindopdracht.DataConnections
                 case "INVALID_REQUEST":
                     await Task.Delay(waitingTime);
                     return await GetPlaces(diameter, coordinate, pagetoken, firstToken);
+                case "INVALID":
+                    return new List<Place>();
+              
+                    
             }
             var nextPage = GooglePlacesParser.NextPage(response);
             var list = GooglePlacesParser.GetPlaces(response);
@@ -48,6 +52,23 @@ namespace UWPEindopdracht.DataConnections
                 firstToken = nextPage;
             list.AddRange(await GetPlaces(diameter, coordinate, nextPage, firstToken));
             return list;
+        }
+
+
+        public async Task<string> GetImageURL(Place place, int maxwidth = 360, int maxheight = 0)
+        {
+            string width = "";
+            if (maxwidth != 0)
+                width = $"maxwidth={maxwidth}&";
+            else if(maxheight != 0)
+                width = $"maxheight={maxheight}&";
+            var link = $"{host}/photo?{width}photoreference={place.ImageLocation}&key={apiKey}";
+            var header = await getHeaders(new Uri(link));
+            if (header.IsSuccessStatusCode)
+            {
+                return link;
+            }
+            return null;
         }
     }
 }

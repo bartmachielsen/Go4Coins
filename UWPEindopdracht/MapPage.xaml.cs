@@ -268,7 +268,7 @@ namespace UWPEindopdracht
             try
             {
                 var places = await PlaceLoader.GetPlaces(GPSHelper.GetGcoordinate(loc.Coordinate.Point));
-                await new GoogleStreetviewConnector().GetURLToSavePicture(places[0]);
+                //await new GoogleStreetviewConnector().GetURLToSavePicture(places[0]);
                 Debug.WriteLine($"Loaded {places.Count} points!");
                 try
                 {

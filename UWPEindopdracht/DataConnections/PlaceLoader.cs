@@ -16,8 +16,8 @@ namespace UWPEindopdracht
         {
             List<Place> places = await new GooglePlacesConnector().GetPlaces(_maxDistanceToPlace,coordinate);
 
-            List<Place> wikiPlaces = await new WikipediaConnector().GetPlaces(_maxDistanceToPlace, coordinate);
-            places = AddPlaces(places, wikiPlaces);
+            //List<Place> wikiPlaces = await new WikipediaConnector().GetPlaces(_maxDistanceToPlace, coordinate);
+            //places = AddPlaces(places, wikiPlaces);
             return places;
         }
 

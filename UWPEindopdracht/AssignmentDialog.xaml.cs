@@ -11,7 +11,9 @@ using Windows.UI.Xaml.Controls.Primitives;
 using Windows.UI.Xaml.Data;
 using Windows.UI.Xaml.Input;
 using Windows.UI.Xaml.Media;
+using Windows.UI.Xaml.Media.Imaging;
 using Windows.UI.Xaml.Navigation;
+using UWPEindopdracht.DataConnections;
 
 // The Content Dialog item template is documented at http://go.microsoft.com/fwlink/?LinkId=234238
 
@@ -24,8 +26,29 @@ namespace UWPEindopdracht
         {
             this.InitializeComponent();
             this._assignment = assignment;
+            IsPrimaryButtonEnabled = false;
+            IsSecondaryButtonEnabled = false;
+            LoadImage();
+            IsPrimaryButtonEnabled = true;
+            IsSecondaryButtonEnabled = true;
         }
 
+        private async void LoadImage()
+        {
+            if (_assignment.Target[0].ImageLocation != null)
+            {
+                string url = await new GooglePlacesConnector().GetImageURL(_assignment.Target[0]);
+                if (url != null)
+                    AssignmentImage.Source = new BitmapImage(new Uri(url));
+            }
+            else
+            {
+                var urls = await new GoogleStreetviewConnector().GetURLToSavePicture(_assignment.Target[0]);
+                if (urls.Count > 0)
+                    AssignmentImage.Source = new BitmapImage(new Uri(urls.ElementAt(0)));
+            }
+        }
+       
         private void ContentDialog_PrimaryButtonClick(ContentDialog sender, ContentDialogButtonClickEventArgs args)
         {
         }

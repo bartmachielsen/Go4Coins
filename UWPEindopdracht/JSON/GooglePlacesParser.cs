@@ -1,4 +1,6 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
+using System.Runtime.CompilerServices;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using UWPEindopdracht.GPSConnections;
@@ -10,11 +12,18 @@ namespace UWPEindopdracht.JSON
     {
         public static string GetStatus(string response)
         {
-            dynamic json = JsonConvert.DeserializeObject(response);
-            string token = json.status;
-            if (token == "" || token == " ")
-                return null;
-            return token;
+            try
+            {
+                dynamic json = JsonConvert.DeserializeObject(response);
+                string token = json.status;
+                if (token == "" || token == " ")
+                    return null;
+                return token;
+            }
+            catch (Exception)
+            {
+                return "INVALID";
+            }
         }
         public static string NextPage(string response)
         {
@@ -50,8 +59,7 @@ namespace UWPEindopdracht.JSON
                                                 (double)jsonplace.geometry.location.lng),
                     Name = (string)jsonplace.name,
                     Types = typeList.ToArray(),
-                    IconLink = jsonplace.icon,
-                    ImageLocation = jsonplace.reference
+                    IconLink = jsonplace.icon
                 };
                 if (jsonplace.geometry.viewport != null)
                 {
@@ -62,6 +70,14 @@ namespace UWPEindopdracht.JSON
                     {
                         place.Viewports[index] = new GCoordinate((double)((dynamic)viewport.Value).lat, (double)((dynamic)viewport.Value).lng);
                         index++;
+                    }
+                }
+
+                if (jsonplace.photos != null)
+                {
+                    if (jsonplace.photos is JArray)
+                    {
+                        place.ImageLocation = (string) (((dynamic) ((JArray)jsonplace.photos)[0]).photo_reference);
                     }
                 }
                 placesToSend.Add(place);
