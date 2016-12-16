@@ -14,21 +14,22 @@ namespace UWPEindopdracht.Multiplayer
         [JsonIgnore]
         public string id { get; set; }
         public string Name { get; set; }
-        public GCoordinate location { get; set; }
-        public DateTime lastSynced { get; set; }
+        public GCoordinate Location { get; set; }
+        public DateTime LastSynced { get; set; }
         [JsonIgnore]
         public LastState LastState;
-        [JsonIgnore]
-        public bool Self { get; set; }
+        
         [JsonIgnore]
         public MapIcon Icon { get; set; }
+
+        public int Coins { get; set; } = 0;
 
         public List<string> Rewards { get; set; }
         public User(string id, string name, GCoordinate location)
         {
             this.id = id;
             Name = name;
-            this.location = location;
+            this.Location = location;
         }
 
     }

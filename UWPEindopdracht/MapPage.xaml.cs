@@ -31,10 +31,14 @@ namespace UWPEindopdracht
 
 
         private Assignment _assignment;
-        private User _user = new User(null, "TestUser", new GCoordinate(0, 0));
+
+        private User _user;
+
         private readonly RestDBConnector _db = new RestDBConnector();
         private MapIcon _userLocation;
+
         private List<User> _users = new List<User>();
+
         private List<Reward> _rewards;
 
         private bool _noInternetConfirmed = false;
@@ -73,16 +77,15 @@ namespace UWPEindopdracht
                 InternetException();
             }
         }
-
+       
         private async void LoadMultiplayerDetails()
         {
            
             var localSettings =
                 ApplicationData.Current.LocalSettings;
-            if (_user == null || _db == null)
-            {
+            if (_db == null)
                 return;
-            }
+            
             if (!localSettings.Values.ContainsKey("multiplayerID"))
             {
                 try
@@ -99,34 +102,28 @@ namespace UWPEindopdracht
                 {
                     System.Diagnostics.Debug.WriteLine(e);
                 }
-            }
-            else
+            }else
             {
-                _user.id = (string) localSettings.Values["multiplayerID"];
                 try
                 {
-                    await _db.UpdateUser(_user);
+                    _user = await _db.GetUser((string) localSettings.Values["multiplayerID"]);
                     _noInternetConfirmed = false;
+                    if (_user == null)
+                    {
+                        _user = await _db.UploadUser(null);
+                        localSettings.Values["multiplayerID"] = _user.id;
+                    }
                 }
                 catch (NoResponseException)
                 {
-                    _user.id = null;
-                    try
-                    {
-                        _user = await _db.UploadUser(_user);
-                        localSettings.Values["multiplayerID"] = _user.id;
-                    }
-                    catch (Exception)
-                    {
-                        
-                    }
+                    
                 }
                 catch (NoInternetException)
                 {
                     InternetException();
                 }
             }
-            _user.Self = true;
+            
             _users.Add(_user);
 
             await LoadRewards();
@@ -176,8 +173,8 @@ namespace UWPEindopdracht
             foreach (var user in _users)
                 if (user.id != _user.id)
                 {
-                    var geopoint = GPSHelper.getPointOutLocation(user.location);
-                    if ((DateTime.Now - user.lastSynced) >= TimeSpan.FromSeconds(_serverTimeOut*5))
+                    var geopoint = GPSHelper.getPointOutLocation(user.Location);
+                    if ((DateTime.Now - user.LastSynced) >= TimeSpan.FromSeconds(_serverTimeOut*5))
                     {
                         if (user.Icon != null)
                         {
@@ -187,7 +184,7 @@ namespace UWPEindopdracht
                     }
                     else
                     {
-                        System.Diagnostics.Debug.WriteLine($"{user.id} is loaded! {DateTime.Now-user.lastSynced}");
+                        System.Diagnostics.Debug.WriteLine($"{user.id} is loaded! {DateTime.Now-user.LastSynced}");
                         if (user.Icon == null)
                         {
                             user.Icon = new MapIcon
@@ -212,8 +209,9 @@ namespace UWPEindopdracht
 
         private async void UpdateMultiplayerServer(GCoordinate coordinate)
         {
+            if (_user == null) return;
             _lastLocationSync = DateTime.Now;
-            _user.location = coordinate;
+            _user.Location = coordinate;
             try
             {
                 await _db.UpdateUser(_user);
@@ -231,7 +229,6 @@ namespace UWPEindopdracht
             {
                 InternetException();
             }
-
         }
 
         private void PlacePinPoints(Geopoint location)

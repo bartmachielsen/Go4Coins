@@ -26,38 +26,17 @@ namespace UWPEindopdracht.JSON
                 {
                     if (((JToken) jsonelement)["data"] != null)
                     {
-
-                        var user = new User(
-                            (string) jsonelement._id,
-                            (string) jsonelement.data.Name,
-                            new GCoordinate((double) jsonelement.data.location.lati,
-                                (double) jsonelement.data.location.longi));
-                        DateTime time;
-                        if (DateTime.TryParse((string) jsonelement.data.lastSynced, out time))
-                            user.lastSynced = time;
-                        else
-                        {
-                            try
-                            {
-                                user.lastSynced = (DateTime) jsonelement.data.lastSynced;
-                            }
-                            catch (Exception)
-                            {
-                            }
-                        }
-                        if (jsonelement.data.rewards != null)
-                            user.Rewards = (List<string>) jsonelement.data.rewards;
-
-                        bool exists = false;
+                        var user = getUsername(JsonConvert.SerializeObject(jsonelement));
+                        var exists = false;
                         foreach (var existuser in users)
                         {
                             if (existuser.id == user.id)
                             {
                                 exists = true;
                                 existuser.LastState = LastState.Updated;
-                                existuser.location = user.location;
+                                existuser.Location = user.Location;
                                 existuser.Name = user.Name;
-                                existuser.lastSynced = user.lastSynced;
+                                existuser.LastSynced = user.LastSynced;
                             }
                         }
                         if (!exists)
@@ -123,6 +102,14 @@ namespace UWPEindopdracht.JSON
                     (RewardValue)jsonelement.Value));
             }
             return rewards;
+        }
+
+        public static User getUsername(string response)
+        {
+            dynamic data = JsonConvert.DeserializeObject(response);
+            User user = JsonConvert.DeserializeObject<User>(JsonConvert.SerializeObject(data.data));
+            user.id = (string) data._id;
+            return user;
         }
     }
 
