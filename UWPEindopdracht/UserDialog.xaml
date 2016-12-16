@@ -7,13 +7,14 @@
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     mc:Ignorable="d"
     Title="NEW USER HAS JOINED!"
-    PrimaryButtonText="Button1"
-    SecondaryButtonText="Button2"
+    PrimaryButtonText="Ignore"
+    SecondaryButtonText="Dual User!"
     PrimaryButtonClick="ContentDialog_PrimaryButtonClick"
     SecondaryButtonClick="ContentDialog_SecondaryButtonClick">
 
     <Grid>
         <Grid.RowDefinitions>
+            <RowDefinition Height="*" />
             <RowDefinition Height="*" />
             <RowDefinition Height="*" />
         </Grid.RowDefinitions>
@@ -35,5 +36,12 @@
             Grid.Row="1"
             Grid.Column="1"
             Name="PointBlock" Text="[POINTS]" />
+        <TextBlock 
+            Grid.Row="2"
+            Text="Rewards:"/>
+        <TextBlock 
+            Grid.Row="2"
+            Grid.Column="1"
+            Name="RewardsBlock" Text="[REWARDS]" />
     </Grid>
 </ContentDialog>

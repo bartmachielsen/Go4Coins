@@ -54,6 +54,7 @@ namespace UWPEindopdracht
             LoadMultiplayerDetails();
 
             InitializeComponent();
+            MapControl.MapDoubleTapped += MapControl_MapDoubleTapped;
             var locator = new Geolocator {DesiredAccuracyInMeters = 10};
 
             locator.PositionChanged += Locator_PositionChanged;
@@ -201,18 +202,11 @@ namespace UWPEindopdracht
                                 Title = user.Name
                             };
                             MapControl.MapElements.Add(user.Icon);
-
+                            
                             if (user.LastState == LastState.Online)
                             {
                             
-                                var dialog = new UserDialog(user);
-                                while (_dialogClaimed) { }
-                                if (!_dialogClaimed)
-                                {
-                                    _dialogClaimed = true;
-                                    await dialog.ShowAsync();
-                                    _dialogClaimed = false;
-                                }
+                                ShowUserDetails(user);
                             }
                         }
                         else
@@ -221,6 +215,29 @@ namespace UWPEindopdracht
                         }
                     }
                 }
+        }
+
+        private async void ShowUserDetails(User user)
+        {
+            var dialog = new UserDialog(user);
+            while (_dialogClaimed) { }
+            if (!_dialogClaimed)
+            {
+                _dialogClaimed = true;
+                await dialog.ShowAsync();
+                _dialogClaimed = false;
+            }
+        }
+
+        private void MapControl_MapDoubleTapped(MapControl sender, MapInputEventArgs args)
+        {
+            foreach (var user in _users)
+            {
+                if (GPSHelper.getPointOutLocation(user.Location).Equals(args.Location))
+                {
+                 ShowUserDetails(user);   
+                }
+            }
         }
 
         private async void UpdateMultiplayerServer(GCoordinate coordinate)
