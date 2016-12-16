@@ -4,5 +4,22 @@
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:local="using:UWPEindopdracht"
     RequestedTheme="Light">
-
+    <Application.Resources>
+        <Style x:Key="HeaderTextStyle" TargetType="TextBlock">
+            <Setter Property="FontSize" Value="22"/>
+            <Setter Property="Foreground" Value="Blue"/>
+            <Setter Property="VerticalAlignment" Value="Center"/>
+            <Setter Property="HorizontalAlignment" Value="Center"/>
+        </Style>
+        <Style x:Key="FooterButtonStyle" TargetType="Button">
+            <Setter Property="Content" Value="BACK TO MAP"/>
+            <Setter Property="Foreground" Value="Blue"/>
+            <Setter Property="Background" Value="White"/>
+            <Setter Property="FontSize" Value="18"/>
+            <Setter Property="BorderBrush" Value="Blue"/>
+            <Setter Property="BorderThickness" Value="2"/>
+            <Setter Property="HorizontalAlignment" Value="Center"/>
+            <Setter Property="VerticalAlignment" Value="Bottom"/>
+        </Style>
+    </Application.Resources>
 </Application>

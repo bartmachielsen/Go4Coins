@@ -35,12 +35,13 @@ namespace UWPEindopdracht
             PointBlock.Text = _user.Coins + " Coins!";
             //RewardsBlock.Text = _user.Rewards.Count + " Rewards earned!";
         }
-        private void ContentDialog_PrimaryButtonClick(ContentDialog sender, ContentDialogButtonClickEventArgs args)
+
+        private void IgnoreButton_Click(object sender, RoutedEventArgs e)
         {
             Dueled = false;
         }
 
-        private void ContentDialog_SecondaryButtonClick(ContentDialog sender, ContentDialogButtonClickEventArgs args)
+        private void ChallengeButton_Click(object sender, RoutedEventArgs e)
         {
             Dueled = true;
         }

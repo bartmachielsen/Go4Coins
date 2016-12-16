@@ -13,6 +13,7 @@ using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Controls.Maps;
 using Windows.UI.Xaml.Media;
+using Windows.UI.Xaml.Media.Imaging;
 using UWPEindopdracht.DataConnections;
 using UWPEindopdracht.GPSConnections;
 using UWPEindopdracht.JSON;
@@ -47,7 +48,6 @@ namespace UWPEindopdracht
         private bool _noInternetConfirmed = false;
         
         private DateTime _lastLocationSync = DateTime.Now;
-        private readonly DispatcherTimer _onTargetNotificationTimer = new DispatcherTimer();
 
         public MapPage()
         {
@@ -320,11 +320,11 @@ namespace UWPEindopdracht
                         OnTargetButton.IsEnabled = true;
                         MapControl.PanInteractionMode = MapPanInteractionMode.Auto;
                         MapControl.ZoomInteractionMode = MapInteractionMode.Auto;
+                        MapControl.RotateInteractionMode = MapInteractionMode.Auto;
+                        MapControl.TiltInteractionMode = MapInteractionMode.Auto;
                     }
                 }
             }
-            
-
             _userLocation.Location = location;
         }
 
@@ -480,11 +480,6 @@ namespace UWPEindopdracht
         {
             var s = new ShopDialog();
             await s.ShowAsync();
-        }
-
-        private void MapControl_OnZoomLevelChanged(MapControl sender, object args)
-        {
-            MapControl.ZoomLevel = 50;
         }
     }
 }

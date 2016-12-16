@@ -36,16 +36,19 @@
             MapServiceToken="{StaticResource ServiceToken}"
             PanInteractionMode="Disabled"
             ZoomInteractionMode="Disabled"
+            RotateInteractionMode="Disabled"
+            TiltInteractionMode="Disabled"
             >    
             <Grid>
                 <Grid.Resources>
                     <Storyboard x:Name="OnTargetErrorAnimation">
-                        <DoubleAnimation Storyboard.TargetName="OnTargetText"
-                                         Storyboard.TargetProperty="Opacity"
-                                         From="1.0"
-                                         To="0.0"
-                                         Duration="0:0:5"
-                                         />
+                        <DoubleAnimation 
+                            Storyboard.TargetName="OnTargetText"
+                            Storyboard.TargetProperty="Opacity"
+                            From="1.0"
+                            To="0.0"
+                            Duration="0:0:5"
+                            />
                     </Storyboard>
                 </Grid.Resources>
 
