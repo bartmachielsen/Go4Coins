@@ -29,7 +29,7 @@ namespace UWPEindopdracht
     public sealed partial class MapPage : Page
     {
         private static bool _follow = false;
-        private static int _serverTimeOut = 3;
+        private static int _serverTimeOut = 4;
 
         private bool _dialogClaimed = false;
         private PlaceLoader _placeLoader = new PlaceLoader();
@@ -150,7 +150,7 @@ namespace UWPEindopdracht
             {
                 await Task.Delay(_serverTimeOut*1000);
                 await UpdateUserDetails();
-                CheckIfLocationUpdate(null);
+                await CheckIfLocationUpdate(null);
             }
         }
 
@@ -419,21 +419,18 @@ namespace UWPEindopdracht
             }
         }
 
-        private async void CheckIfLocationUpdate(Geopoint point)
+        private async Task CheckIfLocationUpdate(Geopoint point)
         {
-            if (DateTime.Now - _lastLocationSync > TimeSpan.FromSeconds(_serverTimeOut))
-            {
-                if (point == null)
-                    point = (await GPSHelper.getLocationOriginal()).Coordinate.Point;
-                UpdateMultiplayerServer(GPSHelper.GetGcoordinate(point));
-            }
-
+            if (DateTime.Now - _lastLocationSync <= TimeSpan.FromSeconds(_serverTimeOut)) return;
+            if (point == null)
+                point = (await GPSHelper.getLocationOriginal()).Coordinate.Point;
+            UpdateMultiplayerServer(GPSHelper.GetGcoordinate(point));
         }
 
         private async void Locator_PositionChanged(Geolocator sender, PositionChangedEventArgs args)
         {
-            CheckIfLocationUpdate(args.Position.Coordinate.Point);
-                
+            //CheckIfLocationUpdate(args.Position.Coordinate.Point);
+              // TODO NEEDED ?  
             await Dispatcher.RunAsync(CoreDispatcherPriority.Normal, () =>
             {
                 var location = args.Position.Coordinate.Point;

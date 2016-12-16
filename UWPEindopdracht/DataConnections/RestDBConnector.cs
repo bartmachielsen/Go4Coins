@@ -75,16 +75,12 @@ namespace UWPEindopdracht.DataConnections
         {
             user.LastSynced = DateTime.Now;
             Uri uri = new Uri($"{Host}/multiplayer/{user.id}?apikey={ApiKey}");
-            while (true)
-            {
                 var header =
                     await
                         Put(uri,
                             new HttpStringContent(RestDBHelper.ConvertUsername(user), UnicodeEncoding.Utf8,
                                 "application/json"));
-                System.Diagnostics.Debug.WriteLine($"UPDATING USER {user}");
-                if (header.IsSuccessStatusCode)
-                    return;
+                System.Diagnostics.Debug.WriteLine($"UPDATING USER {user} {header.IsSuccessStatusCode}");
             }
         }
 
