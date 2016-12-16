@@ -9,7 +9,73 @@
     mc:Ignorable="d"
     Background="White">
 
+    <ContentDialog.Resources>
+        <Style x:Key="BuyNotificationStyle" TargetType="TextBlock">
+            <Setter Property="Text" Value="Bought x1"/>
+            <Setter Property="FontSize" Value="13"/>
+            <Setter Property="Foreground" Value="Red"/>
+            <Setter Property="VerticalAlignment" Value="Bottom"/>
+            <Setter Property="HorizontalAlignment" Value="Right"/>
+            <Setter Property="Margin" Value="0,0,5,40"/>
+            <Setter Property="Opacity" Value="0"></Setter>
+        </Style>
+        <Style x:Key="InfoTextStyle" TargetType="TextBlock">
+            <Setter Property="FontSize" Value="16"/>
+            <Setter Property="Foreground" Value="Blue"/>
+            <Setter Property="VerticalAlignment" Value="Center"/>
+        </Style>
+        <Style x:Key="InfoStackStyle" TargetType="StackPanel">
+            <Setter Property="Orientation" Value="Horizontal"/>
+            <Setter Property="HorizontalAlignment" Value="Center"/>
+            <Setter Property="VerticalAlignment" Value="Bottom"/>
+        </Style>
+        <Style x:Key="BuyButtonStyle" TargetType="Button">
+            <Setter Property="Background" Value="White"/>
+            <Setter Property="Foreground" Value="Blue"/>
+            <Setter Property="BorderBrush" Value="Blue"/>
+            <Setter Property="BorderThickness" Value="1"/>
+            <Setter Property="Margin" Value="10,0"/>
+        </Style>
+        <Style x:Key="CoinStyle" TargetType="Image">
+            <Setter Property="Source" Value="Assets/coin.png"/>
+            <Setter Property="Height" Value="20"/>
+            <Setter Property="Width" Value="20"/>
+            <Setter Property="Margin" Value="3,0"/>
+        </Style>
+    </ContentDialog.Resources>
+    
     <Grid>
+
+        <Grid.Resources>
+            <Storyboard x:Name="FadeAnimationNormal">
+                <DoubleAnimation 
+                    Storyboard.TargetName="NormalChestBuyNotification"
+                    Storyboard.TargetProperty="Opacity"
+                    From="1.0"
+                    To="0.0"
+                    Duration="0:0:3"
+                    />
+            </Storyboard>
+            <Storyboard x:Name="FadeAnimationRare">
+                <DoubleAnimation 
+                    Storyboard.TargetName="RareChestBuyNotification"
+                    Storyboard.TargetProperty="Opacity"
+                    From="1.0"
+                    To="0.0"
+                    Duration="0:0:3"
+                    />
+            </Storyboard>
+            <Storyboard x:Name="FadeAnimationLarge">
+                <DoubleAnimation 
+                    Storyboard.TargetName="LargeChestBuyNotification"
+                    Storyboard.TargetProperty="Opacity"
+                    From="1.0"
+                    To="0.0"
+                    Duration="0:0:3"
+                    />
+            </Storyboard>
+        </Grid.Resources>
+        
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="*"/>
         </Grid.ColumnDefinitions>
@@ -22,9 +88,7 @@
 
         <TextBlock 
             Text="SHOP"
-            Foreground="Blue"
-            FontSize="21"
-            HorizontalAlignment="Center"
+            Style="{StaticResource HeaderTextStyle}"
             />
         <StackPanel 
             Grid.Row="0"
@@ -33,14 +97,12 @@
             VerticalAlignment="Center"
             >
             <TextBlock
-                Text="2000000"
+                x:Name="PointsText"
+                Text="50000"
                 Foreground="Blue"
                 FontSize="14"/>
             <Image 
-                Source="Assets/coin.png"
-                Height="20"
-                Width="20"
-                Margin="3,0"
+                Style="{StaticResource CoinStyle}"
                 />
         </StackPanel>
 
@@ -57,121 +119,94 @@
             
             <Image 
                 Source="Assets/chest.png" 
-                x:Name="NormalChest" 
                 Height="140"
                 VerticalAlignment="Top"
                 />
+            <TextBlock
+                x:Name="NormalChestBuyNotification"
+                Grid.Row="0"
+                Style="{StaticResource BuyNotificationStyle}"
+                />
             <StackPanel 
                 Grid.Row="0"
-                Orientation="Horizontal"
-                HorizontalAlignment="Center"
-                VerticalAlignment="Bottom"
+                Style="{StaticResource InfoStackStyle}"
                 >
                 <TextBlock 
                     Text="Normal chest                 2000"
-                    TextWrapping="Wrap"
-                    Foreground="Blue"
-                    FontSize="16"
-                    VerticalAlignment="Center"
+                    Style="{StaticResource InfoTextStyle}"
                     />
                 <Image 
-                    Source="Assets/coin.png"
-                    Height="20"
-                    Width="20"
-                    Margin="3,0"
+                    Style="{StaticResource CoinStyle}"
                     />
                 <Button
                     Content="BUY"
-                    BorderThickness="1"
-                    BorderBrush="Blue"
-                    Background="White"
-                    Foreground="Blue"
-                    Margin="10,0"
+                    Style="{StaticResource BuyButtonStyle}"
+                    Click="BuyNormalButton_Click"
                     />
             </StackPanel>
             <Image 
                 Grid.Row="1"
                 Source="Assets/chest2.png" 
-                x:Name="RareChest" 
                 Height="140"
                 VerticalAlignment="Top"
                 />
+            <TextBlock
+                x:Name="RareChestBuyNotification"
+                Grid.Row="1"
+                Style="{StaticResource BuyNotificationStyle}"
+                />
             <StackPanel 
                 Grid.Row="1"
-                Orientation="Horizontal"
-                HorizontalAlignment="Center"
-                VerticalAlignment="Bottom"
+                Style="{StaticResource InfoStackStyle}"
                 >
                 <TextBlock 
                     Text="Rare chest                      3000"
-                    TextWrapping="Wrap"
-                    Foreground="Blue"
-                    FontSize="16"
-                    VerticalAlignment="Center"
+                    Style="{StaticResource InfoTextStyle}"
                     />
                 <Image 
-                    Source="Assets/coin.png"
-                    Height="20"
-                    Width="20"
-                    Margin="3,0"
+                    Style="{StaticResource CoinStyle}"
                     />
                 <Button
                     Content="BUY"
-                    BorderThickness="1"
-                    BorderBrush="Blue"
-                    Background="White"
-                    Foreground="Blue"
-                    Margin="10,0"
+                    Style="{StaticResource BuyButtonStyle}"
+                    Click="BuyRareButton_Click"
                     />
             </StackPanel>
             <Image 
                 Grid.Row="2"
-                Source="Assets/chest.png" 
-                x:Name="LargeChest" 
+                Source="Assets/chest.png"
                 Height="170"
                 VerticalAlignment="Top"
                 />
+            <TextBlock
+                x:Name="LargeChestBuyNotification"
+                Grid.Row="2"
+                Style="{StaticResource BuyNotificationStyle}"
+                />
             <StackPanel 
                 Grid.Row="2"
-                Orientation="Horizontal"
-                HorizontalAlignment="Center"
-                VerticalAlignment="Bottom"
+                Style="{StaticResource InfoStackStyle}"
                 >
                 <TextBlock 
                     Text="Large chest                    4000"
-                    TextWrapping="Wrap"
-                    Foreground="Blue"
-                    FontSize="16"
-                    VerticalAlignment="Center"
+                    Style="{StaticResource InfoTextStyle}"
                     />
                 <Image 
-                    Source="Assets/coin.png"
-                    Height="20"
-                    Width="20"
-                    Margin="3,0"
+                    Style="{StaticResource CoinStyle}"
                     />
                 <Button
                     Content="BUY"
-                    BorderThickness="1"
-                    BorderBrush="Blue"
-                    Background="White"
-                    Foreground="Blue"
-                    Margin="10,0"
+                    Style="{StaticResource BuyButtonStyle}"
+                    Click="BuyLargeButton_Click"
                     />
             </StackPanel>
         </Grid>
 
         <Button 
             Grid.Row="2"
-            Content="BACK TO MAP"
-            FontSize="18"
-            BorderBrush="Blue"
-            BorderThickness="2"
-            HorizontalAlignment="Center"
-            VerticalAlignment="Bottom"
-            Background="White"
-            Foreground="Blue"
+            Style="{StaticResource FooterButtonStyle}"
             Click="BackButton_Click"
             />
     </Grid>
 </ContentDialog>
+ 

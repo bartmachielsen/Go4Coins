@@ -146,6 +146,7 @@
     <Content Include="Assets\coin.png" />
     <Content Include="Assets\Loading-Top-Wallpapers.gif" />
     <Content Include="Assets\location.png" />
+    <Content Include="Assets\locationHover.png" />
     <Content Include="Assets\mp.png" />
     <Content Include="Assets\store.png" />
     <Content Include="Properties\Default.rd.xml" />

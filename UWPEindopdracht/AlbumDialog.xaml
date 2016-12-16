@@ -26,9 +26,7 @@
 
         <TextBlock 
                 Text="ALBUM"
-                Foreground="Blue"
-                FontSize="21"
-                HorizontalAlignment="Center"
+                Style="{StaticResource HeaderTextStyle}"
                 />
         <GridView 
                 Grid.Row="1"
@@ -36,13 +34,7 @@
         </GridView>
         <Button 
                 Grid.Row="2"
-                Content="BACK TO MAP"
-                FontSize="18"
-                BorderBrush="Blue"
-                BorderThickness="2"
-                HorizontalAlignment="Center"
-                Background="White"
-                Foreground="Blue"
+                Style="{StaticResource FooterButtonStyle}"
                 Click="BackButton_Click"
                 />
     </Grid>

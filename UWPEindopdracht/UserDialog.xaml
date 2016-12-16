@@ -6,42 +6,96 @@
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     mc:Ignorable="d"
-    Title="NEW USER HAS JOINED!"
-    PrimaryButtonText="Ignore"
-    SecondaryButtonText="Dual User!"
-    PrimaryButtonClick="ContentDialog_PrimaryButtonClick"
-    SecondaryButtonClick="ContentDialog_SecondaryButtonClick">
+    Margin="0,170,0,0">
 
-    <Grid Name="AllGrid">
-        <Grid.RowDefinitions>
-            <RowDefinition Height="*" />
-            <RowDefinition Height="*" />
-            <RowDefinition Height="*" />
-        </Grid.RowDefinitions>
+    <Grid
+        Margin="0,20,0,0">
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="*"/>
-            <ColumnDefinition Width="*"/>
         </Grid.ColumnDefinitions>
-        <TextBlock 
-            Grid.Row="0"
-            Text="Username:"/>
-        <TextBlock 
-            Grid.Row="0"
-            Grid.Column="1"
-            Name="NameBlock" Text="[USERNAME]" />
-        <TextBlock 
+        <Grid.RowDefinitions>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="150"/>
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
+        <TextBlock
+            Text="NEW USER JOINED"
+            Style="{StaticResource HeaderTextStyle}"></TextBlock>
+        <Grid
             Grid.Row="1"
-            Text="Points:"/>
-        <TextBlock 
-            Grid.Row="1"
-            Grid.Column="1"
-            Name="PointBlock" Text="[POINTS]" />
-        <TextBlock 
+            >
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="*"/>
+            </Grid.ColumnDefinitions>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="3*"/>
+                <RowDefinition Height="2*" />
+                <RowDefinition Height="2*" />
+                <RowDefinition Height="2*" />
+                <RowDefinition Height="3*"/>
+            </Grid.RowDefinitions>
+        
+            <TextBlock 
+                Grid.Row="1"
+                HorizontalAlignment="Center"
+                Foreground="Blue"
+                Text="Username:"
+                />
+            <TextBlock 
+                Grid.Row="1"
+                Grid.Column="1"
+                HorizontalAlignment="Center"
+                Foreground="Blue"
+                Name="NameBlock" Text="[USERNAME]" 
+                />
+            <TextBlock 
+                Grid.Row="2"
+                Grid.Column="0"
+                HorizontalAlignment="Center"
+                Foreground="Blue"
+                Text="Points:"
+                />
+            <TextBlock 
+                Grid.Row="2"
+                Grid.Column="1"
+                HorizontalAlignment="Center"
+                Foreground="Blue"
+                Name="PointBlock" Text="[POINTS]" 
+                />
+            <TextBlock 
+                Grid.Row="3"
+                Grid.Column="0"
+                HorizontalAlignment="Center"
+                Foreground="Blue"
+                Text="Rewards:"
+                />
+            <TextBlock 
+                Grid.Row="3"
+                Grid.Column="1"
+                HorizontalAlignment="Center"
+                Foreground="Blue"
+                Name="RewardsBlock" Text="[REWARDS]" 
+                />
+        </Grid>
+        <Grid
             Grid.Row="2"
-            Text="Rewards:"/>
-        <TextBlock 
-            Grid.Row="2"
-            Grid.Column="1"
-            Name="RewardsBlock" Text="[REWARDS]" />
+            >
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="*"/>
+            </Grid.ColumnDefinitions>
+            <Button
+                Content="IGNORE"
+                Style="{StaticResource FooterButtonStyle}"
+                Click="IgnoreButton_Click"
+            />
+            <Button
+                Grid.Column="1"
+                Content="CHALLENGE"
+                Style="{StaticResource FooterButtonStyle}"
+                Click="ChallengeButton_Click"
+            />
+        </Grid>
     </Grid>
 </ContentDialog>
