@@ -29,7 +29,7 @@ namespace UWPEindopdracht
     public sealed partial class MapPage : Page
     {
         private static bool _follow = false;
-        private static int _serverTimeOut = 3;
+        private static int _serverTimeOut = 4;
 
         private bool _dialogClaimed = false;
         private PlaceLoader _placeLoader = new PlaceLoader();
@@ -57,7 +57,7 @@ namespace UWPEindopdracht
             InitializeComponent();
             
             MapControl.MapElementClick += MapControl_MapElementClick;
-            var locator = new Geolocator {DesiredAccuracyInMeters = 10};
+            var locator = new Geolocator {DesiredAccuracyInMeters = 10, ReportInterval = (uint)(_serverTimeOut)};
 
             locator.PositionChanged += Locator_PositionChanged;
 
@@ -233,16 +233,7 @@ namespace UWPEindopdracht
             }
         }
 
-        private void MapControl_MapDoubleTapped(MapControl sender, MapInputEventArgs args)
-        {
-            foreach (var user in _users)
-            {
-                if (GPSHelper.getPointOutLocation(user.Location) == args.Location)
-                {
-                    ShowUserDetails(user);   
-                }
-            }
-        }
+       
         private void MapControl_MapElementClick(MapControl sender, MapElementClickEventArgs args)
         {
             foreach (var user in _users)
@@ -393,8 +384,6 @@ namespace UWPEindopdracht
             else
             {
                 await new MessageDialog("No GPS connection!", "Can't get your location").ShowAsync();
-                //SetLocation();
-                // TODO EXIT APPLICATION BECAUSE NO GPS SIGNAL OR TRY AGAIN A FEW TIMES
             }
         }
 
@@ -421,11 +410,16 @@ namespace UWPEindopdracht
 
         private async void CheckIfLocationUpdate(Geopoint point)
         {
-            if (DateTime.Now - _lastLocationSync > TimeSpan.FromSeconds(_serverTimeOut))
+            if (DateTime.Now - _lastLocationSync >= TimeSpan.FromSeconds(_serverTimeOut))
             {
+                System.Diagnostics.Debug.WriteLine(((DateTime.Now - _lastLocationSync).TotalSeconds + " is good"));
                 if (point == null)
                     point = (await GPSHelper.getLocationOriginal()).Coordinate.Point;
                 UpdateMultiplayerServer(GPSHelper.GetGcoordinate(point));
+            }
+            else
+            {
+                System.Diagnostics.Debug.WriteLine(((DateTime.Now - _lastLocationSync).TotalSeconds + " is to small"));
             }
 
         }
