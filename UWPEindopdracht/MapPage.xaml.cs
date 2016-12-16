@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.Linq;
 using System.Threading.Tasks;
 using Windows.Devices.Geolocation;
 using Windows.Devices.Geolocation.Geofencing;
@@ -54,16 +55,19 @@ namespace UWPEindopdracht
             LoadMultiplayerDetails();
 
             InitializeComponent();
-            MapControl.MapDoubleTapped += MapControl_MapDoubleTapped;
+            
+            MapControl.MapElementClick += MapControl_MapElementClick;
             var locator = new Geolocator {DesiredAccuracyInMeters = 10};
 
             locator.PositionChanged += Locator_PositionChanged;
+
 
             SetLocation();
             MapControl.ZoomInteractionMode = MapInteractionMode.GestureAndControl;
             MapControl.ZoomLevel = 13;
         }
 
+        
         private string DistanceText { get; set; } = "0 km";
         private string TimeText { get; set; } = "00:00";
 
@@ -233,10 +237,20 @@ namespace UWPEindopdracht
         {
             foreach (var user in _users)
             {
-                if (GPSHelper.getPointOutLocation(user.Location).Equals(args.Location))
+                if (GPSHelper.getPointOutLocation(user.Location) == args.Location)
                 {
-                 ShowUserDetails(user);   
+                    ShowUserDetails(user);   
                 }
+            }
+        }
+        private void MapControl_MapElementClick(MapControl sender, MapElementClickEventArgs args)
+        {
+            foreach (var user in _users)
+            {
+                if (user.Icon == null) continue;
+                if (args.MapElements.All(element => element != user.Icon)) continue;
+                ShowUserDetails(user);
+                return;
             }
         }
 

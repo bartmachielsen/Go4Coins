@@ -33,7 +33,7 @@ namespace UWPEindopdracht
         {
             NameBlock.Text = _user.Name;
             PointBlock.Text = _user.Coins + " Coins!";
-            RewardsBlock.Text = _user.Rewards.Count + " Rewards earned!";
+            //RewardsBlock.Text = _user.Rewards.Count + " Rewards earned!";
         }
         private void ContentDialog_PrimaryButtonClick(ContentDialog sender, ContentDialogButtonClickEventArgs args)
         {
