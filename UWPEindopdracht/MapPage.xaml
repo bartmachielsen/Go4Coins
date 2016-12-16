@@ -6,6 +6,7 @@
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:Maps="using:Windows.UI.Xaml.Controls.Maps"
     xmlns:places="using:UWPEindopdracht.Places"
+    xmlns:xamlAnimatedGif="using:XamlAnimatedGif"
     x:Class="UWPEindopdracht.MapPage"
     mc:Ignorable="d">
     
@@ -57,6 +58,7 @@
                 </Grid.RowDefinitions>
 
                 <Image 
+                    xamlAnimatedGif:AnimationBehavior.SourceUri="Assets/Loading-Top-Wallpapers.gif" 
                     x:Name="LoadingAnimation" 
                     Height="80"
                     Width="80"/>
