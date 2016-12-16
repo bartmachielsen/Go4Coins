@@ -24,7 +24,7 @@ namespace UWPEindopdracht.Multiplayer
 
         public int Coins { get; set; } = 0;
 
-        public List<string> Rewards { get; set; }
+        public List<string> Rewards { get; set; } = new List<string>();
         public User(string id, string name, GCoordinate location)
         {
             this.id = id;

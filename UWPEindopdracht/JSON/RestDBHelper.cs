@@ -36,6 +36,8 @@ namespace UWPEindopdracht.JSON
                                 existuser.LastState = LastState.Updated;
                                 existuser.Location = user.Location;
                                 existuser.Name = user.Name;
+                                existuser.Rewards = user.Rewards;
+                                existuser.Coins = user.Coins;
                                 existuser.LastSynced = user.LastSynced;
                             }
                         }

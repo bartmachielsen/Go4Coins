@@ -29,11 +29,11 @@ namespace UWPEindopdracht
     /// </summary>
     public sealed partial class MapPage : Page
     {
-        private static bool _follow = false;
-        private static int _serverTimeOut = 3;
+        private static readonly bool _follow = false;
+        private static readonly int _serverTimeOut = 4;
 
         private bool _dialogClaimed = false;
-        private PlaceLoader _placeLoader = new PlaceLoader();
+        private readonly PlaceLoader _placeLoader = new PlaceLoader();
         private Assignment _assignment;
 
         private User _user;
@@ -113,6 +113,7 @@ namespace UWPEindopdracht
                 try
                 {
                     _user = await _db.GetUser((string) localSettings.Values["multiplayerID"]);
+                    System.Diagnostics.Debug.WriteLine(_user.Name);
                     _noInternetConfirmed = false;
                     
                 }
@@ -136,7 +137,6 @@ namespace UWPEindopdracht
                 }
             }
             
-            _users.Add(_user);
 
             await LoadRewards();
 
@@ -150,7 +150,7 @@ namespace UWPEindopdracht
             {
                 await Task.Delay(_serverTimeOut*1000);
                 await UpdateUserDetails();
-                CheckIfLocationUpdate(null);
+                await CheckIfLocationUpdate(null);
             }
         }
 
@@ -187,7 +187,7 @@ namespace UWPEindopdracht
                 if (user.id != _user.id)
                 {
                     var geopoint = GPSHelper.getPointOutLocation(user.Location);
-                    if ((DateTime.Now - user.LastSynced) >= TimeSpan.FromSeconds(_serverTimeOut*5))
+                    if ((DateTime.Now - user.LastSynced) >= TimeSpan.FromSeconds(_serverTimeOut*3))
                     {
                         if (user.Icon != null)
                         {
@@ -210,20 +210,24 @@ namespace UWPEindopdracht
                             if (user.LastState == LastState.Online)
                             {
                             
-                                ShowUserDetails(user);
+                                ShowUserDetails(user, true);
                             }
                         }
                         else
                         {
+                            user.Icon.Title = user.Name;
                             user.Icon.Location = geopoint;
                         }
                     }
                 }
         }
 
-        private async void ShowUserDetails(User user)
+        private async void ShowUserDetails(User user, bool newUser = true, bool self = false)
         {
-            var dialog = new UserDialog(user);
+            ContentDialog dialog = new UserDialog(user,newUser);
+
+            if(self)
+                dialog = new MultiplayerSettings(user);
             while (_dialogClaimed) { }
             if (!_dialogClaimed)
             {
@@ -233,25 +237,18 @@ namespace UWPEindopdracht
             }
         }
 
-        private void MapControl_MapDoubleTapped(MapControl sender, MapInputEventArgs args)
-        {
-            foreach (var user in _users)
-            {
-                if (GPSHelper.getPointOutLocation(user.Location) == args.Location)
-                {
-                    ShowUserDetails(user);   
-                }
-            }
-        }
+       
         private void MapControl_MapElementClick(MapControl sender, MapElementClickEventArgs args)
         {
             foreach (var user in _users)
             {
                 if (user.Icon == null) continue;
                 if (args.MapElements.All(element => element != user.Icon)) continue;
-                ShowUserDetails(user);
+                ShowUserDetails(user, false);
                 return;
             }
+            if(args.MapElements.All(element => element == _user.Icon))
+                ShowUserDetails(_user,false,true);
         }
 
         private async void UpdateMultiplayerServer(GCoordinate coordinate)
@@ -298,6 +295,8 @@ namespace UWPEindopdracht
                 _userLocation = new MapIcon {Title = "Your Location"};
                 MapControl.MapElements.Add(_userLocation);
             }
+            if (_user != null && _user.Icon == null && _userLocation != null)
+                _user.Icon = _userLocation;
             if ((_assignment?.Target != null) && _assignment.ShowPinPoint)
             {
                 foreach (var target in _assignment.Target)
@@ -309,6 +308,7 @@ namespace UWPEindopdracht
                             Title = target.Name,
                             Location = GPSHelper.getPointOutLocation(target.Location)
                         };
+                        
                         if (!string.IsNullOrEmpty(target.IconLink))
                             target.Icon.Image = RandomAccessStreamReference.CreateFromUri(new Uri(target.IconLink));
                         MapControl.MapElements.Add(target.Icon);
@@ -419,21 +419,18 @@ namespace UWPEindopdracht
             }
         }
 
-        private async void CheckIfLocationUpdate(Geopoint point)
+        private async Task CheckIfLocationUpdate(Geopoint point)
         {
-            if (DateTime.Now - _lastLocationSync > TimeSpan.FromSeconds(_serverTimeOut))
-            {
-                if (point == null)
-                    point = (await GPSHelper.getLocationOriginal()).Coordinate.Point;
-                UpdateMultiplayerServer(GPSHelper.GetGcoordinate(point));
-            }
-
+            if (DateTime.Now - _lastLocationSync <= TimeSpan.FromSeconds(_serverTimeOut)) return;
+            if (point == null)
+                point = (await GPSHelper.getLocationOriginal()).Coordinate.Point;
+            UpdateMultiplayerServer(GPSHelper.GetGcoordinate(point));
         }
 
         private async void Locator_PositionChanged(Geolocator sender, PositionChangedEventArgs args)
         {
-            CheckIfLocationUpdate(args.Position.Coordinate.Point);
-                
+            //CheckIfLocationUpdate(args.Position.Coordinate.Point);
+              // TODO NEEDED ?  
             await Dispatcher.RunAsync(CoreDispatcherPriority.Normal, () =>
             {
                 var location = args.Position.Coordinate.Point;
@@ -467,7 +464,7 @@ namespace UWPEindopdracht
 
         private void MultiplayerToggleButton_Click(object sender, RoutedEventArgs e)
         {
-
+            // show input dialog for inputting name
         }
 
         private async void GoToAlbumButton_Click(object sender, RoutedEventArgs e)
