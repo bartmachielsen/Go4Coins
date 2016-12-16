@@ -81,7 +81,7 @@ namespace UWPEindopdracht.DataConnections
                             new HttpStringContent(RestDBHelper.ConvertUsername(user), UnicodeEncoding.Utf8,
                                 "application/json"));
                 System.Diagnostics.Debug.WriteLine($"UPDATING USER {user} {header.IsSuccessStatusCode}");
-            }
+            
         }
 
         public async void UploadReward(Reward reward)
