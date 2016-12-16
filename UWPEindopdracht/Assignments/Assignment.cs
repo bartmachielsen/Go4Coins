@@ -24,6 +24,7 @@ namespace UWPEindopdracht
 
         public bool ShowPinPoint { get; protected set; } = true;
         protected TimeSpan MaximumTime { get; set; }
+        public bool ShowPicture { get; set; } = true;
 
         // TODO IMAGE FOR SHOWING WHEN ASSIGNMENT HAS BEEN ANNOUNCED!
 

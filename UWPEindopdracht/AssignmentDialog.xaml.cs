@@ -22,13 +22,12 @@ namespace UWPEindopdracht
     public sealed partial class AssignmentDialog : ContentDialog
     {
         private Assignment _assignment;
-        public AssignmentDialog(Assignment assignment)
+        private string _imageURL;
+        public AssignmentDialog(Assignment assignment, string imageURL)
         {
             this.InitializeComponent();
             this._assignment = assignment;
-            IsPrimaryButtonEnabled = false;
-            IsSecondaryButtonEnabled = false;
-            LoadImage();
+            this._imageURL = imageURL;
             LoadDetails();
         }
 
@@ -36,25 +35,11 @@ namespace UWPEindopdracht
         {
             AssignDetails.Text = _assignment.Description;
             Title = _assignment.Target[0].Name;
+            if(this._imageURL != null)
+                AssignmentImage.Source = new BitmapImage(new Uri(_imageURL));
         }
 
-        private async void LoadImage()
-        {
-            if (_assignment.Target[0].ImageLocation != null)
-            {
-                string url = await new GooglePlacesConnector().GetImageURL(_assignment.Target[0], (int)((this.ActualWidth/4.0)*3.0));
-                if (url != null) { 
-                    AssignmentImage.Source = new BitmapImage(new Uri(url));
-                    return;
-                }
-            }
-            var urls = await new GoogleStreetviewConnector().GetURLToSavePicture(_assignment.Target[0]);
-            if (urls.Count > 0)
-                AssignmentImage.Source = new BitmapImage(new Uri(urls.ElementAt(0)));
-            
-            IsPrimaryButtonEnabled = true;
-            IsSecondaryButtonEnabled = true;
-        }
+       
        
         private void ContentDialog_PrimaryButtonClick(ContentDialog sender, ContentDialogButtonClickEventArgs args)
         {

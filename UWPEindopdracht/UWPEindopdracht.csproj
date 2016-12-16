@@ -107,6 +107,7 @@
     <Compile Include="DataConnections\GooglePlacesConnector.cs" />
     <Compile Include="DataConnections\GoogleStreetviewConnector.cs" />
     <Compile Include="DataConnections\HttpConnector.cs" />
+    <Compile Include="DataConnections\ImageLoader.cs" />
     <Compile Include="DataConnections\RestDBConnector.cs" />
     <Compile Include="DataConnections\WikipediaConnector.cs" />
     <Compile Include="GPSConnections\GCoordinate.cs" />
