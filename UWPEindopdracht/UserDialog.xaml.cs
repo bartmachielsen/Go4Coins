@@ -11,47 +11,34 @@ using Windows.UI.Xaml.Controls.Primitives;
 using Windows.UI.Xaml.Data;
 using Windows.UI.Xaml.Input;
 using Windows.UI.Xaml.Media;
-using Windows.UI.Xaml.Media.Imaging;
 using Windows.UI.Xaml.Navigation;
-using UWPEindopdracht.DataConnections;
+using UWPEindopdracht.Multiplayer;
 
 // The Content Dialog item template is documented at http://go.microsoft.com/fwlink/?LinkId=234238
 
 namespace UWPEindopdracht
 {
-    public sealed partial class AssignmentDialog : ContentDialog
+    public sealed partial class UserDialog : ContentDialog
     {
-        private Assignment _assignment;
-        private string _imageURL;
-        public bool accepted = true;
-        public AssignmentDialog(Assignment assignment, string imageURL)
+        private User _user;
+        public UserDialog(User user)
         {
-            this.InitializeComponent();
-            this._assignment = assignment;
-            this._imageURL = imageURL;
+            _user = user;
+            InitializeComponent();
             LoadDetails();
         }
 
         private void LoadDetails()
         {
-            AssignDetails.Text = _assignment.Description;
-            Title = _assignment.Target[0].Name;
-            if(this._imageURL != null)
-                AssignmentImage.Source = new BitmapImage(new Uri(_imageURL));
-            IsSecondaryButtonEnabled = _assignment.IsSkippable();
-
+            NameBlock.Text = _user.Name;
+            PointBlock.Text = _user.Coins + " Coins!";
         }
-
-       
-       
         private void ContentDialog_PrimaryButtonClick(ContentDialog sender, ContentDialogButtonClickEventArgs args)
         {
-            accepted = true;
         }
 
         private void ContentDialog_SecondaryButtonClick(ContentDialog sender, ContentDialogButtonClickEventArgs args)
         {
-            accepted = false;
         }
     }
 }

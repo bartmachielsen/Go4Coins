@@ -7,14 +7,14 @@
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     mc:Ignorable="d"
     Title="AssignmentName"
-    PrimaryButtonText="Button1"
-    SecondaryButtonText="Button2"
+    PrimaryButtonText="Start!"
+    SecondaryButtonText="Skip..."
     PrimaryButtonClick="ContentDialog_PrimaryButtonClick"
     SecondaryButtonClick="ContentDialog_SecondaryButtonClick">
 
     <Grid>
         <StackPanel>
-            <Image Name="AssignmentImage"/>
+            <Image Name="AssignmentImage" MaxHeight="200"/>
             <TextBlock Text="AssignmentDetails:"/>
             <TextBlock Name="AssignDetails" Text="In this assignment you must walk to the given point on the map
                        marked with the point" TextWrapping="Wrap"

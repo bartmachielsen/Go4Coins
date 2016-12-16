@@ -24,6 +24,7 @@ namespace UWPEindopdracht
 
         public bool ShowPinPoint { get; protected set; } = true;
         protected TimeSpan MaximumTime { get; set; }
+        public bool ShowPicture { get; set; } = true;
 
         // TODO IMAGE FOR SHOWING WHEN ASSIGNMENT HAS BEEN ANNOUNCED!
 
@@ -71,12 +72,13 @@ namespace UWPEindopdracht
             {
                 Place place = removed.ElementAt(random.Next(removed.Count));
                 removed.Remove(place);
+                if (place.IsCity()) continue;
                 var route = await GPSHelper.calculateRouteBetween(currentPosition, place.Location);
                 if (route != null)
                     place.Distance = route.LengthInMeters;
                 if (place.Distance >= MinDistance && place.Distance <= MaxDistance)
                 {
-                    return new[] { place};
+                    return new[] {place};
                 }
             }
             throw new NoTargetAvailable();
@@ -96,7 +98,7 @@ namespace UWPEindopdracht
             if (currentTimeSpent.TotalSeconds < MaximumTime.TotalSeconds)
                 timebonus = MaximumTime.TotalSeconds - currentTimeSpent.TotalSeconds;
 
-            return distance * 10 + timebonus * 15;
+            return distance/4.0 + timebonus*4;
         }
 
 
@@ -121,6 +123,12 @@ namespace UWPEindopdracht
             MapRoute route = await GPSHelper.calculateRouteBetween(currentPoint, Target[0].Location);
             return new string[] {$"", route.LengthInMeters/1000.0 + " km"};
         }
+
+
+        public virtual bool IsSkippable()
+        {
+            return true;
+        }
     }
 
     class MapAssignment : Assignment
@@ -130,15 +138,15 @@ namespace UWPEindopdracht
             MaxDistance = 3000;
             MinDistance = 800;
             MaxSpeed = 40;
-            TimeMultiplier = 0.9;
+            TimeMultiplier = 0.6;
         }
         
         public override void FillDescription()
         {
             Description =
                 "Walk to the marked point on the map, " +
-                $"\n Bonus if reached within {MaximumTime.TotalMinutes} minutes." +
-                $"\n total score could be {TotalScore(new TimeSpan())}!";
+                $"\nBonus if reached within {MaximumTime.TotalMinutes} minutes." +
+                $"\ntotal score could be {TotalScore(new TimeSpan())}!";
         }
 
     }
@@ -163,10 +171,10 @@ namespace UWPEindopdracht
 
             Description =
                 "Search the given point!" +
-                $"\n Name: {Target[0].Name}" +
-                $"\n Estimated distance to the target {Target[0].Distance}!" +
-                $"\n Bonus if reached within {MaximumTime.TotalMinutes} minutes." +
-                $"\n Maximum score is {TotalScore(new TimeSpan())}";
+                $"\nName: {Target[0].Name}" +
+                $"\nEstimated distance to the target {Target[0].Distance}!" +
+                $"\nBonus if reached within {MaximumTime.TotalMinutes} minutes." +
+                $"\nMaximum score is {TotalScore(new TimeSpan())}";
         }
     }
 
