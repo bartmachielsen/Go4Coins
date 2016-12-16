@@ -50,16 +50,16 @@
                 <ColumnDefinition Width="*"/>
             </Grid.ColumnDefinitions>
             <Grid.RowDefinitions>
-                <RowDefinition Height="*"/>
-                <RowDefinition Height="*"/>
-                <RowDefinition Height="*"/>
+                <RowDefinition Height="6*"/>
+                <RowDefinition Height="6*"/>
+                <RowDefinition Height="7*"/>
             </Grid.RowDefinitions>
             
             <Image 
                 Source="Assets/chest.png" 
                 x:Name="NormalChest" 
                 Height="140"
-                Margin="0,20,0,0"
+                VerticalAlignment="Top"
                 />
             <StackPanel 
                 Grid.Row="0"
@@ -94,6 +94,7 @@
                 Source="Assets/chest2.png" 
                 x:Name="RareChest" 
                 Height="140"
+                VerticalAlignment="Top"
                 />
             <StackPanel 
                 Grid.Row="1"
@@ -128,6 +129,7 @@
                 Source="Assets/chest.png" 
                 x:Name="LargeChest" 
                 Height="170"
+                VerticalAlignment="Top"
                 />
             <StackPanel 
                 Grid.Row="2"
