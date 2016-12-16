@@ -19,7 +19,9 @@ namespace UWPEindopdracht.DataConnections
         public async Task<List<Place>> GetPlaces(int diameter, GCoordinate coordinate)
         {
             var uri = new Uri($"{Host}action=query&list=geosearch&gscoord={coordinate.lati}%7C{coordinate.longi}&gsradius={diameter}&format=json");
-            var response = await Get(uri);
+            var header = await Get(uri);
+            if (!header.IsSuccessStatusCode) return new List<Place>();
+            var response = await ConvertResponseMessageToContent(header);
             return response == null ? new List<Place>() : WikipediaParser.GetPlaces(response);
         }
     }

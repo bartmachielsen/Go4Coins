@@ -24,7 +24,7 @@ namespace UWPEindopdracht.DataConnections
             {
                 string url =
                     $"{Host}?size={size[0]}x{size[1]}&location={viewport.lati},{viewport.longi}&key={ApiKey}";
-                if ((await getHeaders(new Uri(url))).IsSuccessStatusCode)
+                if ((await Get(new Uri(url))).IsSuccessStatusCode)
                     workingPictures.Add(url);
             }
 

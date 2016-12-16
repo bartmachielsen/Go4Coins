@@ -66,7 +66,7 @@ namespace UWPEindopdracht.DataConnections
             else if(maxheight != 0)
                 width = $"maxheight={maxheight}&";
             var link = $"{Host}/photo?{width}photoreference={place.ImageLocation}&key={ApiKey}";
-            var header = await getHeaders(new Uri(link));
+            var header = await Get(new Uri(link));
             if (header.IsSuccessStatusCode)
             {
                 return link;

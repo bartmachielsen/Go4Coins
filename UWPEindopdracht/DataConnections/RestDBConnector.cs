@@ -64,10 +64,10 @@ namespace UWPEindopdracht.DataConnections
             return user;
         }
 
-        public async Task<User> GetUser(string id)
-        {
-            
-        }
+        //public async Task<User> GetUser(string id)
+        //{
+          //  
+        //}
         public async Task UpdateUser(User user)
         {
             user.lastSynced = DateTime.Now;
@@ -88,17 +88,20 @@ namespace UWPEindopdracht.DataConnections
         public async void UploadReward(Reward reward)
         {
             Uri uri = new Uri($"{Host}/rewards?apikey={ApiKey}");
-            string response =
+            var header =
                 await
                     Post(uri,
                         new HttpStringContent(RestDBHelper.ConvertReward(reward), UnicodeEncoding.Utf8,
                             "application/json"));
+            
         }
 
         public async Task<List<Reward>> GetRewards()
         {
             Uri uri = new Uri($"{Host}/rewards?apikey={ApiKey}");
-            string response = await Get(uri);
+            var header = await Get(uri);
+            var response = await ConvertResponseMessageToContent(header);
+            if (!header.IsSuccessStatusCode) return new List<Reward>();
             RestDBHelper.CheckErrors(response);
             return RestDBHelper.GetRewards(response);
         }
