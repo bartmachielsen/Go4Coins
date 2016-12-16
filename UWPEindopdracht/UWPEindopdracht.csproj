@@ -102,7 +102,6 @@
       <DependentUpon>AssignmentDialog.xaml</DependentUpon>
     </Compile>
     <Compile Include="Assignments\Assignment.cs" />
-    <Compile Include="Assignments\GroupAssignment.cs" />
     <Compile Include="Assignments\PhotoAssignment.cs" />
     <Compile Include="DataConnections\GooglePlacesConnector.cs" />
     <Compile Include="DataConnections\GoogleStreetviewConnector.cs" />
@@ -122,6 +121,7 @@
     <Compile Include="MultiplayerSettings.xaml.cs">
       <DependentUpon>MultiplayerSettings.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Multiplayer\MultiplayerAssignmentDetails.cs" />
     <Compile Include="Multiplayer\Reward.cs" />
     <Compile Include="Multiplayer\User.cs" />
     <Compile Include="Places\Place.cs" />

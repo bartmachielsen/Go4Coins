@@ -104,5 +104,26 @@ namespace UWPEindopdracht.DataConnections
             RestDBHelper.CheckErrors(response);
             return RestDBHelper.GetRewards(response);
         }
+
+        public async void UploadMultiplayerAssignmentDetail(MultiplayerAssignmentDetails detail)
+        {
+            Uri uri = new Uri($"{Host}/assignments?apikey={ApiKey}");
+            var header =
+                await
+                    Post(uri,
+                        new HttpStringContent(RestDBHelper.ConvertMultiplayerAssignmentDetails(detail), UnicodeEncoding.Utf8,
+                            "application/json"));
+            System.Diagnostics.Debug.WriteLine(await ConvertResponseMessageToContent(header));
+
+        }
+        public async Task<List<MultiplayerAssignmentDetails>> GetMultiplayerAssignments()
+        {
+            Uri uri = new Uri($"{Host}/assignments?apikey={ApiKey}");
+            var header = await Get(uri);
+            var response = await ConvertResponseMessageToContent(header);
+            if (!header.IsSuccessStatusCode) return new List<MultiplayerAssignmentDetails>();
+            RestDBHelper.CheckErrors(response);
+            return RestDBHelper.GetAssignments(response);
+        }
     }
 }

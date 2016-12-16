@@ -113,6 +113,27 @@ namespace UWPEindopdracht.JSON
             user.id = (string) data._id;
             return user;
         }
+
+        public static string ConvertMultiplayerAssignmentDetails(MultiplayerAssignmentDetails details)
+        {
+            return JsonConvert.SerializeObject(new
+                {
+                    assignmentdetail = JsonConvert.SerializeObject(details)
+                }
+            );
+        }
+
+        public static List<MultiplayerAssignmentDetails> GetAssignments(string response)
+        {
+            List<MultiplayerAssignmentDetails> assignment = new List<MultiplayerAssignmentDetails>();
+            dynamic json = JsonConvert.DeserializeObject(response);
+            foreach (var jsonelement in json)
+            {
+                assignment.Add(
+                    JsonConvert.DeserializeObject<MultiplayerAssignmentDetails>(JsonConvert.SerializeObject(jsonelement.assignmentdetail)));
+            }
+            return assignment;
+        }
     }
 
     class CannotUploadException : Exception

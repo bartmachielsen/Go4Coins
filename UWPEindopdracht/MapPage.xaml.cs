@@ -53,7 +53,7 @@ namespace UWPEindopdracht
         {
             
             LoadMultiplayerDetails();
-
+            
             InitializeComponent();
             
             MapControl.MapElementClick += MapControl_MapElementClick;
@@ -65,11 +65,20 @@ namespace UWPEindopdracht
             SetLocation();
             MapControl.ZoomInteractionMode = MapInteractionMode.GestureAndControl;
             MapControl.ZoomLevel = 13;
+            LoadAssignments();
         }
 
         
         private string DistanceText { get; set; } = "0 km";
         private string TimeText { get; set; } = "00:00";
+
+        private async Task LoadAssignments()
+        {
+            //_db.UploadMultiplayerAssignmentDetail(new MultiplayerAssignmentDetails(5, "test", "admin"));
+            var list = await _db.GetMultiplayerAssignments();
+            System.Diagnostics.Debug.WriteLine(list.Count);
+        }
+
 
         private async Task LoadRewards()
         {
@@ -209,8 +218,8 @@ namespace UWPEindopdracht
                             
                             if (user.LastState == LastState.Online)
                             {
-                            
-                                ShowUserDetails(user, true);
+                                // TODO SHOW NEW USER NOTIFICATION
+                                //ShowUserDetails(user, true);
                             }
                         }
                         else
@@ -251,7 +260,7 @@ namespace UWPEindopdracht
                 ShowUserDetails(_user,false,true);
         }
 
-        private async void UpdateMultiplayerServer(GCoordinate coordinate)
+        private async Task UpdateMultiplayerServer(GCoordinate coordinate)
         {
             if (_user == null) return;
             _lastLocationSync = DateTime.Now;
@@ -424,7 +433,7 @@ namespace UWPEindopdracht
             if (DateTime.Now - _lastLocationSync <= TimeSpan.FromSeconds(_serverTimeOut)) return;
             if (point == null)
                 point = (await GPSHelper.getLocationOriginal()).Coordinate.Point;
-            UpdateMultiplayerServer(GPSHelper.GetGcoordinate(point));
+            await UpdateMultiplayerServer(GPSHelper.GetGcoordinate(point));
         }
 
         private async void Locator_PositionChanged(Geolocator sender, PositionChangedEventArgs args)
