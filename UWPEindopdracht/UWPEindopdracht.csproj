@@ -119,6 +119,9 @@
       <DependentUpon>MapPage.xaml</DependentUpon>
     </Compile>
     <Compile Include="DataConnections\PlaceLoader.cs" />
+    <Compile Include="MultiplayerSettings.xaml.cs">
+      <DependentUpon>MultiplayerSettings.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Multiplayer\Reward.cs" />
     <Compile Include="Multiplayer\User.cs" />
     <Compile Include="Places\Place.cs" />
@@ -170,6 +173,10 @@
     <Page Include="MapPage.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
+    </Page>
+    <Page Include="MultiplayerSettings.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="ShopDialog.xaml">
       <SubType>Designer</SubType>

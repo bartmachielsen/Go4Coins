@@ -136,7 +136,6 @@ namespace UWPEindopdracht
                 }
             }
             
-            _users.Add(_user);
 
             await LoadRewards();
 
@@ -221,9 +220,12 @@ namespace UWPEindopdracht
                 }
         }
 
-        private async void ShowUserDetails(User user, bool newUser = true)
+        private async void ShowUserDetails(User user, bool newUser = true, bool self = false)
         {
-            var dialog = new UserDialog(user,newUser);
+            ContentDialog dialog = new UserDialog(user,newUser);
+
+            if(self)
+                dialog = new MultiplayerSettings(user);
             while (_dialogClaimed) { }
             if (!_dialogClaimed)
             {
@@ -243,6 +245,8 @@ namespace UWPEindopdracht
                 ShowUserDetails(user, false);
                 return;
             }
+            if(args.MapElements.All(element => element == _user.Icon))
+                ShowUserDetails(_user,false,true);
         }
 
         private async void UpdateMultiplayerServer(GCoordinate coordinate)
@@ -289,6 +293,8 @@ namespace UWPEindopdracht
                 _userLocation = new MapIcon {Title = "Your Location"};
                 MapControl.MapElements.Add(_userLocation);
             }
+            if (_user != null && _user.Icon == null && _userLocation != null)
+                _user.Icon = _userLocation;
             if ((_assignment?.Target != null) && _assignment.ShowPinPoint)
             {
                 foreach (var target in _assignment.Target)
@@ -300,6 +306,7 @@ namespace UWPEindopdracht
                             Title = target.Name,
                             Location = GPSHelper.getPointOutLocation(target.Location)
                         };
+                        
                         if (!string.IsNullOrEmpty(target.IconLink))
                             target.Icon.Image = RandomAccessStreamReference.CreateFromUri(new Uri(target.IconLink));
                         MapControl.MapElements.Add(target.Icon);
