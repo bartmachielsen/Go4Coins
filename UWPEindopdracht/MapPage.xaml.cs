@@ -28,11 +28,11 @@ namespace UWPEindopdracht
     /// </summary>
     public sealed partial class MapPage : Page
     {
-        private static bool _follow = false;
-        private static int _serverTimeOut = 4;
+        private static readonly bool _follow = false;
+        private static readonly int _serverTimeOut = 4;
 
         private bool _dialogClaimed = false;
-        private PlaceLoader _placeLoader = new PlaceLoader();
+        private readonly PlaceLoader _placeLoader = new PlaceLoader();
         private Assignment _assignment;
 
         private User _user;
@@ -187,7 +187,7 @@ namespace UWPEindopdracht
                 if (user.id != _user.id)
                 {
                     var geopoint = GPSHelper.getPointOutLocation(user.Location);
-                    if ((DateTime.Now - user.LastSynced) >= TimeSpan.FromSeconds(_serverTimeOut*5))
+                    if ((DateTime.Now - user.LastSynced) >= TimeSpan.FromSeconds(_serverTimeOut*3))
                     {
                         if (user.Icon != null)
                         {
@@ -210,7 +210,7 @@ namespace UWPEindopdracht
                             if (user.LastState == LastState.Online)
                             {
                             
-                                ShowUserDetails(user);
+                                ShowUserDetails(user, true);
                             }
                         }
                         else
@@ -221,9 +221,9 @@ namespace UWPEindopdracht
                 }
         }
 
-        private async void ShowUserDetails(User user)
+        private async void ShowUserDetails(User user, bool newUser = true)
         {
-            var dialog = new UserDialog(user);
+            var dialog = new UserDialog(user,newUser);
             while (_dialogClaimed) { }
             if (!_dialogClaimed)
             {
@@ -233,23 +233,14 @@ namespace UWPEindopdracht
             }
         }
 
-        private void MapControl_MapDoubleTapped(MapControl sender, MapInputEventArgs args)
-        {
-            foreach (var user in _users)
-            {
-                if (GPSHelper.getPointOutLocation(user.Location) == args.Location)
-                {
-                    ShowUserDetails(user);   
-                }
-            }
-        }
+       
         private void MapControl_MapElementClick(MapControl sender, MapElementClickEventArgs args)
         {
             foreach (var user in _users)
             {
                 if (user.Icon == null) continue;
                 if (args.MapElements.All(element => element != user.Icon)) continue;
-                ShowUserDetails(user);
+                ShowUserDetails(user, false);
                 return;
             }
         }
@@ -464,7 +455,7 @@ namespace UWPEindopdracht
 
         private void MultiplayerToggleButton_Click(object sender, RoutedEventArgs e)
         {
-
+            // show input dialog for inputting name
         }
 
         private async void GoToAlbumButton_Click(object sender, RoutedEventArgs e)

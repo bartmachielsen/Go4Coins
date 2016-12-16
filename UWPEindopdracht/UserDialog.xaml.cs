@@ -22,18 +22,28 @@ namespace UWPEindopdracht
     {
         private User _user;
         public bool Dueled = false;
-        public UserDialog(User user)
+        public UserDialog(User user, bool newUser = true)
         {
             _user = user;
             InitializeComponent();
-            LoadDetails();
+            LoadDetails(newUser);
         }
 
-        private void LoadDetails()
+        private void LoadDetails(bool newuser)
         {
+            if (!newuser)
+                Title = "User Details";
             NameBlock.Text = _user.Name;
             PointBlock.Text = _user.Coins + " Coins!";
-            //RewardsBlock.Text = _user.Rewards.Count + " Rewards earned!";
+            
+            if(_user.Rewards != null)
+                RewardsBlock.Text = _user.Rewards.Count + " Rewards earned!";
+            else
+                RewardsBlock.Text = "No rewards earned yet!";
+
+           
+
+
         }
         private void ContentDialog_PrimaryButtonClick(ContentDialog sender, ContentDialogButtonClickEventArgs args)
         {
