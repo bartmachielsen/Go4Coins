@@ -8,9 +8,9 @@ using UWPEindopdracht.Places;
 
 namespace UWPEindopdracht.DataConnections
 {
-    class GoogleStreetviewConnector : HttpConnector, ApiKeyConnector
+    class GoogleStreetviewConnector : HttpConnector, IApiKeyConnector
     {
-        public string apiKey { get; set; } = "AIzaSyALNAeJEW5aA8D8AdXE4CDDXX4IYh5o1Ns";
+        public string ApiKey { get; set; } = "AIzaSyALNAeJEW5aA8D8AdXE4CDDXX4IYh5o1Ns";
         public int[] size = new[] {600, 300};
         public GoogleStreetviewConnector() : base("https://maps.googleapis.com/maps/api/streetview")
         {
@@ -23,7 +23,7 @@ namespace UWPEindopdracht.DataConnections
             foreach (var viewport in new List<GCoordinate>(place.Viewports) { place.Location })
             {
                 string url =
-                    $"{host}?size={size[0]}x{size[1]}&location={viewport.lati},{viewport.longi}&key={apiKey}";
+                    $"{Host}?size={size[0]}x{size[1]}&location={viewport.lati},{viewport.longi}&key={ApiKey}";
                 if ((await getHeaders(new Uri(url))).IsSuccessStatusCode)
                     workingPictures.Add(url);
             }

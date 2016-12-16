@@ -10,7 +10,7 @@ namespace UWPEindopdracht.DataConnections
     /// <summary>
     ///     Class for connecting to the web api from google places
     /// </summary>
-    internal class GooglePlacesConnector : HttpConnector, ApiKeyConnector
+    internal class GooglePlacesConnector : HttpConnector, IApiKeyConnector
     {
         private static int waitingTime = 4000;
 
@@ -20,19 +20,22 @@ namespace UWPEindopdracht.DataConnections
         }
 
         /// <summary>
-        ///     <see cref="ApiKeyConnector.apiKey" />
+        ///     <see cref="IIApiKeyConnector.ApiKey />
         /// </summary>
-        public string apiKey { get; set; } = "AIzaSyALNAeJEW5aA8D8AdXE4CDDXX4IYh5o1Ns";
+        public string ApiKey { get; set; } = "AIzaSyALNAeJEW5aA8D8AdXE4CDDXX4IYh5o1Ns";
 
         public async Task<List<Place>> GetPlaces(int diameter, GCoordinate coordinate, string pagetoken = null,
             string firstToken = null)
         {
             var uriPlaces =
                 new Uri(
-                    $"{host}/nearbysearch/json?location={coordinate.lati},{coordinate.longi}&radius={diameter}&key={apiKey}");
+                    $"{Host}/nearbysearch/json?location={coordinate.lati},{coordinate.longi}&radius={diameter}&key={ApiKey}");
             if (pagetoken != null)
-                uriPlaces = new Uri($"{host}/nearbysearch/json?pagetoken={pagetoken}&key={apiKey}");
-            var response = await get(uriPlaces);
+                uriPlaces = new Uri($"{Host}/nearbysearch/json?pagetoken={pagetoken}&key={ApiKey}");
+            var header = await Get(uriPlaces);
+            if(!header.IsSuccessStatusCode)
+                return new List<Place>();
+            var response = await ConvertResponseMessageToContent(header);
             switch (GooglePlacesParser.GetStatus(response))
             {
                 case "OVER_QUERY_LIMIT":
@@ -62,7 +65,7 @@ namespace UWPEindopdracht.DataConnections
                 width = $"maxwidth={maxwidth}&";
             else if(maxheight != 0)
                 width = $"maxheight={maxheight}&";
-            var link = $"{host}/photo?{width}photoreference={place.ImageLocation}&key={apiKey}";
+            var link = $"{Host}/photo?{width}photoreference={place.ImageLocation}&key={ApiKey}";
             var header = await getHeaders(new Uri(link));
             if (header.IsSuccessStatusCode)
             {
