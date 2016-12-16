@@ -28,5 +28,17 @@ namespace UWPEindopdracht
         {
             Hide();
         }
+
+        private void Chest1Animation_OnTapped(object sender, TappedRoutedEventArgs e)
+        {
+        }
+
+        private void Chest2Animation_OnTapped(object sender, TappedRoutedEventArgs e)
+        {
+        }
+
+        private void Chest3Animation_OnTapped(object sender, TappedRoutedEventArgs e)
+        {
+        }
     }
 }
