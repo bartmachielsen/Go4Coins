@@ -11,6 +11,7 @@ using Windows.UI.Popups;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Controls.Maps;
+using Windows.UI.Xaml.Media;
 using UWPEindopdracht.DataConnections;
 using UWPEindopdracht.GPSConnections;
 using UWPEindopdracht.JSON;
@@ -29,7 +30,8 @@ namespace UWPEindopdracht
         private static bool _follow = false;
         private static int _serverTimeOut = 3;
 
-
+        private bool _dialogClaimed = false;
+        private PlaceLoader _placeLoader = new PlaceLoader();
         private Assignment _assignment;
 
         private User _user;
@@ -52,7 +54,6 @@ namespace UWPEindopdracht
             LoadMultiplayerDetails();
 
             InitializeComponent();
-            _assignment = new MapAssignment();
             var locator = new Geolocator {DesiredAccuracyInMeters = 10};
 
             locator.PositionChanged += Locator_PositionChanged;
@@ -108,19 +109,25 @@ namespace UWPEindopdracht
                 {
                     _user = await _db.GetUser((string) localSettings.Values["multiplayerID"]);
                     _noInternetConfirmed = false;
-                    if (_user == null)
-                    {
-                        _user = await _db.UploadUser(null);
-                        localSettings.Values["multiplayerID"] = _user.id;
-                    }
+                    
                 }
                 catch (NoResponseException)
                 {
-                    
+                    _user = null;
                 }
                 catch (NoInternetException)
                 {
                     InternetException();
+                    _user = null;
+                }
+                catch (Exception)
+                {
+                    _user = null;
+                }
+                if (_user == null)
+                {
+                    _user = await _db.UploadUser(null);
+                    localSettings.Values["multiplayerID"] = _user.id;
                 }
             }
             
@@ -160,6 +167,7 @@ namespace UWPEindopdracht
             catch (NoInternetException)
             {
                 InternetException();
+                return;
             }
             catch (NoResponseException)
             {
@@ -196,7 +204,15 @@ namespace UWPEindopdracht
 
                             if (user.LastState == LastState.Online)
                             {
-                                new MessageDialog("New user has come online!", "User has entered this world!").ShowAsync();
+                            
+                                var dialog = new UserDialog(user);
+                                while (_dialogClaimed) { }
+                                if (!_dialogClaimed)
+                                {
+                                    _dialogClaimed = true;
+                                    await dialog.ShowAsync();
+                                    _dialogClaimed = false;
+                                }
                             }
                         }
                         else
@@ -232,6 +248,15 @@ namespace UWPEindopdracht
             catch (Exception)
             {
                 
+            }
+        }
+
+        private void RemovePinPoints(Assignment oldAssignment)
+        {
+            foreach (var place in oldAssignment.Target)
+            {
+                MapControl.MapElements.Remove(place.Icon);
+                place.Icon = null;
             }
         }
 
@@ -272,25 +297,40 @@ namespace UWPEindopdracht
             _userLocation.Location = location;
         }
 
-        private async void SetAssignment(Geoposition loc)
+        private async Task SetAssignment(Geoposition loc, Assignment newAssignment)
         {
+            if(_assignment != null)
+                RemovePinPoints(_assignment);
+            await _placeLoader.LoadPlaces(GPSHelper.GetGcoordinate(loc.Coordinate.Point));
+            
             try
             {
-                var places = await PlaceLoader.GetPlaces(GPSHelper.GetGcoordinate(loc.Coordinate.Point));
-                await new GoogleStreetviewConnector().GetURLToSavePicture(places[0]);
-                Debug.WriteLine($"Loaded {places.Count} points!");
-                try
-                {
-                    await _assignment.FillTarget(places, GPSHelper.GetGcoordinate(loc.Coordinate.Point));
-                }
-                catch (NoTargetAvailable)
-                {
-                    await new MessageDialog("Move to another area! (move +5KM)", "Not enough targets!").ShowAsync();
-                    _assignment = null;
-                    return;
-                }
+                await newAssignment.FillTarget(_placeLoader.Places, GPSHelper.GetGcoordinate(loc.Coordinate.Point));
+            }
+            catch (NoTargetAvailable)
+            {
+                await new MessageDialog("Move to another area! (move +5KM)", "Not enough targets!").ShowAsync();
+                newAssignment = null;
+                return;
+            }
+            var dialog = new AssignmentDialog(newAssignment, await ImageLoader.GetBestUrlFromPlace(newAssignment));
+            while (_dialogClaimed) { }
+            if (!_dialogClaimed)
+            {
+                _dialogClaimed = true;
+                await dialog.ShowAsync();
+                _dialogClaimed = false;
+            }
+            if (!dialog.accepted)
+            {
+                await SetAssignment(loc, newAssignment);
+                return;
+            }
+            else
+            {
+                _assignment = newAssignment;
+                PlacePinPoints(loc.Coordinate.Point);
 
-                await new AssignmentDialog(_assignment,await ImageLoader.GetBestUrlFromPlace(_assignment)).ShowAsync();
                 ChangeDistance(GPSHelper.GetGcoordinate(loc.Coordinate.Point));
                 ChangeTime();
 
@@ -307,17 +347,8 @@ namespace UWPEindopdracht
                         timer.Stop();
                 };
                 timer.Start();
+                
             }
-            catch (ApiLimitReached)
-            {
-                await new MessageDialog("Api Limit is reached!", "Api Exception").ShowAsync();
-            }
-            catch (InvalidApiKeyException)
-            {
-                await new MessageDialog("Api key is invalid!", "Api Exception").ShowAsync();
-            }
-            /// remove pinpoints!
-            PlacePinPoints(loc.Coordinate.Point);
         }
 
         private async void SetLocation()
@@ -326,7 +357,7 @@ namespace UWPEindopdracht
             if (loc != null)
             {
                 MapControl.Center = loc.Coordinate.Point;
-                SetAssignment(loc);
+                await SetAssignment(loc,new MapAssignment());
             }
             else
             {
@@ -372,9 +403,6 @@ namespace UWPEindopdracht
         {
             CheckIfLocationUpdate(args.Position.Coordinate.Point);
                 
-
-                
-            
             await Dispatcher.RunAsync(CoreDispatcherPriority.Normal, () =>
             {
                 var location = args.Position.Coordinate.Point;

@@ -3,7 +3,9 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Windows.Devices.Geolocation;
 using Windows.Security.Cryptography.Core;
+using Windows.UI.Xaml.Controls.Maps;
 
 namespace UWPEindopdracht.GPSConnections
 {
@@ -51,6 +53,19 @@ namespace UWPEindopdracht.GPSConnections
         {
             this.lati = lati;
             this.longi = longi;
+        }
+
+        public override bool Equals(object obj)
+        {
+            Geopoint point;
+            GCoordinate other = obj as GCoordinate;
+            if (other == null) return false;
+            if (Math.Abs(other.lati - lati) < 1 &&
+                Math.Abs(other.longi - longi) < 1 &&
+                other.accuracy == accuracy &&
+                other.speed == speed &&
+                other.altitude == altitude) return true;
+            return false;
         }
     }
 
