@@ -113,6 +113,7 @@ namespace UWPEindopdracht
                 try
                 {
                     _user = await _db.GetUser((string) localSettings.Values["multiplayerID"]);
+                    System.Diagnostics.Debug.WriteLine(_user.Name);
                     _noInternetConfirmed = false;
                     
                 }
@@ -214,6 +215,7 @@ namespace UWPEindopdracht
                         }
                         else
                         {
+                            user.Icon.Title = user.Name;
                             user.Icon.Location = geopoint;
                         }
                     }
