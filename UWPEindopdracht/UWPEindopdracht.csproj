@@ -124,6 +124,9 @@
     <Compile Include="Multiplayer\MultiplayerAssignmentDetails.cs" />
     <Compile Include="Multiplayer\Reward.cs" />
     <Compile Include="Multiplayer\User.cs" />
+    <Compile Include="PlaceDialog.xaml.cs">
+      <DependentUpon>PlaceDialog.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Places\Place.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="ShopDialog.xaml.cs">
@@ -176,6 +179,10 @@
       <SubType>Designer</SubType>
     </Page>
     <Page Include="MultiplayerSettings.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="PlaceDialog.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

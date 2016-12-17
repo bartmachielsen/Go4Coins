@@ -14,18 +14,22 @@ namespace UWPEindopdracht.DataConnections
         public static async Task<string> GetBestUrlFromPlace(Assignment assignment)
         {
             if (!assignment.ShowPicture) return null;
-            if (assignment.Target[0].ImageLocation != null)
+            return await GetBestUrlFromPlace(assignment.Target[0]);
+        }
+
+        public static async Task<string> GetBestUrlFromPlace(Place place)
+        {
+            if (place.ImageLocation != null)
             {
-                string url = await new GooglePlacesConnector().GetImageURL(assignment.Target[0], maxheight:MaxHeight);
+                string url = await new GooglePlacesConnector().GetImageURL(place, maxheight: MaxHeight);
                 if (url != null)
                     return url;
-                
+
             }
-            var urls = await new GoogleStreetviewConnector().GetURLToSavePicture(assignment.Target[0]);
+            var urls = await new GoogleStreetviewConnector().GetURLToSavePicture(place);
             if (urls.Count > 0)
                 return urls.ElementAt(0);
             return null;
-
         }
     }
 }

@@ -237,6 +237,11 @@ namespace UWPEindopdracht
 
             if(self)
                 dialog = new MultiplayerSettings(user);
+            ShowDialog(dialog);
+        }
+
+        private async void ShowDialog(ContentDialog dialog)
+        {
             while (_dialogClaimed) { }
             if (!_dialogClaimed)
             {
@@ -245,7 +250,6 @@ namespace UWPEindopdracht
                 _dialogClaimed = false;
             }
         }
-
        
         private void MapControl_MapElementClick(MapControl sender, MapElementClickEventArgs args)
         {
@@ -256,6 +260,13 @@ namespace UWPEindopdracht
                 ShowUserDetails(user, false);
                 return;
             }
+            if(_assignment != null)
+                foreach (var target in _assignment.Target)
+                    foreach (var element in args.MapElements)
+                        if (target.Icon != null && target.Icon == element)
+                            ShowDialog(new PlaceDialog(target));
+                    
+                
             if(args.MapElements.All(element => element == _user.Icon))
                 ShowUserDetails(_user,false,true);
         }
