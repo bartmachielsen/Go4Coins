@@ -94,7 +94,7 @@
                 </Button>
                 <Button
                     x:Name="GoToAlbumButton"
-                    Margin="10,0,0,0"
+                    Margin="10,0,0,20"
                     VerticalAlignment="Bottom"
                     Style="{StaticResource ButtonStyle}"
                     Click="GoToAlbumButton_Click"
@@ -103,7 +103,7 @@
                 </Button>
                 <Button
                     x:Name="GoToShopButton"
-                    Margin="0,0,10,0"
+                    Margin="0,0,10,20"
                     VerticalAlignment="Bottom"
                     HorizontalAlignment="Right"
                     Style="{StaticResource ButtonStyle}"
@@ -126,6 +126,7 @@
                     Background="Transparent" 
                     VerticalAlignment="Bottom"
                     HorizontalAlignment="Center"
+                    Margin="0,0,0,15"
                     >
 
                     <Grid.ColumnDefinitions>
