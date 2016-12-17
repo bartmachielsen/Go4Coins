@@ -13,7 +13,7 @@ namespace UWPEindopdracht
 {
     class PlaceLoader
     {
-        private static int _maxDistanceToPlace = 5000;
+        private static int _maxDistanceToPlace = 3000;
         public List<Place> Places = new List<Place>();
         private List<GCoordinate> _alreadyLoaded = new List<GCoordinate>();
 
