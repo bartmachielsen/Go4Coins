@@ -16,7 +16,7 @@
             <Setter Property="Width" Value="55"/>
             <Setter Property="Height" Value="55"/>
             <Setter Property="Background" Value="Transparent"/>
-            <Setter Property="IsEnabled" Value="False"></Setter>
+            <Setter Property="IsEnabled" Value="False"/>
             <Setter Property="Template">
                 <Setter.Value>
                     <ControlTemplate TargetType="Button">
@@ -32,7 +32,7 @@
     <Grid Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
         <Maps:MapControl
             Name="MapControl"
-            Center="{ Binding location, Mode=TwoWay}"
+            Center="{Binding location, Mode=TwoWay}"
             MapServiceToken="{StaticResource ServiceToken}"
             PanInteractionMode="Disabled"
             ZoomInteractionMode="Disabled"
@@ -61,7 +61,7 @@
                 </Grid.RowDefinitions>
 
                 <Image 
-                    xamlAnimatedGif:AnimationBehavior.SourceUri="Assets/Loading-Top-Wallpapers.gif" 
+                    xamlAnimatedGif:AnimationBehavior.SourceUri="Assets/MapPage/loading.gif" 
                     x:Name="LoadingAnimation" 
                     Height="80"
                     Width="80"/>
@@ -80,7 +80,7 @@
                     Style="{StaticResource ButtonStyle}"
                     Click="OnTargetButton_Click"
                     >
-                    <Image Source="Assets/location.png"/>
+                    <Image Source="Assets/MapPage/location.png"/>
                 </Button>
                 <Button
                     x:Name="MultiplayerToggleButton"
@@ -90,7 +90,7 @@
                     Style="{StaticResource ButtonStyle}"
                     Click="MultiplayerToggleButton_Click"
                     >
-                    <Image Source="Assets/mp.png"/>
+                    <Image Source="Assets/MapPage/mp.png"/>
                 </Button>
                 <Button
                     x:Name="GoToAlbumButton"
@@ -99,7 +99,7 @@
                     Style="{StaticResource ButtonStyle}"
                     Click="GoToAlbumButton_Click"
                     >
-                    <Image Source="Assets/album.png"/>
+                    <Image Source="Assets/MapPage/album.png"/>
                 </Button>
                 <Button
                     x:Name="GoToShopButton"
@@ -109,7 +109,7 @@
                     Style="{StaticResource ButtonStyle}"
                     Click="GoToShopButton_Click"
                     >
-                    <Image Source="Assets/store.png"/>
+                    <Image Source="Assets/MapPage/store.png"/>
                 </Button>
                 <TextBlock 
                     x:Name="OnTargetText"

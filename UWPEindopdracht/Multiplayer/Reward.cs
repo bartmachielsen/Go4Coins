@@ -48,7 +48,7 @@ namespace UWPEindopdracht.Multiplayer
             _price = price;
             this._amount = amount;
         }
-
+       
         public List<Reward> GetRewards(List<Reward> rewards)
         {
             Random random = new Random();
@@ -81,21 +81,21 @@ namespace UWPEindopdracht.Multiplayer
                 {
                     100, 99, 90, 65
                 },
-                ImageLocation = "LOCATION"
+                ImageLocation = "Assets/chest"
             },new RewardChest("Advanced Chest", 100.0, 3)
             {
                 Chance = new int[]
                 {
                     100, 90, 80, 50
                 },
-                ImageLocation = "LOCATION"
+                ImageLocation = "Assets/chest2"
             },new RewardChest("Large Chest", 100.0, 8)
             {
                 Chance = new int[]
                 {
                     100, 99, 90, 65
                 },
-                ImageLocation = "LOCATION"
+                ImageLocation = "Assets/chest"
             }
         };
     }

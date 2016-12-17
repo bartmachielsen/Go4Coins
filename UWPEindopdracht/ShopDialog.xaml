@@ -37,7 +37,7 @@
             <Setter Property="Margin" Value="10,0"/>
         </Style>
         <Style x:Key="CoinStyle" TargetType="Image">
-            <Setter Property="Source" Value="Assets/coin.png"/>
+            <Setter Property="Source" Value="Assets/ShopAndAlbum/coin.png"/>
             <Setter Property="Height" Value="20"/>
             <Setter Property="Width" Value="20"/>
             <Setter Property="Margin" Value="3,0"/>
@@ -72,6 +72,36 @@
                     From="1.0"
                     To="0.0"
                     Duration="0:0:3"
+                    />
+            </Storyboard>
+            <Storyboard x:Name="EnlargeAnimationNormal">
+                <DoubleAnimation 
+                    Storyboard.TargetName="NormalChest"
+                    Storyboard.TargetProperty="Height"
+                    EnableDependentAnimation="True"
+                    From="120"
+                    To="150"
+                    Duration="0:0:0.3"
+                    />
+            </Storyboard>
+            <Storyboard x:Name="EnlargeAnimationRare">
+                <DoubleAnimation 
+                    Storyboard.TargetName="RareChest"
+                    Storyboard.TargetProperty="Height"
+                    EnableDependentAnimation="True"
+                    From="120"
+                    To="150"
+                    Duration="0:0:0.3"
+                    />
+            </Storyboard>
+            <Storyboard x:Name="EnlargeAnimationLarge">
+                <DoubleAnimation 
+                    Storyboard.TargetName="LargeChest"
+                    Storyboard.TargetProperty="Height"
+                    EnableDependentAnimation="True"
+                    From="155"
+                    To="185"
+                    Duration="0:0:0.3"
                     />
             </Storyboard>
         </Grid.Resources>
@@ -118,8 +148,9 @@
             </Grid.RowDefinitions>
             
             <Image 
-                Source="Assets/chest.png" 
-                Height="140"
+                x:Name="NormalChest"
+                Source="Assets/ShopAndAlbum/chest.png" 
+                Height="150"
                 VerticalAlignment="Top"
                 />
             <TextBlock
@@ -145,9 +176,10 @@
                     />
             </StackPanel>
             <Image 
+                x:Name="RareChest"
                 Grid.Row="1"
-                Source="Assets/chest2.png" 
-                Height="140"
+                Source="Assets/ShopAndAlbum/chest2.png" 
+                Height="150"
                 VerticalAlignment="Top"
                 />
             <TextBlock
@@ -173,9 +205,10 @@
                     />
             </StackPanel>
             <Image 
+                x:Name="LargeChest"
                 Grid.Row="2"
-                Source="Assets/chest.png"
-                Height="170"
+                Source="Assets/ShopAndAlbum/chest.png"
+                Height="185"
                 VerticalAlignment="Top"
                 />
             <TextBlock

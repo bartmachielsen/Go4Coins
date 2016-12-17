@@ -11,8 +11,39 @@
     IsSecondaryButtonEnabled="False"
     Height="600"
     Margin="0,10,0,0"
+    Background="White"
     >
-
+    <ContentDialog.Resources>
+        <Style x:Key="HeaderTextStyle" TargetType="TextBlock">
+            <Setter Property="Foreground" Value="Blue"/>
+            <Setter Property="FontSize" Value="13"/>
+            <Setter Property="VerticalAlignment" Value="Center"/>
+            <Setter Property="HorizontalAlignment" Value="Center"/>
+        </Style>
+        <Style x:Key="OpenButtonStyle" TargetType="Button">
+            <Setter Property="Content" Value="Open"/>
+            <Setter Property="FontSize" Value="12"/>
+            <Setter Property="Background" Value="White"/>
+            <Setter Property="Foreground" Value="Blue"/>
+            <Setter Property="BorderBrush" Value="Blue"/>
+            <Setter Property="BorderThickness" Value="1"/>
+            <Setter Property="VerticalAlignment" Value="Center"/>
+            <Setter Property="HorizontalAlignment" Value="Center"/>
+        </Style>
+        <Style x:Key="CategoryButtonStyle" TargetType="Button">
+            <Setter Property="Content" Value="&#xE780;"/>
+            <Setter Property="Foreground" Value="Blue"/>
+            <Setter Property="FontSize" Value="20"/>
+            <Setter Property="Background" Value="White"/>
+            <Setter Property="BorderThickness" Value="0"/>
+            <Setter Property="BorderBrush" Value="Blue"/>
+            <Setter Property="Height" Value="40"/>
+            <Setter Property="Width" Value="40"/>
+            <Setter Property="HorizontalAlignment" Value="Center"/>
+            <Setter Property="VerticalAlignment" Value="Center"/>
+        </Style>
+    </ContentDialog.Resources>
+    
     <Grid>
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="*"/>
@@ -28,14 +59,305 @@
                 Text="ALBUM"
                 Style="{StaticResource HeaderTextStyle}"
                 />
-        <GridView 
-                Grid.Row="1"
+        <Grid 
+            Grid.Row="1"
+            >
+            <Grid.RowDefinitions>
+                <RowDefinition x:Name ="ChestRow" Height="2*"/>
+                <RowDefinition Height="4*"/>
+            </Grid.RowDefinitions>
+
+            <Grid 
+                Grid.Row="0"
                 >
-        </GridView>
-        <Button 
-                Grid.Row="2"
-                Style="{StaticResource FooterButtonStyle}"
-                Click="BackButton_Click"
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="*"/>
+                    <RowDefinition Height="*"/>
+                    <RowDefinition Height="3*"/>
+                    <RowDefinition Height="*"/>
+                </Grid.RowDefinitions>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="*"/>
+                </Grid.ColumnDefinitions>
+
+                <TextBlock
+                    Grid.Column="1"
+                    Style="{StaticResource HeaderTextStyle}"
+                    Text="Chests"
+                    FontSize="18"
+                    />
+                <TextBlock
+                    Grid.Row="1"
+                    Grid.Column="0"
+                    Style="{StaticResource HeaderTextStyle}"
+                    Text="Normal"
+                    />
+                <Image 
+                    Grid.Row="2"
+                    Grid.Column="0"
+                    Source="Assets/ShopAndAlbum/chest.png" 
+                    Height="70"
+                    VerticalAlignment="Center"
+                    HorizontalAlignment="Center"
+                    />
+                <TextBlock
+                    Grid.Column="1"
+                    Grid.Row="1"
+                    Style="{StaticResource HeaderTextStyle}"
+                    Text="Rare"
+                    />
+                <Image 
+                    Grid.Column="1"
+                    Grid.Row="2"
+                    Source="Assets/ShopAndAlbum/chest2.png" 
+                    Height="70"
+                    VerticalAlignment="Center"
+                    HorizontalAlignment="Center"
+                    />
+                <TextBlock
+                    Grid.Column="2"
+                    Grid.Row="1"
+                    Style="{StaticResource HeaderTextStyle}"
+                    Text="Large"
+                    />
+                <Image 
+                    Grid.Column="2"
+                    Grid.Row="2"
+                    Source="Assets/ShopAndAlbum/chest.png" 
+                    Height="90"
+                    VerticalAlignment="Center"
+                    HorizontalAlignment="Center"
+                    />
+                <Grid
+                    Grid.Row="3"
+                    Grid.Column="0">
+                    
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="2*"/>
+                        <ColumnDefinition Width="3*"/>
+                    </Grid.ColumnDefinitions>
+                    
+                    <TextBlock
+                        x:Name="NormalChestAmountText"
+                        Text="x1"
+                        Style="{StaticResource HeaderTextStyle}"
+                        FontSize="16"
+                        />
+                    <Button 
+                        Grid.Column="1"
+                        Style="{StaticResource OpenButtonStyle}"
+                        Click="OpenNormalChest_Click"
+                        />
+                </Grid>
+
+                <Grid
+                    Grid.Row="3"
+                    Grid.Column="1">
+
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="2*"/>
+                        <ColumnDefinition Width="3*"/>
+                    </Grid.ColumnDefinitions>
+
+                    <TextBlock
+                        x:Name="RareChestAmountText"
+                        Text="x1"
+                        Style="{StaticResource HeaderTextStyle}"
+                        FontSize="16"
+                        />
+                    <Button 
+                        Grid.Column="1"
+                        Style="{StaticResource OpenButtonStyle}"
+                        Click="OpenRareChest_Click"
+                        />
+                </Grid>
+
+                <Grid
+                    Grid.Row="3"
+                    Grid.Column="2">
+
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="2*"/>
+                        <ColumnDefinition Width="3*"/>
+                    </Grid.ColumnDefinitions>
+
+                    <TextBlock
+                        x:Name="LargeChestAmountText"
+                        Text="x1"
+                        Style="{StaticResource HeaderTextStyle}"
+                        FontSize="16"
+                        />
+                    <Button 
+                        Grid.Column="1"
+                        Style="{StaticResource OpenButtonStyle}"
+                        Click="OpenLargeChest_Click"
+                        />
+                </Grid>
+            </Grid>
+            
+            <Line
+                Grid.Row="1"
+                X1='0'
+                X2='283'
+                Y1='10'
+                Y2='10'
+                Stroke="Blue"
+                StrokeThickness='2' 
                 />
+            <Button 
+                Grid.Row="1"
+                Background="White" 
+                BorderThickness="0.5"
+                BorderBrush="Blue"
+                HorizontalAlignment="Center"
+                VerticalAlignment="Top"
+                Margin="0,10,0,0"
+                Click="MenuButton_Clicked"
+                >
+                <Image 
+                    Height="6" 
+                    Width="9" 
+                    Source="Assets/ShopAndAlbum/menuButton.png"
+                    VerticalAlignment="Center"
+                    HorizontalAlignment="Center"
+                    />
+            </Button>
+            <TextBlock
+                x:Name="AvailableChestsText"
+                Grid.Row="1"
+                Text="x3"
+                FontSize="11"
+                Foreground="Red"
+                FontWeight="Bold"
+                HorizontalAlignment="Center"
+                Margin="0,23"
+                />
+            
+            <Grid
+                Grid.Row="1"
+                Margin="0,40,0,0"
+                >
+                
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="*"/>
+                    <RowDefinition Height="40"/>
+                </Grid.RowDefinitions>
+                
+                <GridView 
+                    ItemsSource="{x:Bind _images}"
+                    Grid.Row="0" 
+                    Width="283"
+                    Margin="1.5,0,0,0"
+                    >
+                    <GridView.ItemTemplate>
+                        <DataTemplate 
+                            x:DataType="BitmapImage" 
+                            >
+                            <Grid
+                                x:Name="GridViewItem"
+                                Height="180" 
+                                Width="90" 
+                                Background="White"
+                                >
+                                <Grid.RowDefinitions>
+                                    <RowDefinition Height="5*"/>
+                                    <RowDefinition Height="*"/>
+                                </Grid.RowDefinitions>
+                                <Image
+                                    Tapped="ShowInformation"
+                                    Source="Assets/Rewards/Marvel/ironMan.png"
+                                    />
+                                <TextBlock
+                                    Text="Titel"
+                                    Grid.Row="1"
+                                    FontSize= "13"
+                                    Foreground="Blue"
+                                    HorizontalAlignment="Center"
+                                    VerticalAlignment="Center"
+                                />
+                            </Grid>
+                        </DataTemplate>
+                    </GridView.ItemTemplate>
+                </GridView>
+                <Grid
+                    Grid.Row="1"
+                    >
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*"/>
+                        <ColumnDefinition Width="*"/>
+                        <ColumnDefinition Width="*"/>
+                        <ColumnDefinition Width="*"/>
+                        <ColumnDefinition Width="*"/>
+                        <ColumnDefinition Width="*"/>
+                        <ColumnDefinition Width="*"/>
+                    </Grid.ColumnDefinitions>
+
+                    <Button 
+                        x:Name="Category1"
+                        Style="{StaticResource CategoryButtonStyle}"
+                        BorderThickness="2"
+                        Click="Category1_Click"
+                        >
+                        <Image Source="Assets/ShopAndAlbum/all.png"/>
+                    </Button>
+                    <Button 
+                        x:Name="Category2"
+                        Grid.Column="1"
+                        Style="{StaticResource CategoryButtonStyle}"
+                        Click="Category2_Click"
+                        >
+                        <Image Source="Assets/ShopAndAlbum/marvel-logo.png"/>
+                    </Button>
+                    <Button 
+                        x:Name="Category3"
+                        Grid.Column="2"
+                        Style="{StaticResource CategoryButtonStyle}"
+                        Click="Category3_Click"
+                        >
+                        <Image Source="Assets/ShopAndAlbum/dc-logo.png"/>
+                    </Button>
+                    <Button
+                        x:Name="Category4"
+                        Grid.Column="3"
+                        Style="{StaticResource CategoryButtonStyle}"
+                        Click="Category4_Click"
+                        >
+                        <Image Source="Assets/ShopAndAlbum/disney-logo.png"/>
+                    </Button>
+                    <Button 
+                        x:Name="Category5"
+                        Grid.Column="4"
+                        Style="{StaticResource CategoryButtonStyle}"
+                        Click="Category5_Click"
+                        >
+                        <Image Source="Assets/ShopAndAlbum/warnerbros.png"/>
+                    </Button>
+                    <Button 
+                        x:Name="Category6"
+                        Grid.Column="5"
+                        Style="{StaticResource CategoryButtonStyle}"
+                        Click="Category6_Click"
+                        >
+                        <Image Source="Assets/ShopAndAlbum/dreamworks.png"/>
+                    </Button>
+                    <Button 
+                        x:Name="Category7"
+                        Grid.Column="6"
+                        Style="{StaticResource CategoryButtonStyle}"
+                        Click="Category7_Click"
+                        >
+                        <Image Source="Assets/ShopAndAlbum/marvel-logo.png"></Image>
+                    </Button>
+                </Grid>
+            </Grid>
+        </Grid>
+        
+        <Button 
+            Grid.Row="2"
+            Style="{StaticResource FooterButtonStyle}"
+            Click="BackButton_Click"
+            />
     </Grid>
 </ContentDialog>

@@ -13,12 +13,13 @@ using Windows.UI.Xaml.Input;
 using Windows.UI.Xaml.Media;
 using Windows.UI.Xaml.Media.Animation;
 using Windows.UI.Xaml.Navigation;
+using UWPEindopdracht.Multiplayer;
 
 // The Content Dialog item template is documented at http://go.microsoft.com/fwlink/?LinkId=234238
 
 namespace UWPEindopdracht
 {
-    public sealed partial class ShopDialog : ContentDialog
+    public partial class ShopDialog : ContentDialog
     {
         private int _normalIndex = 1;
         private int _rareIndex = 1;
@@ -26,6 +27,9 @@ namespace UWPEindopdracht
         private const int _normalPrice = 2000;
         private const int _rarePrice = 3000;
         private const int _largePrice = 4000;
+        public int NormalChestAmount { get; set; }
+        public int RareChestAmount { get; set; }
+        public int LargeChestAmount { get; set; }
 
         public ShopDialog()
         {
@@ -46,7 +50,9 @@ namespace UWPEindopdracht
             if (int.Parse(PointsText.Text) >= _normalPrice)
             {
                 _normalIndex++;
+                NormalChestAmount++;
             }
+            EnlargeAnimationNormal.Begin();
         }
 
         private void BuyRareButton_Click(object sender, RoutedEventArgs e)
@@ -55,7 +61,9 @@ namespace UWPEindopdracht
             if (int.Parse(PointsText.Text) >= _rarePrice)
             {
                 _rareIndex++;
+                RareChestAmount++;
             }
+            EnlargeAnimationRare.Begin();
         }
 
         private void BuyLargeButton_Click(object sender, RoutedEventArgs e)
@@ -64,7 +72,9 @@ namespace UWPEindopdracht
             if (int.Parse(PointsText.Text) >= _largePrice)
             {
                 _largeIndex++;
+                LargeChestAmount++;
             }
+            EnlargeAnimationLarge.Begin();
         }
 
         private void Notificate(TextBlock notificationText, Storyboard fadeAnimation, int index, int price)
