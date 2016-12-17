@@ -59,6 +59,8 @@ namespace UWPEindopdracht.GPSConnections
         {
             Geopoint point;
             GCoordinate other = obj as GCoordinate;
+            System.Diagnostics.Debug.WriteLine(Math.Abs(other.lati-lati) + " difference in lati");
+            System.Diagnostics.Debug.WriteLine(Math.Abs(other.longi - longi) + " difference in longi");
             if (other == null) return false;
             if (Math.Abs(other.lati - lati) < 1 &&
                 Math.Abs(other.longi - longi) < 1 &&
