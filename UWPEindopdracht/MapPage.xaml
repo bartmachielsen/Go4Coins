@@ -38,7 +38,7 @@
             ZoomInteractionMode="Disabled"
             RotateInteractionMode="Disabled"
             TiltInteractionMode="Disabled"
-            >    
+            />    
             <Grid>
                 <Grid.Resources>
                     <Storyboard x:Name="OnTargetErrorAnimation">
@@ -53,11 +53,11 @@
                 </Grid.Resources>
 
                 <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="360"></ColumnDefinition>
+                    <ColumnDefinition Width="*"></ColumnDefinition>
                 </Grid.ColumnDefinitions>
 
                 <Grid.RowDefinitions>
-                    <RowDefinition Height="610"></RowDefinition>
+                    <RowDefinition Height="*"></RowDefinition>
                 </Grid.RowDefinitions>
 
                 <Image 
@@ -167,7 +167,7 @@
                         />
                 </Grid>
             </Grid>
-        </Maps:MapControl>
+        
     </Grid>
 </Page>
 
