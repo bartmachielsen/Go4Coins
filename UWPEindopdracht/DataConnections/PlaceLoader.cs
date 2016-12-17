@@ -33,6 +33,7 @@ namespace UWPEindopdracht
             {
                 Places = AddPlaces(Places, await GetPlaces(position));
                 Debug.WriteLine($"Loaded {Places.Count} points!");
+                _alreadyLoaded.Add(position);
             }
         }
 
@@ -42,7 +43,7 @@ namespace UWPEindopdracht
             {
                 return AddPlaces(
                     await new GooglePlacesConnector().GetPlaces(_maxDistanceToPlace, coordinate), 
-                    await new WikipediaConnector().GetPlaces(_maxDistanceToPlace, coordinate));;
+                    await new WikipediaConnector().GetPlaces(_maxDistanceToPlace, coordinate));
             }
             catch (ApiLimitReached)
             {
