@@ -10,6 +10,7 @@ namespace UWPEindopdracht.Multiplayer
     class MultiplayerAssignmentDetails : Assignment
     {
         public List<string> Participants = new List<string>();
+        public List<string> Joiners = new List<string>();
         public int MaxJoiners = 5;
         [JsonIgnore]
         private string _id;

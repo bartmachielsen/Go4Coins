@@ -19,8 +19,11 @@ namespace UWPEindopdracht.DataConnections
         public async Task<List<string>> GetURLToSavePicture(Place place)
         {
             List<string> workingPictures = new List<string>();
-            if (place.Viewports == null) return workingPictures;
-            foreach (var viewport in new List<GCoordinate>(place.Viewports) { place.Location })
+            List<GCoordinate> coordinates = new List<GCoordinate>();
+            if (place.Viewports != null)
+                coordinates.AddRange(place.Viewports);
+            coordinates.Add(place.Location);
+            foreach (var viewport in coordinates)
             {
                 string url =
                     $"{Host}?size={size[0]}x{size[1]}&location={viewport.lati},{viewport.longi}&key={ApiKey}";
