@@ -59,7 +59,7 @@
                 Text="ALBUM"
                 Style="{StaticResource HeaderTextStyle}"
                 />
-        <Grid 
+        <Grid Visibility="Visible"
             Grid.Row="1"
             >
             <Grid.RowDefinitions>
@@ -354,6 +354,54 @@
             </Grid>
         </Grid>
         
+        <ListView
+            Visibility="Collapsed"
+            Grid.Row="1"
+            >
+            <ListViewItem>
+                <StackPanel
+                    Orientation="Horizontal"
+                    >
+                    <Image Source="Assets/Rewards/Marvel/ironMan.png"
+                           Height="160"
+                           Width="140"
+                           />
+                    <StackPanel
+                        Margin="8,0,0,0"
+                        Width="135"
+                        Height="150"
+                        >
+                        <TextBlock
+                            HorizontalAlignment="Center"
+                            Text="Title"
+                            Foreground="Blue"
+                            FontSize="18"
+                            />
+                        <ScrollViewer
+                            VerticalScrollBarVisibility="Hidden">
+                            <TextBlock
+                                Text="Information about reward, Information about reward, Information about reward, Information about reward, Information about reward, Information about reward, Information about reward, Information about reward, Information about reward, Information about reward, Information about reward, Information about reward, Information about reward, Information about reward"
+                                TextWrapping="Wrap"></TextBlock>
+                        </ScrollViewer>
+                    </StackPanel>
+                </StackPanel>
+            </ListViewItem>
+        </ListView>
+        
+        <Grid
+            Grid.Row="1"
+            >
+            
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="*"/>
+            </Grid.ColumnDefinitions>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="*"/>
+                <RowDefinition Height="*"/>
+                <RowDefinition Height="*"/>
+            </Grid.RowDefinitions>
+        </Grid>
         <Button 
             Grid.Row="2"
             Style="{StaticResource FooterButtonStyle}"
