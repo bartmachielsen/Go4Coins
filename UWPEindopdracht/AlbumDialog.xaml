@@ -32,15 +32,41 @@
         </Style>
         <Style x:Key="CategoryButtonStyle" TargetType="Button">
             <Setter Property="Content" Value="&#xE780;"/>
-            <Setter Property="Foreground" Value="Blue"/>
-            <Setter Property="FontSize" Value="20"/>
             <Setter Property="Background" Value="White"/>
             <Setter Property="BorderThickness" Value="0"/>
             <Setter Property="BorderBrush" Value="Blue"/>
             <Setter Property="Height" Value="40"/>
-            <Setter Property="Width" Value="40"/>
+            <Setter Property="Width" Value="45"/>
             <Setter Property="HorizontalAlignment" Value="Center"/>
+        </Style>
+        <Style x:Key="ListSelectionButtonStyle" TargetType="Button">
+            <Setter Property="Visibility" Value="Collapsed"/>
+            <Setter Property="Foreground" Value="Blue"/>
+            <Setter Property="FontSize" Value="20"/>
+            <Setter Property="Background" Value="White"/>
+            <Setter Property="BorderThickness" Value="2"/>
+            <Setter Property="BorderBrush" Value="Blue"/>
+            <Setter Property="HorizontalAlignment" Value="Center"/>
+        </Style>
+        <Style x:Key="InformationGridItemStyle" TargetType="Grid">
+            <Setter Property="Height" Value="160"/>
+            <Setter Property="Width" Value="285"/>
+            <Setter Property="Margin" Value="0,5"/>
+        </Style>
+        <Style x:Key="InformationGridTitleStyle" TargetType="TextBlock">
+            <Setter Property="Grid.Row" Value="0"/>
+            <Setter Property="Grid.Column" Value="1"/>
+            <Setter Property="HorizontalAlignment" Value="Left"/>
             <Setter Property="VerticalAlignment" Value="Center"/>
+            <Setter Property="Text" Value="Title"/>
+            <Setter Property="Foreground" Value="Blue"/>
+            <Setter Property="FontSize" Value="18"/>
+        </Style>
+        <Style x:Key="InformationGridInfoStyle" TargetType="TextBlock">
+            <Setter Property="TextWrapping" Value="Wrap"/>
+            <Setter Property="Foreground" Value="Blue"/>
+            <Setter Property="FontSize" Value="10"/>
+            <Setter Property="Text" Value="Information about reward, Information about reward, Information about reward, Information about reward, Information about reward, Information about reward, Information about reward, Information about reward, Information about reward, Information about reward, Information about reward, Information about reward, Information about reward, Information about reward"/>
         </Style>
     </ContentDialog.Resources>
     
@@ -56,10 +82,13 @@
         </Grid.RowDefinitions>
 
         <TextBlock 
-                Text="ALBUM"
-                Style="{StaticResource HeaderTextStyle}"
-                />
-        <Grid Visibility="Visible"
+            x:Name="HeaderText"
+            Text="ALBUM"
+            Style="{StaticResource HeaderTextStyle}"
+            />
+        
+        <Grid 
+            x:Name="ChestGrid"
             Grid.Row="1"
             >
             <Grid.RowDefinitions>
@@ -245,7 +274,45 @@
                     <RowDefinition Height="40"/>
                 </Grid.RowDefinitions>
                 
+                <Button
+                    x:Name="List1"
+                    Grid.Row="0"
+                    Content="MarvelInfo"
+                    Style="{StaticResource ListSelectionButtonStyle}"
+                    Visibility="Visible"
+                    Click="List1_Click"
+                    />
+                <Button
+                    x:Name="List2"
+                    Grid.Row="0"
+                    Content="DcInfo"
+                    Style="{StaticResource ListSelectionButtonStyle}"
+                    Click="List2_Click"
+                    />
+                <Button
+                    x:Name="List3"
+                    Grid.Row="0"
+                    Content="DisneyInfo"
+                    Style="{StaticResource ListSelectionButtonStyle}"
+                    Click="List3_Click"
+                    />
+                <Button
+                    x:Name="List4"
+                    Grid.Row="0"
+                    Content="WarnerBrosInfo"
+                    Style="{StaticResource ListSelectionButtonStyle}"
+                    Click="List4_Click"
+                    />
+                <Button
+                    x:Name="List5"
+                    Grid.Row="0"
+                    Content="DreamworksInfo"
+                    Style="{StaticResource ListSelectionButtonStyle}"
+                    Click="List5_Click"
+                    />
+                
                 <GridView 
+                    IsEnabled="False"
                     ItemsSource="{x:Bind _images}"
                     Grid.Row="0" 
                     Width="283"
@@ -290,17 +357,16 @@
                         <ColumnDefinition Width="*"/>
                         <ColumnDefinition Width="*"/>
                         <ColumnDefinition Width="*"/>
-                        <ColumnDefinition Width="*"/>
-                        <ColumnDefinition Width="*"/>
                     </Grid.ColumnDefinitions>
 
                     <Button 
                         x:Name="Category1"
+                        Grid.Column="0"
                         Style="{StaticResource CategoryButtonStyle}"
                         BorderThickness="2"
                         Click="Category1_Click"
                         >
-                        <Image Source="Assets/ShopAndAlbum/all.png"/>
+                        <Image Source="Assets/ShopAndAlbum/marvel-logo.png"/>
                     </Button>
                     <Button 
                         x:Name="Category2"
@@ -308,23 +374,23 @@
                         Style="{StaticResource CategoryButtonStyle}"
                         Click="Category2_Click"
                         >
-                        <Image Source="Assets/ShopAndAlbum/marvel-logo.png"/>
+                        <Image Source="Assets/ShopAndAlbum/dc-logo.png"/>
                     </Button>
-                    <Button 
+                    <Button
                         x:Name="Category3"
                         Grid.Column="2"
                         Style="{StaticResource CategoryButtonStyle}"
                         Click="Category3_Click"
                         >
-                        <Image Source="Assets/ShopAndAlbum/dc-logo.png"/>
+                        <Image Source="Assets/ShopAndAlbum/disney-logo.png"/>
                     </Button>
-                    <Button
+                    <Button 
                         x:Name="Category4"
                         Grid.Column="3"
                         Style="{StaticResource CategoryButtonStyle}"
                         Click="Category4_Click"
                         >
-                        <Image Source="Assets/ShopAndAlbum/disney-logo.png"/>
+                        <Image Source="Assets/ShopAndAlbum/warnerbros.png"/>
                     </Button>
                     <Button 
                         x:Name="Category5"
@@ -332,66 +398,105 @@
                         Style="{StaticResource CategoryButtonStyle}"
                         Click="Category5_Click"
                         >
-                        <Image Source="Assets/ShopAndAlbum/warnerbros.png"/>
-                    </Button>
-                    <Button 
-                        x:Name="Category6"
-                        Grid.Column="5"
-                        Style="{StaticResource CategoryButtonStyle}"
-                        Click="Category6_Click"
-                        >
                         <Image Source="Assets/ShopAndAlbum/dreamworks.png"/>
-                    </Button>
-                    <Button 
-                        x:Name="Category7"
-                        Grid.Column="6"
-                        Style="{StaticResource CategoryButtonStyle}"
-                        Click="Category7_Click"
-                        >
-                        <Image Source="Assets/ShopAndAlbum/marvel-logo.png"></Image>
                     </Button>
                 </Grid>
             </Grid>
         </Grid>
-        
-        <ListView
+
+        <Grid
+            x:Name="InformationGrid"
             Visibility="Collapsed"
-            Grid.Row="1"
+            Grid.Row="0"
+            Grid.RowSpan="3"
             >
-            <ListViewItem>
-                <StackPanel
-                    Orientation="Horizontal"
-                    >
-                    <Image Source="Assets/Rewards/Marvel/ironMan.png"
-                           Height="160"
-                           Width="140"
-                           />
-                    <StackPanel
-                        Margin="8,0,0,0"
-                        Width="135"
-                        Height="150"
-                        >
-                        <TextBlock
-                            HorizontalAlignment="Center"
-                            Text="Title"
-                            Foreground="Blue"
-                            FontSize="18"
-                            />
-                        <ScrollViewer
-                            VerticalScrollBarVisibility="Hidden">
-                            <TextBlock
-                                Text="Information about reward, Information about reward, Information about reward, Information about reward, Information about reward, Information about reward, Information about reward, Information about reward, Information about reward, Information about reward, Information about reward, Information about reward, Information about reward, Information about reward"
-                                TextWrapping="Wrap"></TextBlock>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="12*"/>
+                <RowDefinition Height="*"/>
+            </Grid.RowDefinitions>
+            <ScrollViewer
+                VerticalScrollBarVisibility="Hidden"
+                >
+                <StackPanel>
+                    <Grid Style="{StaticResource InformationGridItemStyle}">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="3*"/>
+                            <ColumnDefinition Width="4*"/>
+                        </Grid.ColumnDefinitions>
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="*"/>
+                            <RowDefinition Height="7*"/>
+                        </Grid.RowDefinitions>
+                        <Image Grid.RowSpan="2" Source="Assets/Rewards/Marvel/ironMan.png"/>
+                        <TextBlock Style="{StaticResource InformationGridTitleStyle}"/>
+                        <ScrollViewer Grid.Row="1" Grid.Column="1" VerticalScrollBarVisibility="Hidden" HorizontalScrollBarVisibility="Disabled">
+                            <TextBlock Style="{StaticResource InformationGridInfoStyle}"/>
                         </ScrollViewer>
-                    </StackPanel>
+                    </Grid>
+                    <Grid Style="{StaticResource InformationGridItemStyle}">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="3*"/>
+                            <ColumnDefinition Width="4*"/>
+                        </Grid.ColumnDefinitions>
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="*"/>
+                            <RowDefinition Height="7*"/>
+                        </Grid.RowDefinitions>
+                        <Image Grid.RowSpan="2" Source="Assets/Rewards/Marvel/ironMan.png"/>
+                        <TextBlock Style="{StaticResource InformationGridTitleStyle}"/>
+                        <ScrollViewer Grid.Row="1" Grid.Column="1" VerticalScrollBarVisibility="Hidden" HorizontalScrollBarVisibility="Disabled">
+                            <TextBlock Style="{StaticResource InformationGridInfoStyle}"/>
+                        </ScrollViewer>
+                    </Grid>
+                    <Grid Style="{StaticResource InformationGridItemStyle}">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="3*"/>
+                            <ColumnDefinition Width="4*"/>
+                        </Grid.ColumnDefinitions>
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="*"/>
+                            <RowDefinition Height="7*"/>
+                        </Grid.RowDefinitions>
+                        <Image Grid.RowSpan="2" Source="Assets/Rewards/Marvel/ironMan.png"/>
+                        <TextBlock Style="{StaticResource InformationGridTitleStyle}"/>
+                        <ScrollViewer Grid.Row="1" Grid.Column="1" VerticalScrollBarVisibility="Hidden" HorizontalScrollBarVisibility="Disabled">
+                            <TextBlock Style="{StaticResource InformationGridInfoStyle}"/>
+                        </ScrollViewer>
+                    </Grid>
+                    <Grid Style="{StaticResource InformationGridItemStyle}">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="3*"/>
+                            <ColumnDefinition Width="4*"/>
+                        </Grid.ColumnDefinitions>
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="*"/>
+                            <RowDefinition Height="7*"/>
+                        </Grid.RowDefinitions>
+                        <Image Grid.RowSpan="2" Source="Assets/Rewards/Marvel/ironMan.png"/>
+                        <TextBlock Style ="{StaticResource InformationGridTitleStyle}"/>
+                        <ScrollViewer Grid.Row="1" Grid.Column="1" VerticalScrollBarVisibility="Hidden" HorizontalScrollBarVisibility="Disabled">
+                            <TextBlock Style="{StaticResource InformationGridInfoStyle}"/>
+                        </ScrollViewer>
+                    </Grid>
                 </StackPanel>
-            </ListViewItem>
-        </ListView>
-        
+            </ScrollViewer>
+            <Button
+                Grid.Row="1"
+                HorizontalAlignment="Center"
+                Content="Back to Album"
+                Foreground="Blue"
+                Background="White"
+                BorderBrush="Blue"
+                BorderThickness="2"
+                FontSize="13"
+                Width="200"
+                Click="BackToAlbumButton_Click"
+                />
+        </Grid>
+
         <Grid
             Grid.Row="1"
             >
-            
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="*"/>
                 <ColumnDefinition Width="*"/>
@@ -400,9 +505,11 @@
                 <RowDefinition Height="*"/>
                 <RowDefinition Height="*"/>
                 <RowDefinition Height="*"/>
-            </Grid.RowDefinitions>
+            </Grid.RowDefinitions
+                >
         </Grid>
         <Button 
+            x:Name="BackButton"
             Grid.Row="2"
             Style="{StaticResource FooterButtonStyle}"
             Click="BackButton_Click"

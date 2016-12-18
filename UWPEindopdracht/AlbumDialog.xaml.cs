@@ -94,6 +94,7 @@ namespace UWPEindopdracht
             {
                 ClearAll();
                 Category1.BorderThickness = _size;
+                List1.Visibility = Visibility.Visible;
             }
         }
 
@@ -103,6 +104,7 @@ namespace UWPEindopdracht
             {
                 ClearAll();
                 Category2.BorderThickness = _size;
+                List2.Visibility = Visibility.Visible;
             }
         }
 
@@ -112,6 +114,7 @@ namespace UWPEindopdracht
             {
                 ClearAll();
                 Category3.BorderThickness = _size;
+                List3.Visibility = Visibility.Visible;
             }
         }
 
@@ -121,6 +124,7 @@ namespace UWPEindopdracht
             {
                 ClearAll();
                 Category4.BorderThickness = _size;
+                List4.Visibility = Visibility.Visible;
             }
         }
 
@@ -130,24 +134,7 @@ namespace UWPEindopdracht
             {
                 ClearAll();
                 Category5.BorderThickness = _size;
-            }
-        }
-
-        private void Category6_Click(object sender, RoutedEventArgs e)
-        {
-            if (Category6.BorderThickness != _size)
-            {
-                ClearAll();
-                Category6.BorderThickness = _size;
-            }
-        }
-
-        private void Category7_Click(object sender, RoutedEventArgs e)
-        {
-            if (Category7.BorderThickness != _size)
-            {
-                ClearAll();
-                Category7.BorderThickness = _size;
+                List5.Visibility = Visibility.Visible;
             }
         }
 
@@ -159,8 +146,59 @@ namespace UWPEindopdracht
             Category3.BorderThickness = size;
             Category4.BorderThickness = size;
             Category5.BorderThickness = size;
-            Category6.BorderThickness = size;
-            Category7.BorderThickness = size;
+            List1.Visibility = Visibility.Collapsed;
+            List2.Visibility = Visibility.Collapsed;
+            List3.Visibility = Visibility.Collapsed;
+            List4.Visibility = Visibility.Collapsed;
+            List5.Visibility = Visibility.Collapsed;
+        }
+
+        private void List1_Click(object sender, RoutedEventArgs e)
+        {
+            InformationGrid.Visibility = Visibility.Visible;
+            BackButton.Visibility = Visibility.Collapsed;
+            HeaderText.Visibility = Visibility.Collapsed;
+            ChestGrid.Visibility = Visibility.Collapsed;
+        }
+
+        private void List2_Click(object sender, RoutedEventArgs e)
+        {
+            InformationGrid.Visibility = Visibility.Visible;
+            BackButton.Visibility = Visibility.Collapsed;
+            HeaderText.Visibility = Visibility.Collapsed;
+            ChestGrid.Visibility = Visibility.Collapsed;
+        }
+
+        private void List3_Click(object sender, RoutedEventArgs e)
+        {
+            InformationGrid.Visibility = Visibility.Visible;
+            BackButton.Visibility = Visibility.Collapsed;
+            HeaderText.Visibility = Visibility.Collapsed;
+            ChestGrid.Visibility = Visibility.Collapsed;
+        }
+
+        private void List4_Click(object sender, RoutedEventArgs e)
+        {
+            InformationGrid.Visibility = Visibility.Visible;
+            BackButton.Visibility = Visibility.Collapsed;
+            HeaderText.Visibility = Visibility.Collapsed;
+            ChestGrid.Visibility = Visibility.Collapsed;
+        }
+
+        private void List5_Click(object sender, RoutedEventArgs e)
+        {
+            InformationGrid.Visibility = Visibility.Visible;
+            BackButton.Visibility = Visibility.Collapsed;
+            HeaderText.Visibility = Visibility.Collapsed;
+            ChestGrid.Visibility = Visibility.Collapsed;
+        }
+
+        private void BackToAlbumButton_Click(object sender, RoutedEventArgs e)
+        {
+            InformationGrid.Visibility = Visibility.Collapsed;
+            BackButton.Visibility = Visibility.Visible;
+            HeaderText.Visibility = Visibility.Visible;
+            ChestGrid.Visibility = Visibility.Visible;
         }
     }
 }
