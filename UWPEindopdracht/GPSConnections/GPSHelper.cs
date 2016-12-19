@@ -103,6 +103,11 @@ namespace UWPEindopdracht.GPSConnections
             };
         }
 
+        public static async Task<string> GetCityName(GCoordinate coordinate)
+        {
+            var result = await MapLocationFinder.FindLocationsAtAsync(getPointOutLocation(coordinate));
+            return result.Status == MapLocationFinderStatus.Success ? result.Locations.ElementAt(0).Address.Town : null;
+        }
         public static async Task<MapRoute> calculateRouteBetween(GCoordinate start, GCoordinate end)
         {
             return (await MapRouteFinder.GetWalkingRouteAsync(getPointOutLocation(start),getPointOutLocation(end))).Route;

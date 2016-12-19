@@ -46,33 +46,14 @@ namespace UWPEindopdracht
         /// <returns></returns>
         public async Task<Place[]> PickTargetPlace(List<Place> places, GCoordinate currentPosition)
         {
-
-            /**foreach (var place in places)
-            {
-                if (place.Distance == null)
-                {
-                    var route = await GPSHelper.calculateRouteBetween(currentPosition, place.Location);
-                    if(route != null)
-                        place.Distance = route.LengthInMeters;
-                }
-            }
-            
-            places.RemoveAll((Place place) => place.Distance == null || place.Distance < MinDistance || place.Distance > MaxDistance || place.IsCity());
-            if (places.Count == 0)
-                return null;
-            if (places.Count == 1)
-                return places.ElementAt(0);
-            Random random = new Random();
-            System.Diagnostics.Debug.WriteLine($"Filtered the places to {places.Count} Places!");
-            return places.ElementAt(random.Next(places.Count));
-            **/
             Random random = new Random();
             List<Place> removed = new List<Place>(places);
             while (removed.Count > 0)
             {
                 Place place = removed.ElementAt(random.Next(removed.Count));
                 removed.Remove(place);
-                if (place.IsCity()) continue;
+                if (place.IsCity() || place.Name == await GPSHelper.GetCityName(place.Location))
+                    continue;
                 var route = await GPSHelper.calculateRouteBetween(currentPosition, place.Location);
                 if (route != null)
                     place.Distance = route.LengthInMeters;

@@ -24,8 +24,8 @@ namespace UWPEindopdracht.Assignments
 
         public override async Task FillTarget(List<Place> places, GCoordinate currentPosition)
         {
-            List<string> urls = new List<string>();
-            while (Target == null && urls.Count == 0)
+            string urls = null;
+            while (Target == null && urls == null)
             {
                 await base.FillTarget(places, currentPosition);
                 if(Target != null && Target.Length > 0)

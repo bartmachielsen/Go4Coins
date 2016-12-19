@@ -231,7 +231,7 @@ namespace UWPEindopdracht
                 }
         }
 
-        private async void ShowUserDetails(User user, bool newUser = true, bool self = false)
+        private void ShowUserDetails(User user, bool newUser = true, bool self = false)
         {
             ContentDialog dialog = new UserDialog(user,newUser);
 
@@ -374,7 +374,7 @@ namespace UWPEindopdracht
             }
             if (!dialog.accepted)
             {
-                await SetAssignment(loc, newAssignment);
+                SetAssignment(loc, newAssignment);
                 return;
             }
             else

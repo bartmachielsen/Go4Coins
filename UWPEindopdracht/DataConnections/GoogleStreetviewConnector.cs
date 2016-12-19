@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using UWPEindopdracht.GPSConnections;
+using UWPEindopdracht.JSON;
 using UWPEindopdracht.Places;
 
 namespace UWPEindopdracht.DataConnections
@@ -16,22 +17,21 @@ namespace UWPEindopdracht.DataConnections
         {
         }
 
-        public async Task<List<string>> GetURLToSavePicture(Place place)
+        public async Task<string> GetURLToSavePicture(Place place)
         {
             List<string> workingPictures = new List<string>();
-            List<GCoordinate> coordinates = new List<GCoordinate>();
-            if (place.Viewports != null)
+            List<GCoordinate> coordinates = new List<GCoordinate> () { place.Location};
+            if(place.Viewports != null)
                 coordinates.AddRange(place.Viewports);
-            coordinates.Add(place.Location);
             foreach (var viewport in coordinates)
             {
                 string url =
-                    $"{Host}?size={size[0]}x{size[1]}&location={viewport.lati},{viewport.longi}&key={ApiKey}";
-                if ((await Get(new Uri(url))).IsSuccessStatusCode)
-                    workingPictures.Add(url);
+                    $"{Host}/metadata?size={size[0]}x{size[1]}&location={viewport.lati},{viewport.longi}&key={ApiKey}";
+                var response = await ConvertResponseMessageToContent(await Get(new Uri(url)));
+                if(GooglePlacesParser.GetStatus(response) == "OK")
+                    return $"{Host}?size={size[0]}x{size[1]}&location={viewport.lati},{viewport.longi}&key={ApiKey}";
             }
-
-            return workingPictures;
+            return null;
         }
         
     }
