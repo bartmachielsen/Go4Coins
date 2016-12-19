@@ -14,6 +14,7 @@ namespace UWPEindopdracht
     {
         protected int MaxDistance { get; set; }
         protected int MinDistance { get; set; }
+        public int NeededDistance { get; set; }
         protected int? MaxSpeed { get; set; }
         public string Description { get; set; }
         public Place[] Target { get; private set; }
@@ -118,6 +119,7 @@ namespace UWPEindopdracht
         {
             MaxDistance = 3000;
             MinDistance = 800;
+            NeededDistance = 30;
             MaxSpeed = 40;
             TimeMultiplier = 0.6;
         }
