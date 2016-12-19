@@ -85,6 +85,7 @@
             x:Name="HeaderText"
             Text="ALBUM"
             Style="{StaticResource HeaderTextStyle}"
+            FontSize="22"
             />
         
         <Grid 
