@@ -179,9 +179,9 @@ namespace UWPEindopdracht
         public override string GetDescription()
         {
             return
-                "Walk to the marked point on the map, " +
-                $"\nBonus if reached within {MaximumTime.TotalMinutes} minutes." +
-                $"\ntotal score could be {TotalScore(new TimeSpan())}!";
+                "Walk to the marked point on the map!\n" +
+                $"\nYou'll get a bonus if the point is reached within {MaximumTime.TotalMinutes} minutes!" +
+                $"\nYour total score can be {TotalScore(new TimeSpan())}!";
         }
 
     }
@@ -206,11 +206,11 @@ namespace UWPEindopdracht
         {
 
             return
-                "Search the given point!" +
+                "Search the point given below!\n" +
                 $"\nName: {Target[0].Name}" +
-                $"\nEstimated distance to the target {Target[0].Distance}!" +
-                $"\nBonus if reached within {MaximumTime.TotalMinutes} minutes." +
-                $"\nMaximum score is {TotalScore(new TimeSpan())}";
+                $"\nEstimated distance to the target: {Target[0].Distance}!" +
+                $"\nYou'll get a bonus if the point is reached within {MaximumTime.TotalMinutes} minutes!" +
+                $"\nYour total score can be {TotalScore(new TimeSpan())}!";
         }
     }
 

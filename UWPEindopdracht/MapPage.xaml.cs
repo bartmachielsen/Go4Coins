@@ -186,7 +186,7 @@ namespace UWPEindopdracht
             }
             catch (NoResponseException)
             {
-                System.Diagnostics.Debug.WriteLine("Got no response from database! but continue because shit happens");
+                Debug.WriteLine("Got no response from database, but we'll continue because shit happens");
             }
 
             if (_users == null)
@@ -402,7 +402,6 @@ namespace UWPEindopdracht
                         timer.Stop();
                 };
                 timer.Start();
-                
             }
         }
 
@@ -492,14 +491,14 @@ namespace UWPEindopdracht
             }
             else if (!_assignment.RegisterTarget(_assignment.CurrentLocation))
             {
-                OnTargetText.Text = "already reached!";
+                OnTargetText.Text = "Already reached!";
                 OnTargetText.Foreground = new SolidColorBrush(Colors.Red);
                 OnTargetText.Opacity = 1.0;
                 OnTargetErrorAnimation.Begin();
             }
             else
             {
-                OnTargetText.Text = "reached!";
+                OnTargetText.Text = "Reached!";
                 OnTargetText.Foreground = new SolidColorBrush(Colors.Green);
                 OnTargetText.Opacity = 1.0;
                 OnTargetErrorAnimation.Begin();
@@ -509,7 +508,7 @@ namespace UWPEindopdracht
                     //new AssignmentDialog(_assignment, null).ShowAsync();
                     //TODO ADD SCORE TO USER!
                     _user.Coins += _assignment.TotalScore(_assignment.GetSpentTime());
-                    System.Diagnostics.Debug.Write(_user.Coins);
+                    Debug.Write(_user.Coins);
                     await SetAssignment(null, null);
                     _assignment = null;
                 }
