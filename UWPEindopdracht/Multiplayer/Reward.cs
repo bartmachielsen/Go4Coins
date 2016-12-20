@@ -19,16 +19,18 @@ namespace UWPEindopdracht.Multiplayer
         public string Name { get; set; }
         public string ImageLocation { get; set; }
         public string Description { get; set; }
+        public string Categorie { get; set; }
 
         public RewardValue Value { get; set; }
 
-        public Reward(string _id, string name, string imageLocation, string description, RewardValue value)
+        public Reward(string _id, string name, string imageLocation, string description, RewardValue value, string Categorie)
         {
             id = _id;
             Name = name;
             ImageLocation = imageLocation;
             Description = description;
             Value = value;
+            this.Categorie = Categorie;
         }
     }
 

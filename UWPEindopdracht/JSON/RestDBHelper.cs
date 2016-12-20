@@ -101,7 +101,8 @@ namespace UWPEindopdracht.JSON
                     (string)jsonelement.Name, 
                     (string)jsonelement.ImageLocation,
                     (string)jsonelement.Description, 
-                    (RewardValue)jsonelement.Value));
+                    (RewardValue)jsonelement.Value,
+                    (string)jsonelement.Categorie));
             }
             return rewards;
         }
