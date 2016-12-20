@@ -561,13 +561,13 @@ namespace UWPEindopdracht
 
         private async void GoToAlbumButton_Click(object sender, RoutedEventArgs e)
         {
-            var a = new AlbumDialog();
+            var a = new AlbumDialog(_user);
             await a.ShowAsync();
         }
 
         private async void GoToShopButton_Click(object sender, RoutedEventArgs e)
         {
-            var s = new ShopDialog();
+            var s = new ShopDialog(_user);
             await s.ShowAsync();
         }
     }

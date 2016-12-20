@@ -26,21 +26,23 @@ namespace UWPEindopdracht
     {
         ObservableCollection<BitmapImage> _images = new ObservableCollection<BitmapImage>();
         Thickness _size = new Thickness(2);
+        private User _user;
 
-        public AlbumDialog()
+        public AlbumDialog(User user)
         {
+            _user = user;
             this.InitializeComponent();
-            var s = new ShopDialog
-            {
-                NormalChestAmount = 10,
-                RareChestAmount = 10,
-                LargeChestAmount = 10
-            };
+           refreshChestNumbers();
+            
+        }
 
-            NormalChestAmountText.Text = $"x{s.NormalChestAmount}";
-            RareChestAmountText.Text = $"x{s.RareChestAmount}";
-            LargeChestAmountText.Text = $"x{s.LargeChestAmount}";
-            AvailableChestsText.Text = $"x{s.NormalChestAmount + s.RareChestAmount + s.LargeChestAmount}";
+        public void refreshChestNumbers()
+        {
+            var chests = _user.getChests();
+            NormalChestAmountText.Text = $"x{chests.FindAll(chest => chest is BasicChest).Count}";
+            RareChestAmountText.Text = $"x{chests.FindAll(chest => chest is AdvancedChest).Count}";
+            LargeChestAmountText.Text = $"x{chests.FindAll(chest => chest is LargeChest).Count}";
+            AvailableChestsText.Text = $"x{chests.Count}";
         }
 
         private void BackButton_Click(object sender, RoutedEventArgs e)
@@ -50,16 +52,23 @@ namespace UWPEindopdracht
 
         private void OpenNormalChest_Click(object sender, RoutedEventArgs e)
         {
-            ReturnRewards(NormalChestAmountText.Text);
+            if (!_user.Chests.Contains(typeof(BasicChest).Name)) return;
+            _user.Chests.Remove(typeof(BasicChest).Name);
+            refreshChestNumbers();
         }
 
         private void OpenRareChest_Click(object sender, RoutedEventArgs e)
         {
-            ReturnRewards(RareChestAmountText.Text);
+            if (!_user.Chests.Contains(typeof(AdvancedChest).Name)) return;
+            _user.Chests.Remove(typeof(AdvancedChest).Name);
+            refreshChestNumbers();
         }
 
         private void OpenLargeChest_Click(object sender, RoutedEventArgs e)
         {
+            if (!_user.Chests.Contains(typeof(LargeChest).Name)) return;
+            _user.Chests.Remove(typeof(LargeChest).Name);
+            refreshChestNumbers();
             ReturnRewards(LargeChestAmountText.Text);
         }
 

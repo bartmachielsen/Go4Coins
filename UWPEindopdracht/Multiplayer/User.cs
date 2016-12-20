@@ -25,6 +25,7 @@ namespace UWPEindopdracht.Multiplayer
         public int Coins { get; set; } = 0;
 
         public List<string> Rewards { get; set; } = new List<string>();
+        public List<string> Chests { get; set; } = new List<string>();
         public User(string id, string name, GCoordinate location)
         {
             this.id = id;
@@ -32,6 +33,20 @@ namespace UWPEindopdracht.Multiplayer
             this.Location = location;
         }
 
+        public List<RewardChest> getChests()
+        {
+            List<RewardChest> chests = new List<RewardChest>();
+            foreach (var chest in Chests)
+            {
+                if (chest == typeof(BasicChest).Name)
+                    chests.Add(new BasicChest());
+                if (chest == typeof(AdvancedChest).Name)
+                    chests.Add(new AdvancedChest());
+                if (chest == typeof(LargeChest).Name)
+                    chests.Add(new LargeChest());
+            }
+            return chests;
+        }
     }
 
     public enum LastState
