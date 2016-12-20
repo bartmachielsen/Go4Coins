@@ -495,6 +495,7 @@ namespace UWPEindopdracht
                             await new MessageDialog("TO FAST!", "NOT SO FAST").ShowAsync();
                             break;
                         case SpeedException.WarningLevel.Critical:
+                            // TODO CHECK WHAT KIND OF ASSIGNMENT
                             await SetAssignment(args.Position, new MapAssignment());
                             break;
                     }
@@ -553,6 +554,7 @@ namespace UWPEindopdracht
             var loc = await GPSHelper.getLocationOriginal();
             if (loc != null)
             {
+                // TODO DIFFERENT KIND OF ASSIGNMENTS
                 await SetAssignment(loc, new MapAssignment());
             }
         }
