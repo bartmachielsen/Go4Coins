@@ -26,21 +26,23 @@ namespace UWPEindopdracht
     {
         ObservableCollection<BitmapImage> _images = new ObservableCollection<BitmapImage>();
         Thickness _size = new Thickness(2);
+        private User _user;
 
-        public AlbumDialog()
+        public AlbumDialog(User user)
         {
+            _user = user;
             this.InitializeComponent();
-            var s = new ShopDialog
-            {
-                NormalChestAmount = 10,
-                RareChestAmount = 10,
-                LargeChestAmount = 10
-            };
+           refreshChestNumbers();
+            
+        }
 
-            NormalChestAmountText.Text = $"x{s.NormalChestAmount}";
-            RareChestAmountText.Text = $"x{s.RareChestAmount}";
-            LargeChestAmountText.Text = $"x{s.LargeChestAmount}";
-            AvailableChestsText.Text = $"x{s.NormalChestAmount + s.RareChestAmount + s.LargeChestAmount}";
+        public void refreshChestNumbers()
+        {
+            var chests = _user.getChests();
+            NormalChestAmountText.Text = $"x{chests.FindAll(chest => chest is BasicChest).Count}";
+            RareChestAmountText.Text = $"x{chests.FindAll(chest => chest is AdvancedChest).Count}";
+            LargeChestAmountText.Text = $"x{chests.FindAll(chest => chest is LargeChest).Count}";
+            AvailableChestsText.Text = $"x{chests.Count}";
         }
 
         private void BackButton_Click(object sender, RoutedEventArgs e)
@@ -50,32 +52,23 @@ namespace UWPEindopdracht
 
         private void OpenNormalChest_Click(object sender, RoutedEventArgs e)
         {
-            var intToUse = int.Parse(Regex.Match(NormalChestAmountText.Text, @"\d+").Value);
-            var intTotal = int.Parse(Regex.Match(AvailableChestsText.Text, @"\d+").Value);
-
-            if (intToUse <= 0) return;
-            NormalChestAmountText.Text = $"x{intToUse - 1}";
-            AvailableChestsText.Text = $"x{intTotal - 1}";
+            if (!_user.Chests.Contains(typeof(BasicChest).Name)) return;
+            _user.Chests.Remove(typeof(BasicChest).Name);
+            refreshChestNumbers();
         }
 
         private void OpenRareChest_Click(object sender, RoutedEventArgs e)
         {
-            var intToUse = int.Parse(Regex.Match(RareChestAmountText.Text, @"\d+").Value);
-            var intTotal = int.Parse(Regex.Match(AvailableChestsText.Text, @"\d+").Value);
-
-            if (intToUse <= 0) return;
-            RareChestAmountText.Text = $"x{intToUse - 1}";
-            AvailableChestsText.Text = $"x{intTotal - 1}";
+            if (!_user.Chests.Contains(typeof(AdvancedChest).Name)) return;
+            _user.Chests.Remove(typeof(AdvancedChest).Name);
+            refreshChestNumbers();
         }
 
         private void OpenLargeChest_Click(object sender, RoutedEventArgs e)
         {
-            var intToUse = int.Parse(Regex.Match(LargeChestAmountText.Text, @"\d+").Value);
-            var intTotal = int.Parse(Regex.Match(AvailableChestsText.Text, @"\d+").Value);
-
-            if (intToUse <= 0) return;
-            LargeChestAmountText.Text = $"x{intToUse - 1}";
-            AvailableChestsText.Text = $"x{intTotal - 1}";
+            if (!_user.Chests.Contains(typeof(LargeChest).Name)) return;
+            _user.Chests.Remove(typeof(LargeChest).Name);
+            refreshChestNumbers();
         }
 
         private void MenuButton_Clicked(object sender, RoutedEventArgs e)

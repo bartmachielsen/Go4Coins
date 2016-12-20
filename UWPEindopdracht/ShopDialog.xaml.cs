@@ -30,10 +30,13 @@ namespace UWPEindopdracht
         public int NormalChestAmount { get; set; }
         public int RareChestAmount { get; set; }
         public int LargeChestAmount { get; set; }
+        private User _user;
 
-        public ShopDialog()
+        public ShopDialog(User user)
         {
+            _user = user;
             this.InitializeComponent();
+            PointsText.Text = _user.Coins + "";
         }
 
         private void BackButton_Click(object sender, RoutedEventArgs e)
@@ -51,6 +54,7 @@ namespace UWPEindopdracht
             {
                 _normalIndex++;
                 NormalChestAmount++;
+                _user.Chests.Add(typeof(BasicChest).Name);
             }
             EnlargeAnimationNormal.Begin();
         }
@@ -62,6 +66,7 @@ namespace UWPEindopdracht
             {
                 _rareIndex++;
                 RareChestAmount++;
+                _user.Chests.Add(typeof(AdvancedChest).Name);
             }
             EnlargeAnimationRare.Begin();
         }
@@ -73,20 +78,22 @@ namespace UWPEindopdracht
             {
                 _largeIndex++;
                 LargeChestAmount++;
+                _user.Chests.Add(typeof(LargeChest).Name);
             }
             EnlargeAnimationLarge.Begin();
         }
 
         private void Notificate(TextBlock notificationText, Storyboard fadeAnimation, int index, int price)
         {
-            if (int.Parse(PointsText.Text) < price)
+            if (_user.Coins < price)
             {
                 notificationText.Text = "Can't buy";
                 fadeAnimation.Begin();
             }
             else
             {
-                PointsText.Text = (int.Parse(PointsText.Text) - price).ToString();
+                _user.Coins -= price;
+                PointsText.Text = _user.Coins + "";
                 notificationText.Text = $"Bought x{index}";
                 fadeAnimation.Begin();
             }

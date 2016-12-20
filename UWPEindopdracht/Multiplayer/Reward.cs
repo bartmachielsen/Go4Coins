@@ -32,9 +32,9 @@ namespace UWPEindopdracht.Multiplayer
         }
     }
 
-    class RewardChest
+    public class RewardChest
     {
-        private string _name;
+        public string Name;
         private double _price;
 
         internal int[] Chance = new int[Enum.GetNames(typeof(RewardValue)).Length];
@@ -44,7 +44,7 @@ namespace UWPEindopdracht.Multiplayer
         public string ImageLocation { get; set; }
         public RewardChest(string name, double price, int amount)
         {
-            _name = name;
+            Name = name;
             _price = price;
             this._amount = amount;
         }
@@ -71,32 +71,37 @@ namespace UWPEindopdracht.Multiplayer
         }
     }
 
-    static class ChestCollection
+    public class BasicChest : RewardChest
     {
-        public static List<RewardChest> Chests = new List<RewardChest>()
+        public BasicChest() : base("Basic Chest", 50.0, 3)
         {
-            new RewardChest("Basic Chest", 50.0, 3)
+            Chance = new int[]
             {
-                Chance = new int[]
-                {
-                    100, 99, 90, 65
-                },
-                ImageLocation = "Assets/chest"
-            },new RewardChest("Advanced Chest", 100.0, 3)
-            {
-                Chance = new int[]
-                {
-                    100, 90, 80, 50
-                },
-                ImageLocation = "Assets/chest2"
-            },new RewardChest("Large Chest", 100.0, 8)
-            {
-                Chance = new int[]
-                {
-                    100, 99, 90, 65
-                },
-                ImageLocation = "Assets/chest"
-            }
-        };
+                100, 99, 90, 65
+            };
+        }
     }
+
+    public class AdvancedChest : RewardChest
+    {
+        public AdvancedChest() : base("Advanced Chest", 100.0, 3)
+        {
+            Chance = new int[]
+            {
+                100, 90, 80, 50
+            };
+        }
+    }
+
+    public class LargeChest : RewardChest
+    {
+        public LargeChest() : base("Large Chest", 100.0, 8)
+        {
+            Chance = new int[]
+            {
+                100, 99, 90, 65
+            };
+        }
+    }
+   
 }
