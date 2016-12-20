@@ -300,13 +300,18 @@ namespace UWPEindopdracht
             }
         }
 
-        private void RemovePinPoints(Assignment oldAssignment)
+        private async void RemovePinPoints(Assignment oldAssignment)
         {
-            foreach (var place in oldAssignment.Target)
+            await Dispatcher.RunAsync(CoreDispatcherPriority.Normal, () =>
             {
-                MapControl.MapElements.Remove(place.Icon);
-                place.Icon = null;
-            }
+                foreach (var place in oldAssignment.Target)
+                {
+                    MapControl.MapElements.Remove(place.Icon);
+                    //MapControl.MapElements.Remove(place.Icon);
+                    place.Icon = null;
+                }
+            });
+            
         }
 
         private void PlacePinPoints(Geopoint location)
@@ -333,28 +338,48 @@ namespace UWPEindopdracht
                         if (!string.IsNullOrEmpty(target.IconLink))
                             target.Icon.Image = RandomAccessStreamReference.CreateFromUri(new Uri(target.IconLink));
                         MapControl.MapElements.Add(target.Icon);
-                        LoadingAnimation.Visibility = Visibility.Collapsed;
-                        LoadingText.Visibility = Visibility.Collapsed;
-                        NewAssignmentButton.IsEnabled = true;
-                        GoToAlbumButton.IsEnabled = true;
-                        GoToShopButton.IsEnabled = true;
-                        OnTargetButton.IsEnabled = true;
-                        MapControl.PanInteractionMode = MapPanInteractionMode.Auto;
-                        MapControl.ZoomInteractionMode = MapInteractionMode.Auto;
-                        MapControl.RotateInteractionMode = MapInteractionMode.Auto;
-                        MapControl.TiltInteractionMode = MapInteractionMode.Auto;
                     }
                 }
             }
             _userLocation.Location = location;
         }
 
+        private void showLoading()
+        {
+            LoadingAnimation.Visibility = Visibility.Visible;
+            LoadingText.Visibility = Visibility.Visible;
+            NewAssignmentButton.IsEnabled = false;
+            GoToAlbumButton.IsEnabled = false;
+            GoToShopButton.IsEnabled = false;
+            OnTargetButton.IsEnabled = false;
+            MapControl.PanInteractionMode = MapPanInteractionMode.Disabled;
+            MapControl.ZoomInteractionMode = MapInteractionMode.Disabled;
+            MapControl.RotateInteractionMode = MapInteractionMode.Disabled;
+            MapControl.TiltInteractionMode = MapInteractionMode.Disabled;
+        }
+
+        private void hideLoading()
+        {
+            LoadingAnimation.Visibility = Visibility.Collapsed;
+            LoadingText.Visibility = Visibility.Collapsed;
+            NewAssignmentButton.IsEnabled = true;
+            GoToAlbumButton.IsEnabled = true;
+            GoToShopButton.IsEnabled = true;
+            OnTargetButton.IsEnabled = true;
+            MapControl.PanInteractionMode = MapPanInteractionMode.Auto;
+            MapControl.ZoomInteractionMode = MapInteractionMode.Auto;
+            MapControl.RotateInteractionMode = MapInteractionMode.Auto;
+            MapControl.TiltInteractionMode = MapInteractionMode.Auto;
+        }
         private async Task SetAssignment(Geoposition loc, Assignment newAssignment)
         {
             if(_assignment != null)
                 RemovePinPoints(_assignment);
+            var tempSave = _assignment;
+            _assignment = null;
             if (loc == null || newAssignment == null)
                 return;
+            showLoading();
             await _placeLoader.LoadPlaces(GPSHelper.GetGcoordinate(loc.Coordinate.Point));
             
             try
@@ -385,7 +410,7 @@ namespace UWPEindopdracht
                 newAssignment.StartAssignment();
                 _assignment = newAssignment;
                 PlacePinPoints(loc.Coordinate.Point);
-
+                hideLoading();
                 ChangeDistance(GPSHelper.GetGcoordinate(loc.Coordinate.Point));
                 ChangeTime();
 
@@ -411,7 +436,7 @@ namespace UWPEindopdracht
             if (loc != null)
             {
                 MapControl.Center = loc.Coordinate.Point;
-                await SetAssignment(loc, new MapAssignment());
+                hideLoading();
             }
             else
             {
@@ -471,10 +496,6 @@ namespace UWPEindopdracht
                             break;
                         case SpeedException.WarningLevel.Critical:
                             await SetAssignment(args.Position, new MapAssignment());
-                            break;
-                        case SpeedException.WarningLevel.Block:
-                            await SetAssignment(null, null);
-                            _assignment = null;
                             break;
                     }
                 }
