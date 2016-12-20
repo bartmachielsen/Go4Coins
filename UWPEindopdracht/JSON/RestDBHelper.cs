@@ -99,10 +99,11 @@ namespace UWPEindopdracht.JSON
                 rewards.Add(new Reward(
                     (string)jsonelement._id, 
                     (string)jsonelement.Name, 
-                    (string)jsonelement.ImageLocation,
-                    (string)jsonelement.Description, 
-                    (RewardValue)jsonelement.Value,
-                    (string)jsonelement.Categorie));
+                    (string)jsonelement.UnlockedImageLocation,
+                    (string)jsonelement.LockedImageLocation,
+                    (string)jsonelement.Description,
+                    (string)jsonelement.Categorie,
+                    (RewardValue)jsonelement.Value));
             }
             return rewards;
         }

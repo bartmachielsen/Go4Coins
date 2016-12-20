@@ -17,20 +17,22 @@ namespace UWPEindopdracht.Multiplayer
         [JsonIgnore]
         public string id { get; set; }
         public string Name { get; set; }
-        public string ImageLocation { get; set; }
+        public string UnlockedImageLocation { get; set; }
+        public string LockedImageLocation { get; set; }
         public string Description { get; set; }
         public string Categorie { get; set; }
 
         public RewardValue Value { get; set; }
 
-        public Reward(string _id, string name, string imageLocation, string description, RewardValue value, string Categorie)
+        public Reward(string _id, string name, string unlockedImageLocation, string lockedImageLocation, string description, string categorie, RewardValue value)
         {
-            id = _id;
+            this.id = _id;
             Name = name;
-            ImageLocation = imageLocation;
+            UnlockedImageLocation = unlockedImageLocation;
+            LockedImageLocation = lockedImageLocation;
             Description = description;
+            Categorie = categorie;
             Value = value;
-            this.Categorie = Categorie;
         }
     }
 
