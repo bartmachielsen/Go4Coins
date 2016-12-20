@@ -17,7 +17,7 @@ namespace UWPEindopdracht.Assignments
             _connector = new GoogleStreetviewConnector();
         }
 
-        public override void FillDescription()
+        public override string GetDescription()
         {
             throw new NotImplementedException();
         }

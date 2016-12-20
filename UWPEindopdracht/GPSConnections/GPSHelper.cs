@@ -114,7 +114,10 @@ namespace UWPEindopdracht.GPSConnections
         }
         public static async Task<MapRoute> calculateRouteBetween(GCoordinate start, GCoordinate end)
         {
-            return (await MapRouteFinder.GetWalkingRouteAsync(getPointOutLocation(start),getPointOutLocation(end))).Route;
+            var result = (await MapRouteFinder.GetWalkingRouteAsync(getPointOutLocation(start),getPointOutLocation(end)));
+            if (result.Status == MapRouteFinderStatus.Success)
+                return result.Route;
+            return null;
         }
 
         public static GCoordinate GetGcoordinate(Geopoint center)
@@ -144,22 +147,31 @@ namespace UWPEindopdracht.GPSConnections
         /// </summary>
         /// <param name="route">The route the user is using <seealso cref="Route"/></param> 
         /// <exception cref="GpsNotAllowed">Exception when system has deactivated GPS or user does not allow GPS to this application</exception>
-        public static async Task PointOfInterestEntered(Func<Place, Task> notifier, Place place, Assignment assignment)
+        public static async Task PlaceEntered(Func<Place, Task> notifier, Place place, int distance = 30)
         {
             if (!await checkGPSState())
                 return;
-            int distance = 30;
-            if (assignment != null)
-                distance = assignment.NeededDistance;
             var geofence = new Geofence($"{place.GetHashCode()} notifier", new Geocircle(getPointOutLocation(place.Location).Position, distance), MonitoredGeofenceStates.Entered, true, TimeSpan.FromSeconds(1));
 
+            PlaceGeofence(geofence, notifier, place);
+        }
 
+        public static async Task PlaceLeaved(Func<Place, Task> notifier, Place place, int distance = 30)
+        {
+            if (!await checkGPSState())
+                return;
+            var geofence = new Geofence($"{place.GetHashCode()} disnotifier", new Geocircle(getPointOutLocation(place.Location).Position, distance), MonitoredGeofenceStates.Exited, true, TimeSpan.FromSeconds(1));
+
+            PlaceGeofence(geofence, notifier, place);
+        }
+
+        public static async Task PlaceGeofence(Geofence geofence, Func<Place, Task> notifier, Place place)
+        {
             GeofenceMonitor.Current.Geofences.Add(geofence);
 
             TypedEventHandler<GeofenceMonitor, object> listener = null;
-            listener = (GeofenceMonitor monitor, object obj) =>
+            listener = async (GeofenceMonitor monitor, object obj) =>
             {
-                if (place.visited) return;
                 foreach (var report in monitor.ReadReports())
                     if (report.Geofence.Id == geofence.Id)
                     {
@@ -170,11 +182,10 @@ namespace UWPEindopdracht.GPSConnections
             GeofenceMonitor.Current.GeofenceStateChanged += listener;
         }
 
-
     }
 
 
 }
 
 
-}
+

@@ -7,6 +7,7 @@ using Windows.Devices.Geolocation;
 using Windows.Devices.Geolocation.Geofencing;
 using Windows.Storage;
 using Windows.Storage.Streams;
+using Windows.UI;
 using Windows.UI.Core;
 using Windows.UI.Popups;
 using Windows.UI.Xaml;
@@ -51,7 +52,7 @@ namespace UWPEindopdracht
 
         public MapPage()
         {
-            
+            GPSHelper.ClearGeofences();
             LoadMultiplayerDetails();
             
             InitializeComponent();
@@ -374,11 +375,12 @@ namespace UWPEindopdracht
             }
             if (!dialog.accepted)
             {
-                SetAssignment(loc, newAssignment);
+                await SetAssignment(loc, newAssignment);
                 return;
             }
             else
             {
+                newAssignment.StartAssignment();
                 _assignment = newAssignment;
                 PlacePinPoints(loc.Coordinate.Point);
 
@@ -478,8 +480,34 @@ namespace UWPEindopdracht
 
         private void OnTargetButton_Click(object sender, RoutedEventArgs e)
         {
-            OnTargetText.Opacity = 1.0;
-            OnTargetErrorAnimation.Begin();
+            if (_assignment == null) return;
+            if (_assignment.CurrentLocation == null)
+            {
+                OnTargetText.Text = "Not close enough!";
+                OnTargetText.Foreground = new SolidColorBrush(Colors.Red);
+                OnTargetText.Opacity = 1.0;
+                OnTargetErrorAnimation.Begin();
+            }
+            else if (!_assignment.RegisterTarget(_assignment.CurrentLocation))
+            {
+                OnTargetText.Text = "already reached!";
+                OnTargetText.Foreground = new SolidColorBrush(Colors.Red);
+                OnTargetText.Opacity = 1.0;
+                OnTargetErrorAnimation.Begin();
+            }
+            else
+            {
+                OnTargetText.Text = "reached!";
+                OnTargetText.Foreground = new SolidColorBrush(Colors.Green);
+                OnTargetText.Opacity = 1.0;
+                OnTargetErrorAnimation.Begin();
+
+                if (_assignment.AssignmentFinished())
+                {
+                    new AssignmentDialog(_assignment, null).ShowAsync();
+                    //TODO ADD SCORE TO USER!
+                }
+            }
         }
 
         private void MultiplayerToggleButton_Click(object sender, RoutedEventArgs e)

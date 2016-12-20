@@ -34,11 +34,11 @@ namespace UWPEindopdracht
 
         private void LoadDetails()
         {
-            AssignDetails.Text = _assignment.Description;
+            AssignDetails.Text = _assignment.GetDescription();
             Title = _assignment.Target[0].Name;
             if(this._imageURL != null)
                 AssignmentImage.Source = new BitmapImage(new Uri(_imageURL));
-            IsSecondaryButtonEnabled = _assignment.IsSkippable();
+            IsSecondaryButtonEnabled = _assignment.Skippable;
 
         }
 
