@@ -50,32 +50,42 @@ namespace UWPEindopdracht
 
         private void OpenNormalChest_Click(object sender, RoutedEventArgs e)
         {
-            var intToUse = int.Parse(Regex.Match(NormalChestAmountText.Text, @"\d+").Value);
-            var intTotal = int.Parse(Regex.Match(AvailableChestsText.Text, @"\d+").Value);
-
-            if (intToUse <= 0) return;
-            NormalChestAmountText.Text = $"x{intToUse - 1}";
-            AvailableChestsText.Text = $"x{intTotal - 1}";
+            ReturnRewards(NormalChestAmountText.Text);
         }
 
         private void OpenRareChest_Click(object sender, RoutedEventArgs e)
         {
-            var intToUse = int.Parse(Regex.Match(RareChestAmountText.Text, @"\d+").Value);
-            var intTotal = int.Parse(Regex.Match(AvailableChestsText.Text, @"\d+").Value);
-
-            if (intToUse <= 0) return;
-            RareChestAmountText.Text = $"x{intToUse - 1}";
-            AvailableChestsText.Text = $"x{intTotal - 1}";
+            ReturnRewards(RareChestAmountText.Text);
         }
 
         private void OpenLargeChest_Click(object sender, RoutedEventArgs e)
         {
-            var intToUse = int.Parse(Regex.Match(LargeChestAmountText.Text, @"\d+").Value);
+            ReturnRewards(LargeChestAmountText.Text);
+        }
+
+        private void ReturnRewards(string chest)
+        {
+            var intToUse = int.Parse(Regex.Match(chest, @"\d+").Value);
             var intTotal = int.Parse(Regex.Match(AvailableChestsText.Text, @"\d+").Value);
 
             if (intToUse <= 0) return;
-            LargeChestAmountText.Text = $"x{intToUse - 1}";
+            if (chest.Equals(NormalChestAmountText.Text))
+            {
+                NormalChestAmountText.Text = $"x{intToUse - 1}";
+            }
+            else if (chest.Equals(RareChestAmountText.Text))
+            {
+                RareChestAmountText.Text = $"x{intToUse - 1}";
+            }
+            else if (chest.Equals(LargeChestAmountText.Text))
+            {
+                LargeChestAmountText.Text = $"x{intToUse - 1}";
+            }
             AvailableChestsText.Text = $"x{intTotal - 1}";
+            RewardGrid.Visibility = Visibility.Visible;
+            BackButton.Visibility = Visibility.Collapsed;
+            HeaderText.Visibility = Visibility.Collapsed;
+            ChestGrid.Visibility = Visibility.Collapsed;
         }
 
         private void MenuButton_Clicked(object sender, RoutedEventArgs e)
@@ -156,49 +166,45 @@ namespace UWPEindopdracht
         private void List1_Click(object sender, RoutedEventArgs e)
         {
             InformationGrid.Visibility = Visibility.Visible;
-            BackButton.Visibility = Visibility.Collapsed;
-            HeaderText.Visibility = Visibility.Collapsed;
-            ChestGrid.Visibility = Visibility.Collapsed;
+            CollectionsGrid.Visibility = Visibility.Collapsed;
         }
 
         private void List2_Click(object sender, RoutedEventArgs e)
         {
             InformationGrid.Visibility = Visibility.Visible;
-            BackButton.Visibility = Visibility.Collapsed;
-            HeaderText.Visibility = Visibility.Collapsed;
-            ChestGrid.Visibility = Visibility.Collapsed;
+            CollectionsGrid.Visibility = Visibility.Collapsed;
         }
 
         private void List3_Click(object sender, RoutedEventArgs e)
         {
             InformationGrid.Visibility = Visibility.Visible;
-            BackButton.Visibility = Visibility.Collapsed;
-            HeaderText.Visibility = Visibility.Collapsed;
-            ChestGrid.Visibility = Visibility.Collapsed;
+            CollectionsGrid.Visibility = Visibility.Collapsed;
         }
 
         private void List4_Click(object sender, RoutedEventArgs e)
         {
             InformationGrid.Visibility = Visibility.Visible;
-            BackButton.Visibility = Visibility.Collapsed;
-            HeaderText.Visibility = Visibility.Collapsed;
-            ChestGrid.Visibility = Visibility.Collapsed;
+            CollectionsGrid.Visibility = Visibility.Collapsed;
         }
 
         private void List5_Click(object sender, RoutedEventArgs e)
         {
             InformationGrid.Visibility = Visibility.Visible;
-            BackButton.Visibility = Visibility.Collapsed;
-            HeaderText.Visibility = Visibility.Collapsed;
-            ChestGrid.Visibility = Visibility.Collapsed;
+            CollectionsGrid.Visibility = Visibility.Collapsed;
         }
 
         private void BackToAlbumButton_Click(object sender, RoutedEventArgs e)
         {
-            InformationGrid.Visibility = Visibility.Collapsed;
-            BackButton.Visibility = Visibility.Visible;
+            RewardGrid.Visibility = Visibility.Collapsed;
             HeaderText.Visibility = Visibility.Visible;
+            BackButton.Visibility = Visibility.Visible;
             ChestGrid.Visibility = Visibility.Visible;
+        }
+
+        private void BackToAlbumButton2_Click(object sender, RoutedEventArgs e)
+        {
+            InformationGrid.Visibility = Visibility.Collapsed;
+            CollectionsGrid.Visibility = Visibility.Visible;
         }
     }
 }

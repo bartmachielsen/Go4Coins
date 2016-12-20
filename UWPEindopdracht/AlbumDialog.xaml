@@ -68,6 +68,16 @@
             <Setter Property="FontSize" Value="10"/>
             <Setter Property="Text" Value="Information about reward, Information about reward, Information about reward, Information about reward, Information about reward, Information about reward, Information about reward, Information about reward, Information about reward, Information about reward, Information about reward, Information about reward, Information about reward, Information about reward"/>
         </Style>
+        <Style x:Key="BackToAlbumButtonInfoStyle" TargetType="Button">
+            <Setter Property="HorizontalAlignment" Value="Center"/>
+            <Setter Property="Content" Value="Back to album"/>
+            <Setter Property="Foreground" Value="Blue"/>
+            <Setter Property="Background" Value="White"/>
+            <Setter Property="BorderThickness" Value="2"/>
+            <Setter Property="BorderBrush" Value="Blue"/>
+            <Setter Property="FontSize" Value="13"/>
+            <Setter Property="Width" Value="200"/>
+        </Style>
     </ContentDialog.Resources>
     
     <Grid>
@@ -93,7 +103,7 @@
             Grid.Row="1"
             >
             <Grid.RowDefinitions>
-                <RowDefinition x:Name ="ChestRow" Height="2*"/>
+                <RowDefinition x:Name ="ChestRow" Height="0"/>
                 <RowDefinition Height="4*"/>
             </Grid.RowDefinitions>
 
@@ -264,8 +274,62 @@
                 HorizontalAlignment="Center"
                 Margin="0,23"
                 />
-            
+
             <Grid
+                x:Name="InformationGrid"
+                Visibility="Collapsed"
+                Grid.Row="1"
+                Width="285"
+                Margin="0,40,0,0"
+                >
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="*"/>
+                    <RowDefinition Height="6*"/>
+                    <RowDefinition Height="6*"/>
+                    <RowDefinition Height="2*"/>
+                </Grid.RowDefinitions>
+
+                <TextBlock
+                    Text="Title"
+                    FontSize="18"
+                    Foreground="Blue"
+                    HorizontalAlignment="Center"
+                    VerticalAlignment="Center"
+                    />
+                    <Grid
+                        HorizontalAlignment="Center"
+                        VerticalAlignment="Center"
+                        Grid.Row="1"
+                        >
+                        <Border
+                            BorderThickness="4"
+                            BorderBrush="Orange">
+                            <Image
+                                Source="Assets/Rewards/Marvel/ironMan.png"
+                                />
+                        </Border>
+                    </Grid>
+                <ScrollViewer
+                    Margin="0,5,0,5"
+                    Grid.Row="2"
+                    VerticalScrollBarVisibility="Hidden"
+                    >
+                    <TextBlock
+                        FontSize="12"
+                        Foreground="Blue"
+                        TextWrapping="Wrap"
+                        Text="Infomation about item, Infomation about item, Infomation about item, Infomation about item, Infomation about item, Infomation about item, Infomation about item, Infomation about item, Infomation about item, Infomation about item, Infomation about item, Infomation about item, Infomation about item, Infomation about item, Infomation about item, Infomation about item, Infomation about item, Infomation about item, Infomation about item, Infomation about item, Infomation about item, Infomation about item, Infomation about item, Infomation about item, Infomation about item, Infomation about item, Infomation about item, Infomation about item"></TextBlock>
+                </ScrollViewer>
+                <Button
+                    Grid.Row="3"
+                    Style="{StaticResource BackToAlbumButtonInfoStyle}"
+                    Click="BackToAlbumButton2_Click"
+                    />
+            </Grid>
+
+            <Grid
+                x:Name="CollectionsGrid"
+                Visibility="Visible"
                 Grid.Row="1"
                 Margin="0,40,0,0"
                 >
@@ -406,7 +470,7 @@
         </Grid>
 
         <Grid
-            x:Name="InformationGrid"
+            x:Name="RewardGrid"
             Visibility="Collapsed"
             Grid.Row="0"
             Grid.RowSpan="3"
@@ -428,7 +492,11 @@
                             <RowDefinition Height="*"/>
                             <RowDefinition Height="7*"/>
                         </Grid.RowDefinitions>
-                        <Image Grid.RowSpan="2" Source="Assets/Rewards/Marvel/ironMan.png"/>
+                        <Grid HorizontalAlignment="Center" VerticalAlignment="Center" Grid.RowSpan="2">
+                            <Border BorderThickness="4" BorderBrush="Orange">
+                                <Image Source="Assets/Rewards/Marvel/ironMan.png"/>
+                            </Border>
+                        </Grid>
                         <TextBlock Style="{StaticResource InformationGridTitleStyle}"/>
                         <ScrollViewer Grid.Row="1" Grid.Column="1" VerticalScrollBarVisibility="Hidden" HorizontalScrollBarVisibility="Disabled">
                             <TextBlock Style="{StaticResource InformationGridInfoStyle}"/>
@@ -443,7 +511,11 @@
                             <RowDefinition Height="*"/>
                             <RowDefinition Height="7*"/>
                         </Grid.RowDefinitions>
-                        <Image Grid.RowSpan="2" Source="Assets/Rewards/Marvel/ironMan.png"/>
+                        <Grid HorizontalAlignment="Center" VerticalAlignment="Center" Grid.RowSpan="2">
+                            <Border BorderThickness="4" BorderBrush="Orange">
+                                <Image Source="Assets/Rewards/Marvel/ironMan.png"/>
+                            </Border>
+                        </Grid>
                         <TextBlock Style="{StaticResource InformationGridTitleStyle}"/>
                         <ScrollViewer Grid.Row="1" Grid.Column="1" VerticalScrollBarVisibility="Hidden" HorizontalScrollBarVisibility="Disabled">
                             <TextBlock Style="{StaticResource InformationGridInfoStyle}"/>
@@ -458,13 +530,17 @@
                             <RowDefinition Height="*"/>
                             <RowDefinition Height="7*"/>
                         </Grid.RowDefinitions>
-                        <Image Grid.RowSpan="2" Source="Assets/Rewards/Marvel/ironMan.png"/>
+                        <Grid HorizontalAlignment="Center" VerticalAlignment="Center" Grid.RowSpan="2">
+                            <Border BorderThickness="4" BorderBrush="Orange">
+                                <Image Source="Assets/Rewards/Marvel/ironMan.png"/>
+                            </Border>
+                        </Grid>
                         <TextBlock Style="{StaticResource InformationGridTitleStyle}"/>
                         <ScrollViewer Grid.Row="1" Grid.Column="1" VerticalScrollBarVisibility="Hidden" HorizontalScrollBarVisibility="Disabled">
                             <TextBlock Style="{StaticResource InformationGridInfoStyle}"/>
                         </ScrollViewer>
                     </Grid>
-                    <Grid Style="{StaticResource InformationGridItemStyle}">
+                    <!--<Grid Style="{StaticResource InformationGridItemStyle}">
                         <Grid.ColumnDefinitions>
                             <ColumnDefinition Width="3*"/>
                             <ColumnDefinition Width="4*"/>
@@ -473,28 +549,25 @@
                             <RowDefinition Height="*"/>
                             <RowDefinition Height="7*"/>
                         </Grid.RowDefinitions>
-                        <Image Grid.RowSpan="2" Source="Assets/Rewards/Marvel/ironMan.png"/>
+                        <Grid HorizontalAlignment="Center" VerticalAlignment="Center" Grid.RowSpan="2">
+                            <Border BorderThickness="4" BorderBrush="Orange">
+                                <Image Source="Assets/Rewards/Marvel/ironMan.png"/>
+                            </Border>
+                        </Grid>
                         <TextBlock Style ="{StaticResource InformationGridTitleStyle}"/>
                         <ScrollViewer Grid.Row="1" Grid.Column="1" VerticalScrollBarVisibility="Hidden" HorizontalScrollBarVisibility="Disabled">
                             <TextBlock Style="{StaticResource InformationGridInfoStyle}"/>
                         </ScrollViewer>
-                    </Grid>
+                    </Grid>-->
                 </StackPanel>
             </ScrollViewer>
             <Button
                 Grid.Row="1"
-                HorizontalAlignment="Center"
-                Content="Back to Album"
-                Foreground="Blue"
-                Background="White"
-                BorderBrush="Blue"
-                BorderThickness="2"
-                FontSize="13"
-                Width="200"
+                Style="{StaticResource BackToAlbumButtonInfoStyle}"
                 Click="BackToAlbumButton_Click"
                 />
         </Grid>
-
+        
         <Grid
             Grid.Row="1"
             >
