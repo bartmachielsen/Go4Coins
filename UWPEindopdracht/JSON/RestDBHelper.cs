@@ -30,22 +30,17 @@ namespace UWPEindopdracht.JSON
                         var exists = false;
                         foreach (var existuser in users)
                         {
-                            if (existuser.id == user.id)
-                            {
-                                exists = true;
-                                existuser.LastState = LastState.Updated;
-                                existuser.Location = user.Location;
-                                existuser.Name = user.Name;
-                                existuser.Rewards = user.Rewards;
-                                existuser.Coins = user.Coins;
-                                existuser.LastSynced = user.LastSynced;
-                            }
+                            if (existuser.id != user.id) continue;
+                            exists = true;
+                            existuser.Location = user.Location;
+                            existuser.Name = user.Name;
+                            existuser.Rewards = user.Rewards;
+                            existuser.Coins = user.Coins;
+                            existuser.LastSynced = user.LastSynced;
                         }
                         if (!exists)
-                        {
-                            user.LastState = LastState.Online;
                             users.Add(user);
-                        }
+                        
                     }
                 }
                 catch (Exception e)
