@@ -14,10 +14,11 @@ namespace UWPEindopdracht
     {
         protected int MaxDistance { get; set; }
         protected int MinDistance { get; set; }
+        public int NeededDistance { get; set; }
         protected int? MaxSpeed { get; set; }
-        public string Description { get; set; }
         public Place[] Target { get; private set; }
-
+        public Place CurrentLocation { get; set; }
+        private List<Place> _reachedTargets = new List<Place>();
         protected double TimeMultiplier { private get; set; } = 1;
 
         private DateTime _start;
@@ -25,19 +26,17 @@ namespace UWPEindopdracht
         public bool ShowPinPoint { get; protected set; } = true;
         protected TimeSpan MaximumTime { get; set; }
         public bool ShowPicture { get; set; } = true;
+        public bool Skippable { get; set; } = true;
 
         // TODO IMAGE FOR SHOWING WHEN ASSIGNMENT HAS BEEN ANNOUNCED!
 
         public virtual async Task FillTarget(List<Place> places, GCoordinate currentPosition)
         {
             Target = await PickTargetPlace(places, currentPosition);
-            MaximumTime = TimeSpan.FromMinutes((await GPSHelper.calculateRouteBetween(currentPosition, Target[0].Location)).EstimatedDuration.TotalMinutes*TimeMultiplier);
-            FillDescription();
-            _start = DateTime.Now;
-            
+            MaximumTime = TimeSpan.FromMinutes((await GPSHelper.calculateRouteBetween(currentPosition, Target[0].Location)).EstimatedDuration.TotalMinutes*TimeMultiplier);  
         }
 
-        public abstract void FillDescription();
+        public abstract string GetDescription();
         /// <summary>
         /// Select target random from a list with only items that are on a good distance from source
         /// </summary>
@@ -46,33 +45,14 @@ namespace UWPEindopdracht
         /// <returns></returns>
         public async Task<Place[]> PickTargetPlace(List<Place> places, GCoordinate currentPosition)
         {
-
-            /**foreach (var place in places)
-            {
-                if (place.Distance == null)
-                {
-                    var route = await GPSHelper.calculateRouteBetween(currentPosition, place.Location);
-                    if(route != null)
-                        place.Distance = route.LengthInMeters;
-                }
-            }
-            
-            places.RemoveAll((Place place) => place.Distance == null || place.Distance < MinDistance || place.Distance > MaxDistance || place.IsCity());
-            if (places.Count == 0)
-                return null;
-            if (places.Count == 1)
-                return places.ElementAt(0);
-            Random random = new Random();
-            System.Diagnostics.Debug.WriteLine($"Filtered the places to {places.Count} Places!");
-            return places.ElementAt(random.Next(places.Count));
-            **/
             Random random = new Random();
             List<Place> removed = new List<Place>(places);
             while (removed.Count > 0)
             {
                 Place place = removed.ElementAt(random.Next(removed.Count));
                 removed.Remove(place);
-                if (place.IsCity()) continue;
+                if (place.IsCity() || place.Name == await GPSHelper.GetCityName(place.Location))
+                    continue;
                 var route = await GPSHelper.calculateRouteBetween(currentPosition, place.Location);
                 if (route != null)
                     place.Distance = route.LengthInMeters;
@@ -121,13 +101,63 @@ namespace UWPEindopdracht
                 return new string[] {$"{hours}{minutes}:{seconds}"};
             }
             MapRoute route = await GPSHelper.calculateRouteBetween(currentPoint, Target[0].Location);
-            return new string[] {$"", route.LengthInMeters/1000.0 + " km"};
+            if (route != null)
+            {
+                return new string[] {$"", route.LengthInMeters / 1000.0 + " km"};
+            }
+            return new string[] { $"", "Unreachable!" };
         }
 
 
-        public virtual bool IsSkippable()
+        private async void CheckTargetsForReached()
         {
+            Func<Place, Task> reachedFunction = null;
+            Func<Place, Task> leavedFunction = null;
+
+            reachedFunction = async (place) =>
+            {
+                if (CurrentLocation == null || CurrentLocation != place)
+                {
+                    System.Diagnostics.Debug.WriteLine("Reached place! " + place.Name);
+                    CurrentLocation = place;
+                    await GPSHelper.PlaceLeaved(leavedFunction, place, NeededDistance);
+                }
+            };
+            leavedFunction = async (place) =>
+            {
+                if (CurrentLocation != null || CurrentLocation == place)
+                {
+                    System.Diagnostics.Debug.WriteLine("Left place! " + place.Name);
+                    CurrentLocation = null;
+                    await GPSHelper.PlaceEntered(reachedFunction, place, NeededDistance);
+                }
+            };
+            foreach (var target in Target)
+            {
+                await GPSHelper.PlaceEntered(reachedFunction, target, NeededDistance);
+            }
+        }
+
+        public void StartAssignment()
+        {
+            _start = DateTime.Now;
+            foreach (var target in Target)
+            {
+                target.visited = false;
+            }
+            CheckTargetsForReached();
+        }
+
+        public bool RegisterTarget(Place place)
+        {
+            if (_reachedTargets.Contains(place)) return false;
+            _reachedTargets.Add(place);
             return true;
+        }
+
+        public bool AssignmentFinished()
+        {
+            return Target.All(target => _reachedTargets.Contains(target));
         }
     }
 
@@ -137,13 +167,14 @@ namespace UWPEindopdracht
         {
             MaxDistance = 3000;
             MinDistance = 800;
+            NeededDistance = 30;
             MaxSpeed = 40;
             TimeMultiplier = 0.6;
         }
         
-        public override void FillDescription()
+        public override string GetDescription()
         {
-            Description =
+            return
                 "Walk to the marked point on the map, " +
                 $"\nBonus if reached within {MaximumTime.TotalMinutes} minutes." +
                 $"\ntotal score could be {TotalScore(new TimeSpan())}!";
@@ -160,16 +191,17 @@ namespace UWPEindopdracht
             MaxSpeed = null;
             MaxDistance = 1000;
             MinDistance = 100;
+            NeededDistance = 50;
             ShowPinPoint = false;
             TimeMultiplier = 1.5;
         }
 
        
 
-        public override void FillDescription()
+        public override string GetDescription()
         {
 
-            Description =
+            return
                 "Search the given point!" +
                 $"\nName: {Target[0].Name}" +
                 $"\nEstimated distance to the target {Target[0].Distance}!" +

@@ -23,9 +23,9 @@ namespace UWPEindopdracht.Multiplayer
             Administrator = administrator;
         }
 
-        public override void FillDescription()
+        public override string GetDescription()
         {
-            Description = "[DESCRIPTION]";
+           return "[DESCRIPTION]";
             // TODO SET DESCRIPTION
         }
     }

@@ -24,12 +24,8 @@ namespace UWPEindopdracht.DataConnections
                 string url = await new GooglePlacesConnector().GetImageURL(place, maxheight: MaxHeight);
                 if (url != null)
                     return url;
-
             }
-            var urls = await new GoogleStreetviewConnector().GetURLToSavePicture(place);
-            if (urls.Count > 0)
-                return urls.ElementAt(0);
-            return null;
+            return await new GoogleStreetviewConnector().GetURLToSavePicture(place);
         }
     }
 }

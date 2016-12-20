@@ -19,6 +19,7 @@ namespace UWPEindopdracht.Places
         public double? Distance { get; set; }
 
         public HttpConnector.Priority SourcePriority = HttpConnector.Priority.Normal;
+        public bool visited = false;
 
         /// <summary>
         /// Gcoordinate of the location of the place

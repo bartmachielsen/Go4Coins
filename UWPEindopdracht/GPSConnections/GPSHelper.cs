@@ -1,10 +1,14 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Runtime.InteropServices.WindowsRuntime;
 using System.Text;
 using System.Threading.Tasks;
 using Windows.Devices.Geolocation;
+using Windows.Devices.Geolocation.Geofencing;
+using Windows.Foundation;
 using Windows.Services.Maps;
+using UWPEindopdracht.Places;
 
 namespace UWPEindopdracht.GPSConnections
 {
@@ -103,16 +107,85 @@ namespace UWPEindopdracht.GPSConnections
             };
         }
 
+        public static async Task<string> GetCityName(GCoordinate coordinate)
+        {
+            var result = await MapLocationFinder.FindLocationsAtAsync(getPointOutLocation(coordinate));
+            return result.Status == MapLocationFinderStatus.Success ? result.Locations.ElementAt(0).Address.Town : null;
+        }
         public static async Task<MapRoute> calculateRouteBetween(GCoordinate start, GCoordinate end)
         {
-            return (await MapRouteFinder.GetWalkingRouteAsync(getPointOutLocation(start),getPointOutLocation(end))).Route;
+            var result = (await MapRouteFinder.GetWalkingRouteAsync(getPointOutLocation(start),getPointOutLocation(end)));
+            if (result.Status == MapRouteFinderStatus.Success)
+                return result.Route;
+            return null;
         }
 
         public static GCoordinate GetGcoordinate(Geopoint center)
         {
             return new GCoordinate(center.Position.Latitude, center.Position.Longitude);
         }
+        /// <summary>
+        /// Method for listening to changes from the gps locator
+        /// </summary>
+        /// <exception cref="GpsNotAllowed">Exception when system has deactivated GPS or user does not allow GPS to this application</exception>
+        /// <param name="method"></param>
+        public static async void NotifyOnLocationUpdate(Func<Geoposition, Task> method)
+        {
+            if (!await checkGPSState())
+            return;
+            Geolocator locator = new Geolocator() { DesiredAccuracyInMeters = desiredAccuracy};
+            locator.PositionChanged +=
+                (Geolocator sender, PositionChangedEventArgs args) => { method.Invoke(args.Position); };
+        }
+        public static void ClearGeofences()
+        {
+            GeofenceMonitor.Current.Geofences.Clear();
+        }
+
+        /// <summary>
+        /// Method for listening if the user the route has leaved or exited
+        /// </summary>
+        /// <param name="route">The route the user is using <seealso cref="Route"/></param> 
+        /// <exception cref="GpsNotAllowed">Exception when system has deactivated GPS or user does not allow GPS to this application</exception>
+        public static async Task PlaceEntered(Func<Place, Task> notifier, Place place, int distance = 30)
+        {
+            if (!await checkGPSState())
+                return;
+            var geofence = new Geofence($"{place.GetHashCode()} notifier", new Geocircle(getPointOutLocation(place.Location).Position, distance), MonitoredGeofenceStates.Entered, true, TimeSpan.FromSeconds(1));
+
+            PlaceGeofence(geofence, notifier, place);
+        }
+
+        public static async Task PlaceLeaved(Func<Place, Task> notifier, Place place, int distance = 30)
+        {
+            if (!await checkGPSState())
+                return;
+            var geofence = new Geofence($"{place.GetHashCode()} disnotifier", new Geocircle(getPointOutLocation(place.Location).Position, distance), MonitoredGeofenceStates.Exited, true, TimeSpan.FromSeconds(1));
+
+            PlaceGeofence(geofence, notifier, place);
+        }
+
+        public static async Task PlaceGeofence(Geofence geofence, Func<Place, Task> notifier, Place place)
+        {
+            GeofenceMonitor.Current.Geofences.Add(geofence);
+
+            TypedEventHandler<GeofenceMonitor, object> listener = null;
+            listener = async (GeofenceMonitor monitor, object obj) =>
+            {
+                foreach (var report in monitor.ReadReports())
+                    if (report.Geofence.Id == geofence.Id)
+                    {
+                        notifier.Invoke(place);
+                        GeofenceMonitor.Current.GeofenceStateChanged -= listener;
+                    }
+            };
+            GeofenceMonitor.Current.GeofenceStateChanged += listener;
+        }
+
     }
 
 
 }
+
+
+
