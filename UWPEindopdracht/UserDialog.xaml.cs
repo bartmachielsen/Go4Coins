@@ -31,8 +31,6 @@ namespace UWPEindopdracht
 
         private void LoadDetails(bool newuser)
         {
-            if (!newuser)
-                Title = "User Details";
             NameBlock.Text = _user.Name;
             PointBlock.Text = _user.Coins + " Coins!";
             

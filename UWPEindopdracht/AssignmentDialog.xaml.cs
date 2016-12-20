@@ -34,11 +34,11 @@ namespace UWPEindopdracht
 
         private void LoadDetails()
         {
-            AssignmentDetails.Text = _assignment.Description;
+            AssignmentDetails.Text = _assignment.GetDescription();
             AssignmentName.Text = _assignment.Target[0].Name;
             if(_imageURL != null)
                 AssignmentImage.Source = new BitmapImage(new Uri(_imageURL));
-            SkipButton.IsEnabled = _assignment.IsSkippable();
+            SkipButton.IsEnabled = _assignment.Skippable;
         }
 
         private void StartButton_Click(object sender, RoutedEventArgs e)
