@@ -123,6 +123,7 @@
       <DependentUpon>MultiplayerSettings.xaml</DependentUpon>
     </Compile>
     <Compile Include="Multiplayer\MultiplayerAssignmentDetails.cs" />
+    <Compile Include="Multiplayer\MultiplayerData.cs" />
     <Compile Include="Multiplayer\Reward.cs" />
     <Compile Include="Multiplayer\User.cs" />
     <Compile Include="PlaceDialog.xaml.cs">

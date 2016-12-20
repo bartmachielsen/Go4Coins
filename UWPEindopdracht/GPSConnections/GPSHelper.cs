@@ -42,8 +42,14 @@ namespace UWPEindopdracht.GPSConnections
             if (accesstate != GeolocationAccessStatus.Allowed) return false;
             return true;
         }
-        
 
+        public static async void NotifyOnLocationUpdate(Func<GCoordinate, Task> method)
+        {
+            if (!await checkGPSState()) return;
+            var locator = new Geolocator() { DesiredAccuracyInMeters = desiredAccuracy};
+            locator.PositionChanged +=
+                (Geolocator sender, PositionChangedEventArgs args) => { method.Invoke(GetGCoordinate(args.Position)); };
+        }
         /// <summary>
         /// Method for converting a GCoordinate to a Geopoint needed for a map
         /// </summary>

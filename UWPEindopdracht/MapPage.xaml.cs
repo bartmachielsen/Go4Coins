@@ -31,25 +31,10 @@ namespace UWPEindopdracht
     /// </summary>
     public sealed partial class MapPage : Page
     {
-        private static readonly bool _follow = false;
-        private static readonly int _serverTimeOut = 4;
-
         private bool _dialogClaimed = false;
-        private readonly PlaceLoader _placeLoader = new PlaceLoader();
         private Assignment _assignment;
-
-        private User _user;
-
-        private readonly RestDBConnector _db = new RestDBConnector();
-        private MapIcon _userLocation;
-
-        private List<User> _users = new List<User>();
-
-        private List<Reward> _rewards;
-
-        private bool _noInternetConfirmed = false;
+        private readonly MultiplayerData _multiplayerData = new MultiplayerData();
         
-        private DateTime _lastLocationSync = DateTime.Now;
 
         public MapPage()
         {
@@ -59,125 +44,53 @@ namespace UWPEindopdracht
             InitializeComponent();
             
             MapControl.MapElementClick += MapControl_MapElementClick;
-            var locator = new Geolocator {DesiredAccuracyInMeters = 10};
 
-            locator.PositionChanged += Locator_PositionChanged;
+            GPSHelper.NotifyOnLocationUpdate(LocationChanged);
             
             SetLocation();
             MapControl.ZoomInteractionMode = MapInteractionMode.GestureAndControl;
             MapControl.ZoomLevel = 13;
-            //LoadAssignments();
         }
+
+     
+   
+
 
         
-        private string DistanceText { get; set; } = "0 km";
-        private string TimeText { get; set; } = "00:00";
-
-        private async Task LoadAssignments()
-        {
-            //_db.UploadMultiplayerAssignmentDetail(new MultiplayerAssignmentDetails(5, "test", "admin"));
-            var list = await _db.GetMultiplayerAssignments();
-            Debug.WriteLine(list.Count);
-        }
-
-
-        private async Task LoadRewards()
-        {
-            try
-            {
-                _rewards = await _db.GetRewards();
-                _noInternetConfirmed = false;
-            }
-            catch (NoInternetException)
-            {
-                InternetException();
-            }
-        }
        
         private async void LoadMultiplayerDetails()
         {
-           
-            var localSettings =
-                ApplicationData.Current.LocalSettings;
-            if (_db == null)
-                return;
-            
-            if (!localSettings.Values.ContainsKey("multiplayerID"))
-            {
-                try
-                {
-                    _user = await _db.UploadUser(_user);
-                    localSettings.Values["multiplayerID"] = _user.id;
-                    _noInternetConfirmed = false;
-                }
-                catch (NoInternetException)
-                {
-                    InternetException();
-                }
-                catch (Exception e)
-                {
-                    System.Diagnostics.Debug.WriteLine(e);
-                }
-            }else
-            {
-                try
-                {
-                    _user = await _db.GetUser((string) localSettings.Values["multiplayerID"]);
-                    System.Diagnostics.Debug.WriteLine(_user.Name);
-                    _noInternetConfirmed = false;
-                    
-                }
-                catch (NoResponseException)
-                {
-                    _user = null;
-                }
-                catch (NoInternetException)
-                {
-                    InternetException();
-                    _user = null;
-                }
-                catch (Exception)
-                {
-                    _user = null;
-                }
-                if (_user == null)
-                {
-                    _user = await _db.UploadUser(null);
-                    localSettings.Values["multiplayerID"] = _user.id;
-                }
-            }
-            
-
-            await LoadRewards();
-
+            await _multiplayerData.RegisterMultiplayerUser();
+            await _multiplayerData.LoadRewards();
+            await _multiplayerData.LoadAssignments();
             LiveUpdateUser();
         }
 
         private async void LiveUpdateUser()
         {
-            
             while (true)
             {
-                await Task.Delay(_serverTimeOut*1000);
+                await Task.Delay(MultiplayerData.ServerTimeOut*1000);
                 await UpdateUserDetails();
                 await CheckIfLocationUpdate(null);
             }
         }
 
-        private async void InternetException()
+        public static async void InternetException()
         {
-            if (!_noInternetConfirmed)
+            if (!MultiplayerData.NoInternetConfirmed)
             {
                 await new MessageDialog("No internet connection found", "Internet connection error").ShowAsync();
-                _noInternetConfirmed = true;
+                MultiplayerData.NoInternetConfirmed = true;
             }
         }
         private async Task UpdateUserDetails()
         {
+            
             try
             {
-                _users = await _db.GetUsers(_users);
-                _noInternetConfirmed = false;
+                _multiplayerData.Users = await _multiplayerData.Db.GetUsers(_multiplayerData.Users);
+                MultiplayerData.NoInternetConfirmed = false;
             }
             catch (NoInternetException)
             {
@@ -189,21 +102,16 @@ namespace UWPEindopdracht
                 Debug.WriteLine("Got no response from database, but we'll continue because shit happens");
             }
 
-            if (_users == null)
-            {
-                return;
-            }
-            foreach (var user in _users)
-                if (user.id != _user.id)
+            if (_multiplayerData.Users == null) return;
+            foreach (var user in _multiplayerData.Users)
+                if (user.id != _multiplayerData.User.id)
                 {
                     var geopoint = GPSHelper.getPointOutLocation(user.Location);
-                    if ((DateTime.Now - user.LastSynced) >= TimeSpan.FromSeconds(_serverTimeOut*3))
+                    if (!user.IsAlive())
                     {
-                        if (user.Icon != null)
-                        {
-                            MapControl.MapElements.Remove(user.Icon);
-                            user.Icon = null;
-                        }
+                        if (user.Icon == null) continue;
+                        MapControl.MapElements.Remove(user.Icon);
+                        user.Icon = null;
                     }
                     else
                     {
@@ -216,12 +124,6 @@ namespace UWPEindopdracht
                                 Title = user.Name
                             };
                             MapControl.MapElements.Add(user.Icon);
-                            
-                            if (user.LastState == LastState.Online)
-                            {
-                                // TODO SHOW NEW USER NOTIFICATION
-                                //ShowUserDetails(user, true);
-                            }
                         }
                         else
                         {
@@ -254,7 +156,7 @@ namespace UWPEindopdracht
        
         private void MapControl_MapElementClick(MapControl sender, MapElementClickEventArgs args)
         {
-            foreach (var user in _users)
+            foreach (var user in _multiplayerData.Users)
             {
                 if (user.Icon == null) continue;
                 if (args.MapElements.All(element => element != user.Icon)) continue;
@@ -268,37 +170,11 @@ namespace UWPEindopdracht
                             ShowDialog(new PlaceDialog(target));
                     
                 
-            if(args.MapElements.All(element => element == _user.Icon))
-                ShowUserDetails(_user,false,true);
+            if(args.MapElements.All(element => element == _multiplayerData.User.Icon))
+                ShowUserDetails(_multiplayerData.User, false,true);
         }
 
-        private async Task UpdateMultiplayerServer(GCoordinate coordinate)
-        {
-            if (_user == null) return;
-            _lastLocationSync = DateTime.Now;
-            _user.Location = coordinate;
-            try
-            {
-                await _db.UpdateUser(_user);
-                _noInternetConfirmed = false;
-            }
-            catch (NoResponseException)
-            {
-                //var localSettings =
-                //ApplicationData.Current.LocalSettings;
-                //_user.id = null;
-                //_user = await _db.UploadUser(_user);
-                //localSettings.Values["multiplayerID"] = _user.id;
-            }
-            catch (NoInternetException)
-            {
-                InternetException();
-            }
-            catch (Exception)
-            {
-                
-            }
-        }
+        
 
         private async void RemovePinPoints(Assignment oldAssignment)
         {
@@ -307,7 +183,6 @@ namespace UWPEindopdracht
                 foreach (var place in oldAssignment.Target)
                 {
                     MapControl.MapElements.Remove(place.Icon);
-                    //MapControl.MapElements.Remove(place.Icon);
                     place.Icon = null;
                 }
             });
@@ -316,32 +191,29 @@ namespace UWPEindopdracht
 
         private void PlacePinPoints(Geopoint location)
         {
-            if (_userLocation == null)
+            if (_multiplayerData.User == null) return;
+            if (_multiplayerData.User.Icon == null)
             {
-                _userLocation = new MapIcon {Title = "Your Location"};
-                MapControl.MapElements.Add(_userLocation);
+                _multiplayerData.User.Icon = new MapIcon {Title = "Your Location"};
+                MapControl.MapElements.Add(_multiplayerData.User.Icon);
             }
-            if (_user != null && _user.Icon == null && _userLocation != null)
-                _user.Icon = _userLocation;
             if ((_assignment?.Target != null) && _assignment.ShowPinPoint)
             {
                 foreach (var target in _assignment.Target)
                 {
-                    if (target.Icon == null)
+                    if (target.Icon != null) continue;
+                    target.Icon = new MapIcon()
                     {
-                        target.Icon = new MapIcon()
-                        {
-                            Title = target.Name,
-                            Location = GPSHelper.getPointOutLocation(target.Location)
-                        };
+                        Title = target.Name,
+                        Location = GPSHelper.getPointOutLocation(target.Location)
+                    };
                         
-                        if (!string.IsNullOrEmpty(target.IconLink))
-                            target.Icon.Image = RandomAccessStreamReference.CreateFromUri(new Uri(target.IconLink));
-                        MapControl.MapElements.Add(target.Icon);
-                    }
+                    if (!string.IsNullOrEmpty(target.IconLink))
+                        target.Icon.Image = RandomAccessStreamReference.CreateFromUri(new Uri(target.IconLink));
+                    MapControl.MapElements.Add(target.Icon);
                 }
             }
-            _userLocation.Location = location;
+            _multiplayerData.User.Icon.Location = location;
         }
 
         private void showLoading()
@@ -371,7 +243,7 @@ namespace UWPEindopdracht
             MapControl.RotateInteractionMode = MapInteractionMode.Auto;
             MapControl.TiltInteractionMode = MapInteractionMode.Auto;
         }
-        private async Task SetAssignment(Geoposition loc, Assignment newAssignment)
+        private async Task SetAssignment(GCoordinate loc, Assignment newAssignment)
         {
             if(_assignment != null)
                 RemovePinPoints(_assignment);
@@ -380,11 +252,11 @@ namespace UWPEindopdracht
             if (loc == null || newAssignment == null)
                 return;
             showLoading();
-            await _placeLoader.LoadPlaces(GPSHelper.GetGcoordinate(loc.Coordinate.Point));
+            await _multiplayerData.placeLoader.LoadPlaces(loc);
             
             try
             {
-                await newAssignment.FillTarget(_placeLoader.Places, GPSHelper.GetGcoordinate(loc.Coordinate.Point));
+                await newAssignment.FillTarget(_multiplayerData.placeLoader.Places, loc);
             }
             catch (NoTargetAvailable)
             {
@@ -409,12 +281,10 @@ namespace UWPEindopdracht
             {
                 newAssignment.StartAssignment();
                 _assignment = newAssignment;
-                PlacePinPoints(loc.Coordinate.Point);
+                PlacePinPoints(GPSHelper.getPointOutLocation(loc));
                 hideLoading();
-                ChangeDistance(GPSHelper.GetGcoordinate(loc.Coordinate.Point));
+                ChangeDistance(loc);
                 ChangeTime();
-
-                //start time change timer
                 var timer = new DispatcherTimer
                 {
                     Interval = TimeSpan.FromSeconds(1)
@@ -449,8 +319,7 @@ namespace UWPEindopdracht
             if ((_assignment != null) && (_assignment.Target != null))
             {
                 var information = await _assignment.GetRouteInformation(current);
-                DistanceText = information[1];
-                DistanceTextBlock.Text = DistanceText;
+                DistanceTextBlock.Text = information[1];
                 
             }
         }
@@ -460,32 +329,29 @@ namespace UWPEindopdracht
             if ((_assignment != null) && (_assignment.Target != null))
             {
                 var information = await _assignment.GetRouteInformation(null, false);
-                TimeText = information[0];
-                await Dispatcher.RunAsync(CoreDispatcherPriority.Normal, () => { TimeTextBlock.Text = TimeText; });
+                await Dispatcher.RunAsync(CoreDispatcherPriority.Normal, () => { TimeTextBlock.Text = information[0]; });
             }
         }
 
         private async Task CheckIfLocationUpdate(Geopoint point)
         {
-            if (DateTime.Now - _lastLocationSync <= TimeSpan.FromSeconds(_serverTimeOut)) return;
+            if (DateTime.Now - _multiplayerData.LastLocationSync <= TimeSpan.FromSeconds(MultiplayerData.ServerTimeOut)) return;
             if (point == null)
                 point = (await GPSHelper.getLocationOriginal()).Coordinate.Point;
-            await UpdateMultiplayerServer(GPSHelper.GetGcoordinate(point));
+            await _multiplayerData.UpdateMultiplayerServer(GPSHelper.GetGcoordinate(point));
         }
 
-        private async void Locator_PositionChanged(Geolocator sender, PositionChangedEventArgs args)
+        private async Task LocationChanged(GCoordinate coordinate)
         {
             await Dispatcher.RunAsync(CoreDispatcherPriority.Normal, async () =>
             {
-                var location = args.Position.Coordinate.Point;
+                var location = GPSHelper.getPointOutLocation(coordinate);
                 if (location == null) return;
-                if (_follow)
-                    MapControl.Center = location;
                 PlacePinPoints(location);
                 ChangeDistance(GPSHelper.GetGcoordinate(location));
                 try
                 {
-                    _assignment?.LocationChanged(GPSHelper.GetGCoordinate(args.Position));
+                    _assignment?.LocationChanged(coordinate);
                 }
                 catch (SpeedException e)
                 {
@@ -496,7 +362,7 @@ namespace UWPEindopdracht
                             break;
                         case SpeedException.WarningLevel.Critical:
                             // TODO CHECK WHAT KIND OF ASSIGNMENT
-                            await SetAssignment(args.Position, new MapAssignment());
+                            await SetAssignment(coordinate, new MapAssignment());
                             break;
                     }
                 }
@@ -537,7 +403,7 @@ namespace UWPEindopdracht
                 if (_assignment.AssignmentFinished())
                 {
                     //TODO ADD SCORE TO USER!
-                    _user.Coins += _assignment.TotalScore(_assignment.GetSpentTime());
+                    _multiplayerData.User.Coins += _assignment.TotalScore(_assignment.GetSpentTime());
                     await SetAssignment(null, null);
                     _assignment = null;
                 }
@@ -551,7 +417,7 @@ namespace UWPEindopdracht
                 TakeAssignmentErrorAnimation.Begin();
                 return;
             }
-            var loc = await GPSHelper.getLocationOriginal();
+            var loc = await GPSHelper.getLocation();
             if (loc != null)
             {
                 // TODO DIFFERENT KIND OF ASSIGNMENTS
@@ -561,13 +427,13 @@ namespace UWPEindopdracht
 
         private async void GoToAlbumButton_Click(object sender, RoutedEventArgs e)
         {
-            var a = new AlbumDialog(_user);
+            var a = new AlbumDialog(_multiplayerData.User);
             await a.ShowAsync();
         }
 
         private async void GoToShopButton_Click(object sender, RoutedEventArgs e)
         {
-            var s = new ShopDialog(_user);
+            var s = new ShopDialog(_multiplayerData.User);
             await s.ShowAsync();
         }
     }

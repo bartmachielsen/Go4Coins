@@ -16,8 +16,6 @@ namespace UWPEindopdracht.Multiplayer
         public string Name { get; set; }
         public GCoordinate Location { get; set; }
         public DateTime LastSynced { get; set; }
-        [JsonIgnore]
-        public LastState LastState;
         
         [JsonIgnore]
         public MapIcon Icon { get; set; }
@@ -47,10 +45,14 @@ namespace UWPEindopdracht.Multiplayer
             }
             return chests;
         }
+
+        public bool IsAlive()
+        {
+            return !((DateTime.Now - LastSynced) >= TimeSpan.FromSeconds(MultiplayerData.ServerTimeOut*3));
+        }
+
     }
 
-    public enum LastState
-    {
-        Online, Offline, Updated
-    }
+
+    
 }
