@@ -111,6 +111,7 @@
     <Compile Include="DataConnections\WikipediaConnector.cs" />
     <Compile Include="GPSConnections\GCoordinate.cs" />
     <Compile Include="GPSConnections\GPSHelper.cs" />
+    <Compile Include="GPSConnections\SpeedChecker.cs" />
     <Compile Include="JSON\GooglePlacesParser.cs" />
     <Compile Include="JSON\RestDBHelper.cs" />
     <Compile Include="JSON\WikipediaParser.cs" />

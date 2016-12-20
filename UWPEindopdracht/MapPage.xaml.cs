@@ -417,8 +417,6 @@ namespace UWPEindopdracht
             else
             {
                 await new MessageDialog("No GPS connection!", "Can't get your location").ShowAsync();
-                //SetLocation();
-                // TODO EXIT APPLICATION BECAUSE NO GPS SIGNAL OR TRY AGAIN A FEW TIMES
             }
         }
 
@@ -453,36 +451,47 @@ namespace UWPEindopdracht
 
         private async void Locator_PositionChanged(Geolocator sender, PositionChangedEventArgs args)
         {
-            //CheckIfLocationUpdate(args.Position.Coordinate.Point);
-              // TODO NEEDED ?  
-            await Dispatcher.RunAsync(CoreDispatcherPriority.Normal, () =>
+            await Dispatcher.RunAsync(CoreDispatcherPriority.Normal, async () =>
             {
                 var location = args.Position.Coordinate.Point;
-                if (location != null)
+                if (location == null) return;
+                if (_follow)
+                    MapControl.Center = location;
+                PlacePinPoints(location);
+                ChangeDistance(GPSHelper.GetGcoordinate(location));
+                try
                 {
-                    if (_follow)
-                        MapControl.Center = location;
-                    PlacePinPoints(location);
-                    ChangeDistance(GPSHelper.GetGcoordinate(location));
+                    _assignment?.LocationChanged(GPSHelper.GetGCoordinate(args.Position));
+                }
+                catch (SpeedException e)
+                {
+                    switch (e.Warning)
+                    {
+                        case SpeedException.WarningLevel.Warning:
+                            await new MessageDialog("TO FAST!", "NOT SO FAST").ShowAsync();
+                            break;
+                        case SpeedException.WarningLevel.Critical:
+                            await SetAssignment(args.Position, new MapAssignment());
+                            break;
+                        case SpeedException.WarningLevel.Block:
+                            await SetAssignment(null, null);
+                            _assignment = null;
+                            break;
+                    }
                 }
             });
         }
-
-        private void SetGeofence(Geopoint point)
-        {
-            GeofenceMonitor.Current.Geofences.Add(new Geofence("Fence1", new Geocircle(point.Position, 10),
-                MonitoredGeofenceStates.Entered, false, new TimeSpan(5)));
-            GeofenceMonitor.Current.GeofenceStateChanged += GeofenceActivated;
-        }
-
-        private void GeofenceActivated(GeofenceMonitor sender, object args)
-        {
-            throw new NotImplementedException();
-        }
-
+        
         private async void OnTargetButton_Click(object sender, RoutedEventArgs e)
         {
-            if (_assignment == null) return;
+            if (_assignment == null)
+            {
+                OnTargetText.Text = "No assignment picked!";
+                OnTargetText.Foreground = new SolidColorBrush(Colors.Red);
+                OnTargetText.Opacity = 1.0;
+                OnTargetErrorAnimation.Begin();
+                return;
+            }
             if (_assignment.CurrentLocation == null)
             {
                 OnTargetText.Text = "Not close enough!";
@@ -506,10 +515,8 @@ namespace UWPEindopdracht
 
                 if (_assignment.AssignmentFinished())
                 {
-                    //new AssignmentDialog(_assignment, null).ShowAsync();
                     //TODO ADD SCORE TO USER!
                     _user.Coins += _assignment.TotalScore(_assignment.GetSpentTime());
-                    System.Diagnostics.Debug.Write(_user.Coins);
                     await SetAssignment(null, null);
                     _assignment = null;
                 }

@@ -13,6 +13,7 @@ namespace UWPEindopdracht
     public abstract class Assignment
     {
         protected int MaxDistance { get; set; }
+        private SpeedChecker _speedControl = new SpeedChecker();
         protected int MinDistance { get; set; }
         public int NeededDistance { get; set; }
         protected int? MaxSpeed { get; set; }
@@ -163,12 +164,20 @@ namespace UWPEindopdracht
         {
             return Target.All(target => _reachedTargets.Contains(target));
         }
+
+        public void LocationChanged(GCoordinate coordinate)
+        {
+            if(MaxSpeed != null)
+                _speedControl.MaxSpeed = MaxSpeed.Value;
+            _speedControl.RegisterLocationChange(coordinate);
+        }
     }
 
     class MapAssignment : Assignment
     {
         public MapAssignment()
         {
+
             MaxDistance = 3000;
             MinDistance = 800;
             NeededDistance = 30;

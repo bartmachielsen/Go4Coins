@@ -78,7 +78,7 @@ namespace UWPEindopdracht.GPSConnections
         /// </summary>
         /// <param name="coordinate">the position in form of <see cref="Geoposition"/></param>
         /// <returns>returns the location converted to <see cref="GCoordinate"/> or <see cref="CivilCoordinate"/></returns>
-        private static GCoordinate GetGCoordinate(Geoposition coordinate)
+        public static GCoordinate GetGCoordinate(Geoposition coordinate)
         {
             if (coordinate.CivicAddress != null)
             {
@@ -182,6 +182,7 @@ namespace UWPEindopdracht.GPSConnections
             GeofenceMonitor.Current.GeofenceStateChanged += listener;
         }
 
+       
     }
 
 
