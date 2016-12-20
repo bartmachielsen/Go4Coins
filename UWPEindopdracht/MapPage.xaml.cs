@@ -66,7 +66,6 @@ namespace UWPEindopdracht
             SetLocation();
             MapControl.ZoomInteractionMode = MapInteractionMode.GestureAndControl;
             MapControl.ZoomLevel = 13;
-            LoadAssignments();
         }
 
         
@@ -516,9 +515,9 @@ namespace UWPEindopdracht
             }
         }
 
-        private void NewAssignmentButton_Click(object sender, RoutedEventArgs e)
+        private async void NewAssignmentButton_Click(object sender, RoutedEventArgs e)
         {
-            // create new assignment now instead of on startup
+            await LoadAssignments();
         }
 
         private async void GoToAlbumButton_Click(object sender, RoutedEventArgs e)
