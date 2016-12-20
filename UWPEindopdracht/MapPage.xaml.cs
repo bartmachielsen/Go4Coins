@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
+using System.Runtime.InteropServices.WindowsRuntime;
 using System.Threading.Tasks;
 using Windows.Devices.Geolocation;
 using Windows.Devices.Geolocation.Geofencing;
@@ -61,12 +62,11 @@ namespace UWPEindopdracht
             var locator = new Geolocator {DesiredAccuracyInMeters = 10};
 
             locator.PositionChanged += Locator_PositionChanged;
-
-
+            
             SetLocation();
             MapControl.ZoomInteractionMode = MapInteractionMode.GestureAndControl;
             MapControl.ZoomLevel = 13;
-            LoadAssignments();
+            //LoadAssignments();
         }
 
         
@@ -77,7 +77,7 @@ namespace UWPEindopdracht
         {
             //_db.UploadMultiplayerAssignmentDetail(new MultiplayerAssignmentDetails(5, "test", "admin"));
             var list = await _db.GetMultiplayerAssignments();
-            System.Diagnostics.Debug.WriteLine(list.Count);
+            Debug.WriteLine(list.Count);
         }
 
 
@@ -186,7 +186,7 @@ namespace UWPEindopdracht
             }
             catch (NoResponseException)
             {
-                System.Diagnostics.Debug.WriteLine("Got no response from database! but continue because shit happens");
+                Debug.WriteLine("Got no response from database, but we'll continue because shit happens");
             }
 
             if (_users == null)
@@ -335,7 +335,7 @@ namespace UWPEindopdracht
                         MapControl.MapElements.Add(target.Icon);
                         LoadingAnimation.Visibility = Visibility.Collapsed;
                         LoadingText.Visibility = Visibility.Collapsed;
-                        MultiplayerToggleButton.IsEnabled = true;
+                        NewAssignmentButton.IsEnabled = true;
                         GoToAlbumButton.IsEnabled = true;
                         GoToShopButton.IsEnabled = true;
                         OnTargetButton.IsEnabled = true;
@@ -402,7 +402,6 @@ namespace UWPEindopdracht
                         timer.Stop();
                 };
                 timer.Start();
-                
             }
         }
 
@@ -412,7 +411,7 @@ namespace UWPEindopdracht
             if (loc != null)
             {
                 MapControl.Center = loc.Coordinate.Point;
-                await SetAssignment(loc,new MapAssignment());
+                await SetAssignment(loc, new MapAssignment());
             }
             else
             {
@@ -501,14 +500,14 @@ namespace UWPEindopdracht
             }
             else if (!_assignment.RegisterTarget(_assignment.CurrentLocation))
             {
-                OnTargetText.Text = "already reached!";
+                OnTargetText.Text = "Already reached!";
                 OnTargetText.Foreground = new SolidColorBrush(Colors.Red);
                 OnTargetText.Opacity = 1.0;
                 OnTargetErrorAnimation.Begin();
             }
             else
             {
-                OnTargetText.Text = "reached!";
+                OnTargetText.Text = "Reached!";
                 OnTargetText.Foreground = new SolidColorBrush(Colors.Green);
                 OnTargetText.Opacity = 1.0;
                 OnTargetErrorAnimation.Begin();
@@ -523,9 +522,18 @@ namespace UWPEindopdracht
             }
         }
 
-        private void MultiplayerToggleButton_Click(object sender, RoutedEventArgs e)
+        private async void NewAssignmentButton_Click(object sender, RoutedEventArgs e)
         {
-            // show input dialog for inputting name
+            if (_assignment != null)
+            {
+                TakeAssignmentErrorAnimation.Begin();
+                return;
+            }
+            var loc = await GPSHelper.getLocationOriginal();
+            if (loc != null)
+            {
+                await SetAssignment(loc, new MapAssignment());
+            }
         }
 
         private async void GoToAlbumButton_Click(object sender, RoutedEventArgs e)

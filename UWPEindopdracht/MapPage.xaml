@@ -38,137 +38,157 @@
             ZoomInteractionMode="Disabled"
             RotateInteractionMode="Disabled"
             TiltInteractionMode="Disabled"
-            />    
-            <Grid>
-                <Grid.Resources>
-                    <Storyboard x:Name="OnTargetErrorAnimation">
-                        <DoubleAnimation 
+            />
+        <Grid>
+            <Grid.Resources>
+                <Storyboard x:Name="OnTargetErrorAnimation">
+                    <DoubleAnimation 
                             Storyboard.TargetName="OnTargetText"
                             Storyboard.TargetProperty="Opacity"
                             From="1.0"
                             To="0.0"
                             Duration="0:0:5"
                             />
-                    </Storyboard>
-                </Grid.Resources>
+                </Storyboard>
+                <Storyboard x:Name="TakeAssignmentErrorAnimation">
+                    <DoubleAnimation 
+                            Storyboard.TargetName="TakeAssignmentText"
+                            Storyboard.TargetProperty="Opacity"
+                            From="1.0"
+                            To="0.0"
+                            Duration="0:0:5"
+                            />
+                </Storyboard>
+            </Grid.Resources>
 
-                <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="*"></ColumnDefinition>
-                </Grid.ColumnDefinitions>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*"></ColumnDefinition>
+            </Grid.ColumnDefinitions>
 
-                <Grid.RowDefinitions>
-                    <RowDefinition Height="*"></RowDefinition>
-                </Grid.RowDefinitions>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="*"></RowDefinition>
+            </Grid.RowDefinitions>
 
-                <Image 
+            <Image 
                     xamlAnimatedGif:AnimationBehavior.SourceUri="Assets/MapPage/loading.gif" 
                     x:Name="LoadingAnimation" 
                     Height="80"
                     Width="80"/>
-                <TextBlock 
-                    x:Name="LoadingText"
-                    Text="LOADING TARGET"
-                    Margin="0,80,0,0"
-                    HorizontalAlignment="Center"
-                    VerticalAlignment="Center"
-                    FontSize="15"
-                    Foreground="Blue"/>
-                <Button 
-                    x:Name="OnTargetButton"
-                    Margin="10,10" 
-                    VerticalAlignment="Top"
-                    Style="{StaticResource ButtonStyle}"
-                    Click="OnTargetButton_Click"
-                    >
-                    <Image Source="Assets/MapPage/location.png"/>
-                </Button>
-                <Button
-                    x:Name="MultiplayerToggleButton"
-                    Margin="0,10,10,0" 
-                    VerticalAlignment="Top" 
-                    HorizontalAlignment="Right"
-                    Style="{StaticResource ButtonStyle}"
-                    Click="MultiplayerToggleButton_Click"
-                    >
-                    <Image Source="Assets/MapPage/mp.png"/>
-                </Button>
-                <Button
-                    x:Name="GoToAlbumButton"
-                    Margin="10,0,0,20"
-                    VerticalAlignment="Bottom"
-                    Style="{StaticResource ButtonStyle}"
-                    Click="GoToAlbumButton_Click"
-                    >
-                    <Image Source="Assets/MapPage/album.png"/>
-                </Button>
-                <Button
-                    x:Name="GoToShopButton"
-                    Margin="0,0,10,20"
-                    VerticalAlignment="Bottom"
-                    HorizontalAlignment="Right"
-                    Style="{StaticResource ButtonStyle}"
-                    Click="GoToShopButton_Click"
-                    >
-                    <Image Source="Assets/MapPage/store.png"/>
-                </Button>
-                <TextBlock 
-                    x:Name="OnTargetText"
-                    Text="Not close enough" 
-                    Margin="75,25"
-                    FontSize="18" 
-                    FontStyle="Italic" 
-                    Foreground="Red" 
-                    Visibility="Visible"
-                    Opacity="0.0"
+            <TextBlock 
+                x:Name="LoadingText"
+                Text="LOADING"
+                Margin="0,80,0,0"
+                HorizontalAlignment="Center"
+                VerticalAlignment="Center"
+                FontSize="15"
+                Foreground="Blue"
+                />
+            <Button 
+                x:Name="OnTargetButton"
+                Margin="10,10" 
+                VerticalAlignment="Top"
+                Style="{StaticResource ButtonStyle}"
+                Click="OnTargetButton_Click"
+                >
+                <Image Source="Assets/MapPage/location.png"/>
+            </Button>
+            <Button
+                x:Name="NewAssignmentButton"
+                Margin="0,10,10,0" 
+                VerticalAlignment="Top" 
+                HorizontalAlignment="Right"
+                Style="{StaticResource ButtonStyle}"
+                Click="NewAssignmentButton_Click"
+                >
+                <Image Source="Assets/MapPage/new.png"/>
+            </Button>
+            <Button
+                x:Name="GoToAlbumButton"
+                Margin="10,0,0,20"
+                VerticalAlignment="Bottom"
+                Style="{StaticResource ButtonStyle}"
+                Click="GoToAlbumButton_Click"
+                >
+                <Image Source="Assets/MapPage/album.png"/>
+            </Button>
+            <Button
+                x:Name="GoToShopButton"
+                Margin="0,0,10,20"
+                VerticalAlignment="Bottom"
+                HorizontalAlignment="Right"
+                Style="{StaticResource ButtonStyle}"
+                Click="GoToShopButton_Click"
+                >
+                <Image Source="Assets/MapPage/store.png"/>
+            </Button>
+            <TextBlock 
+                x:Name="OnTargetText"
+                Text="Not close enough" 
+                Margin="75,25"
+                FontSize="18" 
+                FontStyle="Italic" 
+                Foreground="Red" 
+                Visibility="Visible"
+                Opacity="0.0"
+                />
+            <TextBlock 
+                x:Name="TakeAssignmentText"
+                Text="Already started" 
+                Margin="75,25"
+                TextAlignment="Right"
+                FontSize="18" 
+                FontStyle="Italic" 
+                Foreground="Red" 
+                Visibility="Visible"
+                Opacity="0"
+                />
+            
+            <Grid 
+                Background="Transparent" 
+                VerticalAlignment="Bottom"
+                HorizontalAlignment="Center"
+                Margin="0,0,0,15"
+                >
+
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="85"/>
+                    <ColumnDefinition Width="{Binding ElementName=DistanceTextBlock, Path=ActualWidth}"></ColumnDefinition>
+                </Grid.ColumnDefinitions>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="30"/>
+                    <RowDefinition Height="30"></RowDefinition>
+                </Grid.RowDefinitions>
+
+                <TextBlock
+                    Text="Distance: " 
+                    FontSize="19"
+                    Foreground="Blue"
                     />
-
-                <Grid 
-                    Background="Transparent" 
-                    VerticalAlignment="Bottom"
-                    HorizontalAlignment="Center"
-                    Margin="0,0,0,15"
-                    >
-
-                    <Grid.ColumnDefinitions>
-                        <ColumnDefinition Width="85"/>
-                        <ColumnDefinition Width="{Binding ElementName=DistanceTextBlock, Path=ActualWidth}"></ColumnDefinition>
-                    </Grid.ColumnDefinitions>
-                    <Grid.RowDefinitions>
-                        <RowDefinition Height="30"/>
-                        <RowDefinition Height="30"></RowDefinition>
-                    </Grid.RowDefinitions>
-
-                    <TextBlock
-                        Text="Distance: " 
-                        FontSize="19"
-                        Foreground="Blue"
-                        />
-                    <TextBlock
-                        x:Name="DistanceTextBlock"
-                        Grid.Column="1"
-                        Grid.Row="0"
-                        Text="0 km"
-                        FontSize="19"
-                        Foreground="Blue"
-                        />
-                    <TextBlock
-                        Grid.Row="1"
-                        Grid.Column="0"
-                        Text="Time: "
-                        FontSize="19"
-                        Foreground="Blue"
-                        />
-                    <TextBlock
-                        x:Name="TimeTextBlock"
-                        Grid.Row="1"
-                        Grid.Column="1"
-                        Text="0:00"
-                        FontSize="19"
-                        Foreground="Blue"
-                        />
-                </Grid>
+                <TextBlock
+                    x:Name="DistanceTextBlock"
+                    Grid.Column="1"
+                    Grid.Row="0"
+                    Text="0 km"
+                    FontSize="19"
+                    Foreground="Blue"
+                    />
+                <TextBlock
+                    Grid.Row="1"
+                    Grid.Column="0"
+                    Text="Time: "
+                    FontSize="19"
+                    Foreground="Blue"
+                    />
+                <TextBlock
+                    x:Name="TimeTextBlock"
+                    Grid.Row="1"
+                    Grid.Column="1"
+                    Text="0:00"
+                    FontSize="19"
+                    Foreground="Blue"
+                    />
             </Grid>
-        
+        </Grid>
     </Grid>
 </Page>
 

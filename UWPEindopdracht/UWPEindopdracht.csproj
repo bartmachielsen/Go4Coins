@@ -145,6 +145,7 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="Assets\MapPage\album.png" />
+    <Content Include="Assets\MapPage\new.png" />
     <Content Include="Assets\Rewards\DcGrey\alanScottGrey.png" />
     <Content Include="Assets\Rewards\DcGrey\aquamanGrey.png" />
     <Content Include="Assets\Rewards\DcGrey\atrocitusGrey.png" />
@@ -464,7 +465,6 @@
     <Content Include="Assets\ShopAndAlbum\dreamworks.png" />
     <Content Include="Assets\ShopAndAlbum\marvel-logo.png" />
     <Content Include="Assets\ShopAndAlbum\menuButton.png" />
-    <Content Include="Assets\MapPage\mp.png" />
     <Content Include="Assets\MapPage\store.png" />
     <Content Include="Assets\ShopAndAlbum\warnerbros.png" />
     <Content Include="Assets\unavailable-image.png" />
