@@ -1,4 +1,5 @@
 ﻿<ContentDialog
+    x:Name="Content"
     x:Class="UWPEindopdracht.AssignmentDialog"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
@@ -6,19 +7,91 @@
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     mc:Ignorable="d"
-    Title="AssignmentName"
-    PrimaryButtonText="Start!"
-    SecondaryButtonText="Skip..."
-    PrimaryButtonClick="ContentDialog_PrimaryButtonClick"
-    SecondaryButtonClick="ContentDialog_SecondaryButtonClick">
+    Background="White"
+    Height="540"
+    Margin="0,40"
+    >
 
-    <Grid>
-        <StackPanel>
-            <Image Name="AssignmentImage" MaxHeight="200"/>
-            <TextBlock Text="AssignmentDetails:"/>
-            <TextBlock Name="AssignDetails" Text="In this assignment you must walk to the given point on the map
-                       marked with the point" TextWrapping="Wrap"
-                       />
-        </StackPanel>
+    <Grid 
+        Margin="0,10"
+        >
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="140"/>
+            <ColumnDefinition Width="140"/>
+        </Grid.ColumnDefinitions>
+
+        <Grid.RowDefinitions>
+            <RowDefinition Height="60"/>
+            <RowDefinition Height="200"/>
+            <RowDefinition Height="45"/>
+            <RowDefinition Height="150"/>
+            <RowDefinition Height="45"/>
+        </Grid.RowDefinitions>
+        
+        <TextBlock
+            x:Name="AssignmentName"
+            TextWrapping="Wrap"
+            Grid.ColumnSpan="2"
+            Style="{StaticResource HeaderTextStyle}"
+            Text="Title"
+            />
+        <Grid 
+            Grid.Row="1"
+            Grid.Column="0"
+            Grid.ColumnSpan="2"
+            BorderBrush="Blue"
+            HorizontalAlignment="Center"
+            VerticalAlignment="Center"
+            >
+            <Border
+                BorderThickness="1.5"
+                BorderBrush="Blue"
+                >
+                <Image
+                    x:Name="AssignmentImage"
+                    Source="Assets/unavailable-image.png"
+                    MaxHeight="200"
+                    HorizontalAlignment="Center"
+                    VerticalAlignment="Center"
+                    />
+            </Border>
+        </Grid>
+        <TextBlock 
+            Grid.Row="2" 
+            Grid.Column="0"
+            Grid.ColumnSpan="2"
+            HorizontalAlignment="Center"
+            VerticalAlignment="Center"
+            Text="Information:"
+            Foreground="Blue"
+            FontSize="18"
+            />
+        <TextBlock
+            Grid.Row="3"
+            Grid.Column="0"
+            Grid.ColumnSpan="2"
+            TextAlignment="Center"
+            Name="AssignmentDetails" 
+            Text="Walk to the marked point on the map" 
+            TextWrapping="Wrap"
+            Foreground="Blue"
+            FontSize="14"
+            />
+        <Button
+            Grid.Row="4"
+            Grid.Column="0"
+            Content="Start"
+            Style="{StaticResource FooterButtonStyle}"
+            Click="StartButton_Click"
+            />
+        <Button
+            x:Name="SkipButton"
+            Grid.Row="4"
+            Grid.Column="1"
+            Content="Skip"
+            Style="{StaticResource FooterButtonStyle}"
+            Margin="0,10,0,0"
+            Click="SkipButton_Click"
+            />
     </Grid>
 </ContentDialog>

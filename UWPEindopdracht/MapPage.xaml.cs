@@ -372,7 +372,7 @@ namespace UWPEindopdracht
                 await dialog.ShowAsync();
                 _dialogClaimed = false;
             }
-            if (!dialog.accepted)
+            if (!dialog.Accepted)
             {
                 await SetAssignment(loc, newAssignment);
                 return;
