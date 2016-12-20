@@ -353,6 +353,8 @@ namespace UWPEindopdracht
         {
             if(_assignment != null)
                 RemovePinPoints(_assignment);
+            if (loc == null || newAssignment == null)
+                return;
             await _placeLoader.LoadPlaces(GPSHelper.GetGcoordinate(loc.Coordinate.Point));
             
             try
@@ -478,7 +480,7 @@ namespace UWPEindopdracht
             throw new NotImplementedException();
         }
 
-        private void OnTargetButton_Click(object sender, RoutedEventArgs e)
+        private async void OnTargetButton_Click(object sender, RoutedEventArgs e)
         {
             if (_assignment == null) return;
             if (_assignment.CurrentLocation == null)
@@ -504,8 +506,12 @@ namespace UWPEindopdracht
 
                 if (_assignment.AssignmentFinished())
                 {
-                    new AssignmentDialog(_assignment, null).ShowAsync();
+                    //new AssignmentDialog(_assignment, null).ShowAsync();
                     //TODO ADD SCORE TO USER!
+                    _user.Coins += _assignment.TotalScore(_assignment.GetSpentTime());
+                    System.Diagnostics.Debug.Write(_user.Coins);
+                    await SetAssignment(null, null);
+                    _assignment = null;
                 }
             }
         }

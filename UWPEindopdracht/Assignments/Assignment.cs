@@ -69,7 +69,7 @@ namespace UWPEindopdracht
         /// </summary>
         /// <param name="currentTimeSpent"></param>
         /// <returns></returns>
-        public double TotalScore(TimeSpan currentTimeSpent)
+        public int TotalScore(TimeSpan currentTimeSpent)
         {
             double distance = 0;
             double timebonus = 0;
@@ -78,9 +78,13 @@ namespace UWPEindopdracht
             if (currentTimeSpent.TotalSeconds < MaximumTime.TotalSeconds)
                 timebonus = MaximumTime.TotalSeconds - currentTimeSpent.TotalSeconds;
 
-            return distance/4.0 + timebonus*4;
+            return (int)(distance/4.0 + timebonus*4);
         }
 
+        public TimeSpan GetSpentTime()
+        {
+         return DateTime.Now - _start;
+        }
 
         public async Task<string[]> GetRouteInformation(GCoordinate currentPoint, bool wantRoute = true)
         {
