@@ -335,7 +335,7 @@ namespace UWPEindopdracht
                         MapControl.MapElements.Add(target.Icon);
                         LoadingAnimation.Visibility = Visibility.Collapsed;
                         LoadingText.Visibility = Visibility.Collapsed;
-                        MultiplayerToggleButton.IsEnabled = true;
+                        NewAssignmentButton.IsEnabled = true;
                         GoToAlbumButton.IsEnabled = true;
                         GoToShopButton.IsEnabled = true;
                         OnTargetButton.IsEnabled = true;
@@ -510,9 +510,9 @@ namespace UWPEindopdracht
             }
         }
 
-        private void MultiplayerToggleButton_Click(object sender, RoutedEventArgs e)
+        private void NewAssignmentButton_Click(object sender, RoutedEventArgs e)
         {
-            // show input dialog for inputting name
+            // create new assignment now instead of on startup
         }
 
         private async void GoToAlbumButton_Click(object sender, RoutedEventArgs e)
