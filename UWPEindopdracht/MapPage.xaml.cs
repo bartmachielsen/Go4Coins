@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
+using System.Runtime.InteropServices.WindowsRuntime;
 using System.Threading.Tasks;
 using Windows.Devices.Geolocation;
 using Windows.Devices.Geolocation.Geofencing;
@@ -61,11 +62,11 @@ namespace UWPEindopdracht
             var locator = new Geolocator {DesiredAccuracyInMeters = 10};
 
             locator.PositionChanged += Locator_PositionChanged;
-
-
+            
             SetLocation();
             MapControl.ZoomInteractionMode = MapInteractionMode.GestureAndControl;
             MapControl.ZoomLevel = 13;
+            //LoadAssignments();
         }
 
         
@@ -76,7 +77,7 @@ namespace UWPEindopdracht
         {
             //_db.UploadMultiplayerAssignmentDetail(new MultiplayerAssignmentDetails(5, "test", "admin"));
             var list = await _db.GetMultiplayerAssignments();
-            System.Diagnostics.Debug.WriteLine(list.Count);
+            Debug.WriteLine(list.Count);
         }
 
 
@@ -411,7 +412,7 @@ namespace UWPEindopdracht
             if (loc != null)
             {
                 MapControl.Center = loc.Coordinate.Point;
-                await SetAssignment(loc,new MapAssignment());
+                await SetAssignment(loc, new MapAssignment());
             }
             else
             {
@@ -517,7 +518,16 @@ namespace UWPEindopdracht
 
         private async void NewAssignmentButton_Click(object sender, RoutedEventArgs e)
         {
-            await LoadAssignments();
+            if (_assignment != null)
+            {
+                TakeAssignmentErrorAnimation.Begin();
+                return;
+            }
+            var loc = await GPSHelper.getLocationOriginal();
+            if (loc != null)
+            {
+                await SetAssignment(loc, new MapAssignment());
+            }
         }
 
         private async void GoToAlbumButton_Click(object sender, RoutedEventArgs e)
