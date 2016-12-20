@@ -5,12 +5,12 @@ using System.Linq;
 using System.Runtime.InteropServices.WindowsRuntime;
 using Windows.Foundation;
 using Windows.Foundation.Collections;
+using Windows.UI;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Controls.Primitives;
 using Windows.UI.Xaml.Data;
 using Windows.UI.Xaml.Input;
-using Windows.UI.Xaml.Media;
 using Windows.UI.Xaml.Media.Imaging;
 using Windows.UI.Xaml.Navigation;
 using UWPEindopdracht.DataConnections;
@@ -23,35 +23,34 @@ namespace UWPEindopdracht
     {
         private Assignment _assignment;
         private string _imageURL;
-        public bool accepted = true;
+        public bool Accepted = true;
         public AssignmentDialog(Assignment assignment, string imageURL)
         {
             this.InitializeComponent();
-            this._assignment = assignment;
-            this._imageURL = imageURL;
+            _assignment = assignment;
+            _imageURL = imageURL;
             LoadDetails();
         }
 
         private void LoadDetails()
         {
-            AssignDetails.Text = _assignment.GetDescription();
-            Title = _assignment.Target[0].Name;
-            if(this._imageURL != null)
+            AssignmentDetails.Text = _assignment.GetDescription();
+            AssignmentName.Text = _assignment.Target[0].Name;
+            if(_imageURL != null)
                 AssignmentImage.Source = new BitmapImage(new Uri(_imageURL));
-            IsSecondaryButtonEnabled = _assignment.Skippable;
-
+            SkipButton.IsEnabled = _assignment.Skippable;
         }
 
-       
-       
-        private void ContentDialog_PrimaryButtonClick(ContentDialog sender, ContentDialogButtonClickEventArgs args)
+        private void StartButton_Click(object sender, RoutedEventArgs e)
         {
-            accepted = true;
+            Accepted = true;
+            Hide();
         }
 
-        private void ContentDialog_SecondaryButtonClick(ContentDialog sender, ContentDialogButtonClickEventArgs args)
+        private void SkipButton_Click(object sender, RoutedEventArgs e)
         {
-            accepted = false;
+            Accepted = false;
+            Hide();
         }
     }
 }

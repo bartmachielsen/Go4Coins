@@ -21,7 +21,7 @@ namespace UWPEindopdracht
     public sealed partial class UserDialog : ContentDialog
     {
         private User _user;
-        public bool Dueled = false;
+        public bool Dueled;
         public UserDialog(User user, bool newUser = true)
         {
             _user = user;
@@ -31,8 +31,6 @@ namespace UWPEindopdracht
 
         private void LoadDetails(bool newuser)
         {
-            if (!newuser)
-                Title = "User Details";
             NameBlock.Text = _user.Name;
             PointBlock.Text = _user.Coins + " Coins!";
             
@@ -40,20 +38,18 @@ namespace UWPEindopdracht
                 RewardsBlock.Text = _user.Rewards.Count + " Rewards earned!";
             else
                 RewardsBlock.Text = "No rewards earned yet!";
-
-           
-
-
         }
 
         private void IgnoreButton_Click(object sender, RoutedEventArgs e)
         {
             Dueled = false;
+            Hide();
         }
 
         private void ChallengeButton_Click(object sender, RoutedEventArgs e)
         {
             Dueled = true;
+            Hide();
         }
     }
 }
