@@ -24,10 +24,14 @@ namespace UWPEindopdracht
         private Assignment _assignment;
         private string _imageURL;
         public bool Accepted = true;
-        public AssignmentDialog(Assignment assignment, string imageURL)
+        public AssignmentDialog(Assignment assignment, string imageURL, bool loaded = false)
         {
             this.InitializeComponent();
             _assignment = assignment;
+            if (loaded)
+            {
+                SkipButton.Content = "Stop";
+            }
             _imageURL = imageURL;
             LoadDetails();
         }

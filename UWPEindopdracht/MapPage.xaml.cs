@@ -142,7 +142,7 @@ namespace UWPEindopdracht
             ShowDialog(dialog);
         }
 
-        private async void ShowDialog(ContentDialog dialog)
+        private async Task ShowDialog(ContentDialog dialog)
         {
             while (_dialogClaimed) { }
             if (!_dialogClaimed)
@@ -244,8 +244,13 @@ namespace UWPEindopdracht
         }
         private async Task SetAssignment(GCoordinate loc, Assignment newAssignment, bool selectNew = false)
         {
-            if(_assignment != null)
+            if (_assignment != null)
+            {
                 RemovePinPoints(_assignment);
+                _assignment = null;
+                DistanceTextBlock.Text = "0 km";
+                TimeTextBlock.Text = "00:00";
+            }
             var tempSave = _assignment;
             _assignment = null;
             if (loc == null || newAssignment == null)
@@ -272,20 +277,14 @@ namespace UWPEindopdracht
                 return;
             }
             var dialog = new AssignmentDialog(newAssignment, await ImageLoader.GetBestUrlFromPlace(newAssignment));
-            while (_dialogClaimed) { }
-            if (!_dialogClaimed)
-            {
-                _dialogClaimed = true;
-                await dialog.ShowAsync();
-                _dialogClaimed = false;
-            }
+            await ShowDialog(dialog);
+            
             if (!dialog.Accepted)
             {
                 if (selectNew)
                     newAssignment = getRandomAssignment();
                 // TODO COINS PENALTY WHEN USER IS SKIPPING
                 await SetAssignment(loc, newAssignment);
-                return;
             }
             else
             {
@@ -414,7 +413,6 @@ namespace UWPEindopdracht
                     //TODO ADD SCORE TO USER!
                     _multiplayerData.User.Coins += _assignment.TotalScore(_assignment.GetSpentTime());
                     await SetAssignment(null, null);
-                    _assignment = null;
                 }
             }
         }
@@ -423,6 +421,21 @@ namespace UWPEindopdracht
         {
             var stack = new StackPanel();
             NewAssignmentButton.Flyout = new Flyout() {Content = stack};
+            if (_assignment != null)
+            {
+                var current = new Button() { Content = "Currently playing", HorizontalAlignment = HorizontalAlignment.Stretch, Margin = new Thickness(0, 0, 0, 10) };
+                stack.Children.Add(current);
+                current.Click += async (o, args) =>
+                {
+                    NewAssignmentButton.Flyout.Hide();
+                    var dialog = new AssignmentDialog(_assignment, await ImageLoader.GetBestUrlFromPlace(_assignment),true);
+                    await ShowDialog(dialog);
+                    if (dialog.Accepted) return;
+                    // TODO REMOVE COINS BECAUSE USER HAS CANCELED
+                    await SetAssignment(null, null);
+                };
+                
+            }
             var multiplayer = new Button() {Content = "Multiplayer", HorizontalAlignment = HorizontalAlignment.Stretch, Margin = new Thickness(0,0,0,10)};
             var singleplayer = new Button() { Content = "Singleplayer", HorizontalAlignment = HorizontalAlignment.Stretch};
             stack.Children.Add(multiplayer);
@@ -434,11 +447,11 @@ namespace UWPEindopdracht
                     TakeAssignmentErrorAnimation.Begin();
                     return;
                 }
+                NewAssignmentButton.Flyout.Hide();
                 var loc = await GPSHelper.getLocation();
                 if (loc != null)
                 {
-                    // TODO DIFFERENT KIND OF ASSIGNMENTS
-                    await SetAssignment(loc, getRandomAssignment(), true);
+                    await SetAssignment(loc, getRandomAssignment());
                 }
             };
         }
