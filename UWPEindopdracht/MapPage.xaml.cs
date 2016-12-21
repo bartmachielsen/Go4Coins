@@ -34,7 +34,7 @@ namespace UWPEindopdracht
         private bool _dialogClaimed = false;
         private Assignment _assignment;
         private readonly MultiplayerData _multiplayerData = new MultiplayerData();
-        
+        private readonly Random _random = new Random();
 
         public MapPage()
         {
@@ -86,7 +86,6 @@ namespace UWPEindopdracht
         }
         private async Task UpdateUserDetails()
         {
-            
             try
             {
                 _multiplayerData.Users = await _multiplayerData.Db.GetUsers(_multiplayerData.Users);
@@ -243,7 +242,7 @@ namespace UWPEindopdracht
             MapControl.RotateInteractionMode = MapInteractionMode.Auto;
             MapControl.TiltInteractionMode = MapInteractionMode.Auto;
         }
-        private async Task SetAssignment(GCoordinate loc, Assignment newAssignment)
+        private async Task SetAssignment(GCoordinate loc, Assignment newAssignment, bool selectNew = false)
         {
             if(_assignment != null)
                 RemovePinPoints(_assignment);
@@ -282,6 +281,9 @@ namespace UWPEindopdracht
             }
             if (!dialog.Accepted)
             {
+                if (selectNew)
+                    newAssignment = getRandomAssignment();
+                // TODO COINS PENALTY WHEN USER IS SKIPPING
                 await SetAssignment(loc, newAssignment);
                 return;
             }
@@ -436,11 +438,16 @@ namespace UWPEindopdracht
                 if (loc != null)
                 {
                     // TODO DIFFERENT KIND OF ASSIGNMENTS
-                    await SetAssignment(loc, new MapAssignment());
+                    await SetAssignment(loc, getRandomAssignment(), true);
                 }
             };
         }
 
+        private Assignment getRandomAssignment()
+        {
+            List<Assignment> assignments = new List<Assignment>() {new MapAssignment(), new SearchAssignment()};
+            return assignments.ElementAt(_random.Next(assignments.Count));
+        }
         private async void GoToAlbumButton_Click(object sender, RoutedEventArgs e)
         {
             var a = new AlbumDialog(_multiplayerData.User);
