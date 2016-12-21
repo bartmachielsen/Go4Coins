@@ -16,6 +16,7 @@ using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Controls.Maps;
 using Windows.UI.Xaml.Media;
 using Windows.UI.Xaml.Media.Imaging;
+using UWPEindopdracht.Assignments;
 using UWPEindopdracht.DataConnections;
 using UWPEindopdracht.GPSConnections;
 using UWPEindopdracht.JSON;
@@ -215,7 +216,7 @@ namespace UWPEindopdracht
             _multiplayerData.User.Icon.Location = location;
         }
 
-        private void showLoading()
+        private void ShowLoading()
         {
             LoadingAnimation.Visibility = Visibility.Visible;
             LoadingText.Visibility = Visibility.Visible;
@@ -229,7 +230,7 @@ namespace UWPEindopdracht
             MapControl.TiltInteractionMode = MapInteractionMode.Disabled;
         }
 
-        private void hideLoading()
+        private void HideLoading()
         {
             LoadingAnimation.Visibility = Visibility.Collapsed;
             LoadingText.Visibility = Visibility.Collapsed;
@@ -255,7 +256,7 @@ namespace UWPEindopdracht
             _assignment = null;
             if (loc == null || newAssignment == null)
                 return;
-            showLoading();
+            ShowLoading();
             await _multiplayerData.placeLoader.LoadPlaces(loc);
 
             try
@@ -266,14 +267,14 @@ namespace UWPEindopdracht
             {
                 await new MessageDialog("Move to another area! (move +5KM)", "Not enough targets!").ShowAsync();
                 _assignment = null;
-                hideLoading();
+                HideLoading();
                 return;
             }
             catch (CantCalculateRouteException)
             {
                 await new MessageDialog("Cant find route to target(s)", "please move to walking area!").ShowAsync();
                 _assignment = null;
-                hideLoading();
+                HideLoading();
                 return;
             }
             var dialog = new AssignmentDialog(newAssignment, await ImageLoader.GetBestUrlFromPlace(newAssignment));
@@ -282,16 +283,18 @@ namespace UWPEindopdracht
             if (!dialog.Accepted)
             {
                 if (selectNew)
-                    newAssignment = getRandomAssignment();
+                {
+                    newAssignment = GetRandomAssignment();
+                }
                 // TODO COINS PENALTY WHEN USER IS SKIPPING
-                await SetAssignment(loc, newAssignment);
+                await SetAssignment(loc, newAssignment, selectNew);
             }
             else
             {
                 newAssignment.StartAssignment();
                 _assignment = newAssignment;
                 PlacePinPoints(GPSHelper.getPointOutLocation(loc));
-                hideLoading();
+                HideLoading();
                 ChangeDistance(loc);
                 ChangeTime();
                 var timer = new DispatcherTimer
@@ -315,7 +318,7 @@ namespace UWPEindopdracht
             if (loc != null)
             {
                 MapControl.Center = loc.Coordinate.Point;
-                hideLoading();
+                HideLoading();
             }
             else
             {
@@ -335,6 +338,7 @@ namespace UWPEindopdracht
             {
                 await Dispatcher.RunAsync(CoreDispatcherPriority.Normal, () =>
                 {
+                    if (_assignment == null) return;
                     var time = _assignment.GetTimeText();
                     TimeTextBlock.Text = time ?? "00:00";
                 });
@@ -451,15 +455,17 @@ namespace UWPEindopdracht
                 var loc = await GPSHelper.getLocation();
                 if (loc != null)
                 {
-                    await SetAssignment(loc, getRandomAssignment());
+                    await SetAssignment(loc, GetRandomAssignment(), true);
                 }
             };
         }
 
-        private Assignment getRandomAssignment()
+        private Assignment GetRandomAssignment()
         {
-            List<Assignment> assignments = new List<Assignment>() {new MapAssignment(), new SearchAssignment()};
-            return assignments.ElementAt(_random.Next(assignments.Count));
+            List<Assignment> assignments = new List<Assignment>() {new MapAssignment(), new SearchAssignment(), new AssistedAssignment()};
+            var index = _random.Next(assignments.Count);
+            System.Diagnostics.Debug.WriteLine(index);
+            return assignments.ElementAt(index);
         }
         private async void GoToAlbumButton_Click(object sender, RoutedEventArgs e)
         {

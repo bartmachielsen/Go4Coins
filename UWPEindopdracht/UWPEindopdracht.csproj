@@ -102,6 +102,7 @@
       <DependentUpon>AssignmentDialog.xaml</DependentUpon>
     </Compile>
     <Compile Include="Assignments\Assignment.cs" />
+    <Compile Include="Assignments\AssistedAssignment.cs" />
     <Compile Include="Assignments\PhotoAssignment.cs" />
     <Compile Include="DataConnections\GooglePlacesConnector.cs" />
     <Compile Include="DataConnections\GoogleStreetviewConnector.cs" />

@@ -5,6 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using Windows.Services.Maps;
 using Windows.UI.Xaml.Media.Animation;
+using UWPEindopdracht.DataConnections;
 using UWPEindopdracht.GPSConnections;
 using UWPEindopdracht.Places;
 
@@ -13,6 +14,7 @@ namespace UWPEindopdracht
     public abstract class Assignment
     {
         protected int MaxDistance { get; set; }
+        public bool PictureNeeded { get; set; } = false;
         private SpeedChecker _speedControl = new SpeedChecker();
         protected int MinDistance { get; set; }
         public int NeededDistance { get; set; }
@@ -46,7 +48,7 @@ namespace UWPEindopdracht
         /// <param name="places"></param>
         /// <param name="currentPosition"></param>
         /// <returns></returns>
-        public async Task<Place[]> PickTargetPlace(List<Place> places, GCoordinate currentPosition)
+        public virtual async Task<Place[]> PickTargetPlace(List<Place> places, GCoordinate currentPosition)
         {
             Random random = new Random();
             List<Place> removed = new List<Place>(places);
@@ -72,6 +74,10 @@ namespace UWPEindopdracht
                 var route = result.Route;
                 
                 place.Distance = route.LengthInMeters;
+                if (PictureNeeded)
+                    if ((await ImageLoader.GetBestUrlFromPlace(place)) == null)
+                        continue;
+                    
                 
                 
                 if (place.Distance >= MinDistance && place.Distance <= MaxDistance)
@@ -104,7 +110,7 @@ namespace UWPEindopdracht
          return DateTime.Now - _start;
         }
 
-        public async Task<string> GetDistanceText(GCoordinate currentPoint)
+        public virtual async Task<string> GetDistanceText(GCoordinate currentPoint)
         {
             if (Targets == null) return "";   
             MapRoute route = await GPSHelper.calculateRouteBetween(currentPoint, Targets[0].Location);
@@ -224,6 +230,7 @@ namespace UWPEindopdracht
         {
             MaximumTime = TimeSpan.FromHours(1);
             MaxSpeed = null;
+            PictureNeeded = true;
             MaxDistance = 1000;
             MinDistance = 100;
             NeededDistance = 50;
@@ -231,7 +238,8 @@ namespace UWPEindopdracht
             TimeMultiplier = 1.5;
         }
 
-       
+        
+
 
         public override string GetDescription()
         {
@@ -239,10 +247,12 @@ namespace UWPEindopdracht
             return
                 "Search the point given below!\n" +
                 $"\nName: {Targets[0].Name}" +
-                $"\nEstimated distance to the target: {Targets[0].Distance}!" +
+                $"\nEstimated distance to the target: {Targets[0].Distance} meters!" +
                 $"\nYou'll get a bonus if the point is reached within {MaximumTime.TotalMinutes} minutes!" +
                 $"\nYour total score can be {TotalScore(new TimeSpan())}!";
         }
+
+      
     }
 
     class NoTargetAvailable : Exception
