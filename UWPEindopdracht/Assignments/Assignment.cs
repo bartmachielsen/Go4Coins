@@ -17,11 +17,11 @@ namespace UWPEindopdracht
         protected int MinDistance { get; set; }
         public int NeededDistance { get; set; }
         protected int? MaxSpeed { get; set; }
-        public Place[] Target { get; private set; }
+        public Place[] Targets { get; private set; }
         public Place CurrentLocation { get; set; }
         private List<Place> _reachedTargets = new List<Place>();
         protected double TimeMultiplier { private get; set; } = 1;
-
+        private int errorsWithLoading = 0;
         private DateTime _start;
 
         public bool ShowPinPoint { get; protected set; } = true;
@@ -33,8 +33,8 @@ namespace UWPEindopdracht
 
         public virtual async Task FillTarget(List<Place> places, GCoordinate currentPosition)
         {
-            Target = await PickTargetPlace(places, currentPosition);
-            var route = await GPSHelper.calculateRouteBetween(currentPosition, Target[0].Location);
+            Targets = await PickTargetPlace(places, currentPosition);
+            var route = await GPSHelper.calculateRouteBetween(currentPosition, Targets[0].Location);
             if(route != null)
                 MaximumTime = TimeSpan.FromMinutes(route.EstimatedDuration.TotalMinutes*TimeMultiplier);  
         }
@@ -56,9 +56,24 @@ namespace UWPEindopdracht
                 removed.Remove(place);
                 if (place.IsCity() || place.Name == await GPSHelper.GetCityName(place.Location))
                     continue;
-                var route = await GPSHelper.calculateRouteBetween(currentPosition, place.Location);
-                if (route != null)
-                    place.Distance = route.LengthInMeters;
+                var result = await GPSHelper.getRouteResult(currentPosition, place.Location);
+                if (result.Status == MapRouteFinderStatus.NoRouteFoundWithGivenOptions)
+                {
+                    if (errorsWithLoading >= 3)
+                    {
+                        errorsWithLoading = 0;
+                        throw new CantCalculateRouteException();
+                    }
+                    errorsWithLoading += 1;
+                    continue;
+                }
+                
+
+                var route = result.Route;
+                
+                place.Distance = route.LengthInMeters;
+                
+                
                 if (place.Distance >= MinDistance && place.Distance <= MaxDistance)
                 {
                     return new[] {place};
@@ -76,8 +91,8 @@ namespace UWPEindopdracht
         {
             double distance = 0;
             double timebonus = 0;
-            if (Target[0].Distance != null)
-                distance = (double)Target[0].Distance;
+            if (Targets[0].Distance != null)
+                distance = (double)Targets[0].Distance;
             if (currentTimeSpent.TotalSeconds < MaximumTime.TotalSeconds)
                 timebonus = MaximumTime.TotalSeconds - currentTimeSpent.TotalSeconds;
 
@@ -89,30 +104,35 @@ namespace UWPEindopdracht
          return DateTime.Now - _start;
         }
 
-        public async Task<string[]> GetRouteInformation(GCoordinate currentPoint, bool wantRoute = true)
+        public async Task<string> GetDistanceText(GCoordinate currentPoint)
         {
-            TimeSpan span = MaximumTime - DateTime.Now.Subtract(_start);
-            if (!wantRoute)
-            {
-                string hours = "";
-                if (span.Hours > 0)
-                    hours = span.Hours + ":";
-                if (hours.Length < 3 && span.Hours > 0)
-                    hours = "0" + hours;
-                string minutes = span.Minutes + "";
-                if (minutes.Length < 2)
-                    minutes = "0" + minutes;
-                string seconds = span.Seconds + "";
-                if (seconds.Length < 2)
-                    seconds = "0" + seconds;
-                return new string[] {$"{hours}{minutes}:{seconds}"};
-            }
-            MapRoute route = await GPSHelper.calculateRouteBetween(currentPoint, Target[0].Location);
+            if (Targets == null) return "";   
+            MapRoute route = await GPSHelper.calculateRouteBetween(currentPoint, Targets[0].Location);
             if (route != null)
             {
-                return new string[] {$"", route.LengthInMeters / 1000.0 + " km"};
+                return route.LengthInMeters / 1000.0 + " km";
             }
-            return new string[] { $"", "Unreachable!" };
+            return "Unreachable!";
+        }
+        public string GetTimeText()
+        {
+            if (Targets == null)
+                return "";
+            TimeSpan span = MaximumTime - DateTime.Now.Subtract(_start);
+            string hours = "";
+            if (span.Hours > 0)
+                hours = Math.Abs(span.Hours) + ":";
+            if (hours.Length < 3 && span.Hours > 0)
+                hours = "0" + hours;
+            string minutes = Math.Abs(span.Minutes) + "";
+            if (minutes.Length < 2)
+                minutes = "0" + minutes;
+            string seconds = Math.Abs(span.Seconds) + "";
+            if (seconds.Length < 2)
+                seconds = "0" + seconds;
+            if (span <= TimeSpan.Zero)
+                return null;
+            return $"{hours}{minutes}:{seconds}";
         }
 
 
@@ -139,7 +159,7 @@ namespace UWPEindopdracht
                     await GPSHelper.PlaceEntered(reachedFunction, place, NeededDistance);
                 }
             };
-            foreach (var target in Target)
+            foreach (var target in Targets)
             {
                 await GPSHelper.PlaceEntered(reachedFunction, target, NeededDistance);
             }
@@ -148,7 +168,7 @@ namespace UWPEindopdracht
         public void StartAssignment()
         {
             _start = DateTime.Now;
-            foreach (var target in Target)
+            foreach (var target in Targets)
             {
                 target.visited = false;
             }
@@ -164,7 +184,7 @@ namespace UWPEindopdracht
 
         public bool AssignmentFinished()
         {
-            return Target.All(target => _reachedTargets.Contains(target));
+            return Targets.All(target => _reachedTargets.Contains(target));
         }
 
         public void LocationChanged(GCoordinate coordinate)
@@ -218,8 +238,8 @@ namespace UWPEindopdracht
 
             return
                 "Search the point given below!\n" +
-                $"\nName: {Target[0].Name}" +
-                $"\nEstimated distance to the target: {Target[0].Distance}!" +
+                $"\nName: {Targets[0].Name}" +
+                $"\nEstimated distance to the target: {Targets[0].Distance}!" +
                 $"\nYou'll get a bonus if the point is reached within {MaximumTime.TotalMinutes} minutes!" +
                 $"\nYour total score can be {TotalScore(new TimeSpan())}!";
         }
@@ -230,5 +250,10 @@ namespace UWPEindopdracht
         public NoTargetAvailable() : base("No available targets!")
         {
         }
+    }
+
+    class CantCalculateRouteException : Exception
+    {
+        
     }
 }

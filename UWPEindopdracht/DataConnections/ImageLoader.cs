@@ -14,7 +14,7 @@ namespace UWPEindopdracht.DataConnections
         public static async Task<string> GetBestUrlFromPlace(Assignment assignment)
         {
             if (!assignment.ShowPicture) return null;
-            return await GetBestUrlFromPlace(assignment.Target[0]);
+            return await GetBestUrlFromPlace(assignment.Targets[0]);
         }
 
         public static async Task<string> GetBestUrlFromPlace(Place place)

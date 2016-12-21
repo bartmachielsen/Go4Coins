@@ -95,6 +95,16 @@ namespace UWPEindopdracht.DataConnections
             
         }
 
+        public async void UpdateReward(Reward reward)
+        {
+            Uri uri = new Uri($"{Host}/rewards/{reward.id}?apikey={ApiKey}");
+            var header =
+                await
+                    Put(uri,
+                        new HttpStringContent(RestDBHelper.ConvertReward(reward), UnicodeEncoding.Utf8,
+                            "application/json"));
+        }
+
         public async Task<List<Reward>> GetRewards()
         {
             Uri uri = new Uri($"{Host}/rewards?apikey={ApiKey}");

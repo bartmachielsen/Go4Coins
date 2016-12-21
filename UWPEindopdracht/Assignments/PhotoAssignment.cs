@@ -25,11 +25,11 @@ namespace UWPEindopdracht.Assignments
         public override async Task FillTarget(List<Place> places, GCoordinate currentPosition)
         {
             string urls = null;
-            while (Target == null && urls == null)
+            while (Targets == null && urls == null)
             {
                 await base.FillTarget(places, currentPosition);
-                if(Target != null && Target.Length > 0)
-                    urls = await _connector.GetURLToSavePicture(Target[0]);
+                if(Targets != null && Targets.Length > 0)
+                    urls = await _connector.GetURLToSavePicture(Targets[0]);
             }
         }
     }

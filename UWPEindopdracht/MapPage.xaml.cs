@@ -164,7 +164,7 @@ namespace UWPEindopdracht
                 return;
             }
             if(_assignment != null)
-                foreach (var target in _assignment.Target)
+                foreach (var target in _assignment.Targets)
                     foreach (var element in args.MapElements)
                         if (target.Icon != null && target.Icon == element)
                             ShowDialog(new PlaceDialog(target));
@@ -180,7 +180,7 @@ namespace UWPEindopdracht
         {
             await Dispatcher.RunAsync(CoreDispatcherPriority.Normal, () =>
             {
-                foreach (var place in oldAssignment.Target)
+                foreach (var place in oldAssignment.Targets)
                 {
                     MapControl.MapElements.Remove(place.Icon);
                     place.Icon = null;
@@ -197,9 +197,9 @@ namespace UWPEindopdracht
                 _multiplayerData.User.Icon = new MapIcon {Title = "Your Location"};
                 MapControl.MapElements.Add(_multiplayerData.User.Icon);
             }
-            if ((_assignment?.Target != null) && _assignment.ShowPinPoint)
+            if ((_assignment?.Targets != null) && _assignment.ShowPinPoint)
             {
-                foreach (var target in _assignment.Target)
+                foreach (var target in _assignment.Targets)
                 {
                     if (target.Icon != null) continue;
                     target.Icon = new MapIcon()
@@ -253,7 +253,7 @@ namespace UWPEindopdracht
                 return;
             showLoading();
             await _multiplayerData.placeLoader.LoadPlaces(loc);
-            
+
             try
             {
                 await newAssignment.FillTarget(_multiplayerData.placeLoader.Places, loc);
@@ -261,7 +261,15 @@ namespace UWPEindopdracht
             catch (NoTargetAvailable)
             {
                 await new MessageDialog("Move to another area! (move +5KM)", "Not enough targets!").ShowAsync();
-                newAssignment = null;
+                _assignment = null;
+                hideLoading();
+                return;
+            }
+            catch (CantCalculateRouteException)
+            {
+                await new MessageDialog("Cant find route to target(s)", "please move to walking area!").ShowAsync();
+                _assignment = null;
+                hideLoading();
                 return;
             }
             var dialog = new AssignmentDialog(newAssignment, await ImageLoader.GetBestUrlFromPlace(newAssignment));
@@ -316,20 +324,19 @@ namespace UWPEindopdracht
 
         private async void ChangeDistance(GCoordinate current)
         {
-            if ((_assignment != null) && (_assignment.Target != null))
-            {
-                var information = await _assignment.GetRouteInformation(current);
-                DistanceTextBlock.Text = information[1];
-                
-            }
+            if (_assignment != null)
+                DistanceTextBlock.Text = await _assignment.GetDistanceText(current);
         }
 
         private async void ChangeTime()
         {
-            if ((_assignment != null) && (_assignment.Target != null))
+            if (_assignment != null)
             {
-                var information = await _assignment.GetRouteInformation(null, false);
-                await Dispatcher.RunAsync(CoreDispatcherPriority.Normal, () => { TimeTextBlock.Text = information[0]; });
+                await Dispatcher.RunAsync(CoreDispatcherPriority.Normal, () =>
+                {
+                    var time = _assignment.GetTimeText();
+                    TimeTextBlock.Text = time ?? "00:00";
+                });
             }
         }
 
@@ -412,17 +419,26 @@ namespace UWPEindopdracht
 
         private async void NewAssignmentButton_Click(object sender, RoutedEventArgs e)
         {
-            if (_assignment != null)
+            var stack = new StackPanel();
+            NewAssignmentButton.Flyout = new Flyout() {Content = stack};
+            var multiplayer = new Button() {Content = "Multiplayer", HorizontalAlignment = HorizontalAlignment.Stretch, Margin = new Thickness(0,0,0,10)};
+            var singleplayer = new Button() { Content = "Singleplayer", HorizontalAlignment = HorizontalAlignment.Stretch};
+            stack.Children.Add(multiplayer);
+            stack.Children.Add(singleplayer);
+            singleplayer.Click += async (o, args) =>
             {
-                TakeAssignmentErrorAnimation.Begin();
-                return;
-            }
-            var loc = await GPSHelper.getLocation();
-            if (loc != null)
-            {
-                // TODO DIFFERENT KIND OF ASSIGNMENTS
-                await SetAssignment(loc, new MapAssignment());
-            }
+                if (_assignment != null)
+                {
+                    TakeAssignmentErrorAnimation.Begin();
+                    return;
+                }
+                var loc = await GPSHelper.getLocation();
+                if (loc != null)
+                {
+                    // TODO DIFFERENT KIND OF ASSIGNMENTS
+                    await SetAssignment(loc, new MapAssignment());
+                }
+            };
         }
 
         private async void GoToAlbumButton_Click(object sender, RoutedEventArgs e)
