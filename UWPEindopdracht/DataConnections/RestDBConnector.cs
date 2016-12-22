@@ -136,7 +136,7 @@ namespace UWPEindopdracht.DataConnections
             return RestDBHelper.GetAssignments(response);
         }
 
-        public async void UpdateMultiplayerAssignmentDetail(MultiplayerAssignmentDetails assignment)
+        public async Task UpdateMultiplayerAssignmentDetail(MultiplayerAssignmentDetails assignment)
         {
             Uri uri = new Uri($"{Host}/assignments/{assignment.Id}?apikey={ApiKey}");
             var header =
@@ -144,6 +144,16 @@ namespace UWPEindopdracht.DataConnections
                     Put(uri,
                         new HttpStringContent(RestDBHelper.ConvertMultiplayerAssignmentDetails(assignment), UnicodeEncoding.Utf8,
                             "application/json"));
+        }
+
+        public async Task GetMultiplayerAssignment(MultiplayerAssignmentDetails details)
+        {
+            Uri uri = new Uri($"{Host}/assignments/{details.Id}?apikey={ApiKey}");
+            var header = await Get(uri);
+            var response = await ConvertResponseMessageToContent(header);
+            if (!header.IsSuccessStatusCode) return;
+            RestDBHelper.CheckErrors(response);
+            details.Merge(RestDBHelper.GetAssignment(response));
         }
     }
 }

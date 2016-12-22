@@ -132,6 +132,14 @@ namespace UWPEindopdracht.JSON
             }
             return assignment;
         }
+
+        public static MultiplayerAssignmentDetails GetAssignment(string response)
+        {
+            dynamic json = JsonConvert.DeserializeObject(response);
+            MultiplayerAssignmentDetails assi = JsonConvert.DeserializeObject<MultiplayerAssignmentDetails>(JsonConvert.SerializeObject(json.assignmentdetail));
+            assi.Id = (string)json._id;
+            return assi;
+        }
     }
 
     class CannotUploadException : Exception

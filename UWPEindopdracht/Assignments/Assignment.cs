@@ -37,6 +37,8 @@ namespace UWPEindopdracht
         public virtual async Task FillTarget(List<Place> places, GCoordinate currentPosition)
         {
             Targets = await PickTargetPlace(places, currentPosition);
+            if (Targets == null)
+                return;
             var route = await GPSHelper.calculateRouteBetween(currentPosition, Targets[0].Location);
             if(route != null)
                 MaximumTime = TimeSpan.FromMinutes(route.EstimatedDuration.TotalMinutes*TimeMultiplier);

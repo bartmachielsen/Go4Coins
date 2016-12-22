@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -17,7 +18,7 @@ namespace UWPEindopdracht.Multiplayer
         public RestDBConnector Db = new RestDBConnector();
         public PlaceLoader placeLoader = new PlaceLoader();
         public List<User> Users = new List<User>();
-        public List<MultiplayerAssignmentDetails> MultiplayerAssignmentDetailses;
+        public ObservableCollection<MultiplayerAssignmentDetails> MultiplayerAssignmentDetailses = new ObservableCollection<MultiplayerAssignmentDetails>();
         public User User;
         public List<Reward> Rewards;
         public DateTime LastLocationSync = DateTime.Now;
@@ -114,9 +115,44 @@ namespace UWPEindopdracht.Multiplayer
             }
         }
 
-        public async Task LoadAssignments()
+       
+        public async Task UpdateAssignments()
         {
-            MultiplayerAssignmentDetailses = await Db.GetMultiplayerAssignments();
+            List<MultiplayerAssignmentDetails> assignmentDetailses = await Db.GetMultiplayerAssignments();
+
+            foreach (var assignment in assignmentDetailses)
+            {
+                var exists = false;
+                foreach (var existing in MultiplayerAssignmentDetailses)
+                {
+                    if (assignment.Id != existing.Id) continue;
+                    exists = true;
+                    existing.Merge(assignment);
+
+                    break;
+                }
+                if (!exists)
+                    MultiplayerAssignmentDetailses.Add(assignment);
+
+            }
+            var removal = new List<MultiplayerAssignmentDetails>();
+            foreach (var assigment in MultiplayerAssignmentDetailses)
+            {
+                var users = Users.FindAll((user => assigment.Participants.Contains(user.id) || user.id == assigment.Administrator));
+                if (assigment.Participants.Contains(User.id))
+                    users.Add(User);
+                assigment.CurrentUser = User.id;
+                if (!users.Exists((user => user.IsAlive())) && (assigment.Administrator == User.id || assigment.Participants.Contains(User.id))
+                    || !assignmentDetailses.Exists((details => assigment.Id == details.Id)))
+                {
+                    removal.Add(assigment);
+                }
+            }
+            foreach (var remover in removal)
+            {
+                MultiplayerAssignmentDetailses.Remove(remover);
+            }
+
         }
 
     }

@@ -21,59 +21,15 @@ namespace UWPEindopdracht
 {
     public sealed partial class MultiplayerAssignments : ContentDialog
     {
-        public ObservableCollection<MultiplayerAssignmentDetails> Assignments = new ObservableCollection<MultiplayerAssignmentDetails>();
         private MultiplayerData _data;
-        private DispatcherTimer _timer;
+        public MultiplayerAssignmentDetails selected;
         public MultiplayerAssignments(MultiplayerData data)
         {
             _data = data;
-            
             this.InitializeComponent();
-
-            UpdateAssignments(null,null);
-            _timer = new DispatcherTimer() {Interval= TimeSpan.FromSeconds(3)};
-            _timer.Tick += UpdateAssignments;
-            _timer.Start();
         }
 
-        private async void UpdateAssignments(object sender, object tick)
-        {
-            List<MultiplayerAssignmentDetails> assignmentDetailses = await _data.Db.GetMultiplayerAssignments();
-            
-            foreach (var assignment in assignmentDetailses)
-            {
-                var exists = false;
-                foreach (var existing in Assignments)
-                {
-                    if (assignment.Id != existing.Id) continue;
-                    exists = true;
-                    existing.Merge(assignment);
-                    break;
-                }
-                var users = _data.Users.FindAll((user => assignment.Participants.Contains(user.id)));
-                if (!exists)
-                {
-                    Assignments.Add(assignment);
-                }
-            }
-            var removal = new List<MultiplayerAssignmentDetails>();
-            foreach (var assigment in Assignments)
-            {
-                var users = _data.Users.FindAll((user => assigment.Participants.Contains(user.id) || user.id == assigment.Administrator));
-                if (assigment.Participants.Contains(_data.User.id))
-                    users.Add(_data.User);
-                
-                if (!users.Exists((user => user.IsAlive())) || !assignmentDetailses.Exists((details => assigment.Id == details.Id)))
-                {
-                    removal.Add(assigment);
-                }
-            }
-            foreach (var remover in removal)
-            {
-                Assignments.Remove(remover);
-            }
-
-        }
+       
         private void ContentDialog_PrimaryButtonClick(ContentDialog sender, ContentDialogButtonClickEventArgs args)
         {
         }
@@ -83,18 +39,28 @@ namespace UWPEindopdracht
 
         }
 
-        private void OnJoinClicked(object sender, RoutedEventArgs e)
+        private async void OnJoinClicked(object sender, RoutedEventArgs e)
         {
             var assignment = ((Button) sender).DataContext as MultiplayerAssignmentDetails;
             if (assignment != null)
             {  
+                // todo check if not already joined!
                 
                 assignment.Joiners.Add(_data.User.id);
                 assignment.OnPropertyChanged("Available");
-                _data.Db.UpdateMultiplayerAssignmentDetail(assignment);
-                _timer.Stop();
+                selected = assignment;
+                await _data.Db.UpdateMultiplayerAssignmentDetail(assignment);
                 Hide();
             }
+        }
+
+        private void MultiplayerAssignments_OnSecondaryButtonClick(ContentDialog sender, ContentDialogButtonClickEventArgs args)
+        {
+            // TODO CHECK IF NOT ALREADY JOINED!
+            var assignment = new MultiplayerAssignmentDetails(4, null, _data.User.id);
+            _data.Db.UploadMultiplayerAssignmentDetail(assignment);
+            _data.MultiplayerAssignmentDetailses.Add(assignment);
+            selected = assignment;
         }
     }
 }

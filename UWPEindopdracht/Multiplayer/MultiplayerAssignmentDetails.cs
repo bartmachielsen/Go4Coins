@@ -6,6 +6,8 @@ using System.Text;
 using System.Threading.Tasks;
 using Windows.UI.Xaml;
 using Newtonsoft.Json;
+using UWPEindopdracht.GPSConnections;
+using UWPEindopdracht.Places;
 
 namespace UWPEindopdracht.Multiplayer
 {
@@ -18,20 +20,34 @@ namespace UWPEindopdracht.Multiplayer
         public string Id;
 
         [JsonIgnore]
-        public bool Available
-        {
-            get { return (Joiners.Count + Participants.Count) < MaxJoiners; }
-        }
+        public string CurrentUser;
 
-        public string Description { get; set; } = "Multiplayer game";
+        [JsonIgnore] public bool syncNeeded = false;
+
+        [JsonIgnore]
+        public bool Available => (
+                                     Joiners.Count + Participants.Count) < MaxJoiners && 
+                                 Administrator != CurrentUser && CurrentUser != null && 
+                                 !Participants.Contains(CurrentUser) &&
+                                 !Joiners.Contains(CurrentUser);
+
+        public string Description { get; private set; } = "Multiplayer game";
     
         public string Administrator;
 
         public MultiplayerAssignmentDetails(int maxJoiners, string id, string administrator)
         {
+            MaxDistance = 3000;
+            MinDistance = 800;
+            NeededDistance = 30;
+            MaxSpeed = 40;
+            TimeMultiplier = 0.6;
+
             MaxJoiners = maxJoiners;
             Id = id;
             Administrator = administrator;
+            if(!Participants.Contains(Administrator))
+                Participants.Add(Administrator);
         }
         
         public void OnPropertyChanged(string name)
@@ -62,6 +78,18 @@ namespace UWPEindopdracht.Multiplayer
             Administrator = assignment.Administrator;
             OnPropertyChanged("Administrator");
             OnPropertyChanged("Available");
+        }
+
+        public override async Task<Place[]> PickTargetPlace(List<Place> places, GCoordinate currentPosition)
+        {
+            if (Targets != null)
+                return Targets;
+            if (Administrator == CurrentUser)
+            {
+                syncNeeded = true;
+                return await base.PickTargetPlace(places, currentPosition);
+            }
+            return null;
         }
     }
 }
