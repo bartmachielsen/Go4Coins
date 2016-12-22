@@ -101,6 +101,8 @@
                 Style="{StaticResource ButtonStyle}"
                 Click="NewAssignmentButton_Click"
                 >
+                <!--<Button.Flyout>
+                </Button.Flyout>-->
                 <Image Source="Assets/MapPage/new.png"/>
             </Button>
             <Button

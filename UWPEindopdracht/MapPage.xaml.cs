@@ -458,8 +458,8 @@ namespace UWPEindopdracht
                 };
 
             }
-            var multiplayer = new Button() { Content = "Multiplayer", HorizontalAlignment = HorizontalAlignment.Stretch, Margin = new Thickness(0, 0, 0, 10) };
-            var singleplayer = new Button() { Content = "Singleplayer", HorizontalAlignment = HorizontalAlignment.Stretch };
+            var multiplayer = new Button() { Content = "Multiplayer", Style = (Style)Application.Current.Resources["FooterButtonStyle"], HorizontalAlignment = HorizontalAlignment.Stretch, Margin = new Thickness(0, 0, 0, 10) };
+            var singleplayer = new Button() { Content = "Singleplayer", Style = (Style)Application.Current.Resources["FooterButtonStyle"], HorizontalAlignment = HorizontalAlignment.Stretch };
             stack.Children.Add(multiplayer);
             stack.Children.Add(singleplayer);
             singleplayer.Click += async (o, args) =>
@@ -493,7 +493,6 @@ namespace UWPEindopdracht
                     _multiplayerData.Db.UploadMultiplayerAssignmentDetail(assignment);
 
                     var dialog = new MultiplayerAssignments(_multiplayerData);
-                    dialog.Assignments.Add(assignment);
 
                     await ShowDialog(dialog);
                     updateAssignments = false;
