@@ -82,6 +82,15 @@ namespace UWPEindopdracht.Multiplayer
             Name = assignment.Name;
             OnPropertyChanged("Name");
             Participants = assignment.Participants;
+            if (Targets == null)
+                Targets = assignment.Targets;
+            else
+                if (assignment.Targets != null)
+                    foreach (var place in assignment.Targets)
+                        foreach (var target in Targets)
+                            if (place.Name == target.Name)
+                                target.MergeInto(place);
+          
             OnPropertyChanged("Participants");
             OnPropertyChanged("Joiners");
             MaxJoiners = assignment.MaxJoiners;

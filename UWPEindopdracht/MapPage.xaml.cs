@@ -79,7 +79,11 @@ namespace UWPEindopdracht
                 {
                     if (details.syncNeeded)
                         await _multiplayerData.Db.UpdateMultiplayerAssignmentDetail(details);
+                    var existed = details.Targets == null;
                     await _multiplayerData.Db.GetMultiplayerAssignment(details);
+                    if (existed && details.Targets != null)
+                        SetAssignment(await GPSHelper.getLocation(), details);
+                    
                 }
             }
         }
@@ -198,12 +202,6 @@ namespace UWPEindopdracht
 
         private void PlacePinPoints(Geopoint location)
         {
-            if (_multiplayerData.User == null) return;
-            if (_multiplayerData.User.Icon == null)
-            {
-                _multiplayerData.User.Icon = new MapIcon {Title = "Your Location"};
-                MapControl.MapElements.Add(_multiplayerData.User.Icon);
-            }
             if ((_assignment?.Targets != null) && _assignment.ShowPinPoint)
             {
                 foreach (var target in _assignment.Targets)
@@ -219,6 +217,13 @@ namespace UWPEindopdracht
                         target.Icon.Image = RandomAccessStreamReference.CreateFromUri(new Uri(target.IconLink));
                     MapControl.MapElements.Add(target.Icon);
                 }
+            }
+            if (location == null) return;
+            if (_multiplayerData.User == null) return;
+            if (_multiplayerData.User.Icon == null)
+            {
+                _multiplayerData.User.Icon = new MapIcon { Title = "Your Location" };
+                MapControl.MapElements.Add(_multiplayerData.User.Icon);
             }
             _multiplayerData.User.Icon.Location = location;
         }
@@ -285,10 +290,18 @@ namespace UWPEindopdracht
                 HideLoading();
                 return;
             }
-            var dialog = new AssignmentDialog(newAssignment, await ImageLoader.GetBestUrlFromPlace(newAssignment));
-            await ShowDialog(dialog);
-            
-            if (!dialog.Accepted)
+            bool cont = false;
+            if (newAssignment.Targets != null)
+            {
+                var dialog = new AssignmentDialog(newAssignment, await ImageLoader.GetBestUrlFromPlace(newAssignment));
+                await ShowDialog(dialog);
+                cont = dialog.Accepted;
+            }
+            if (newAssignment is MultiplayerAssignmentDetails)
+            {
+                cont = true;
+            }
+            if (!cont)
             {
                 if (selectNew)
                 {
