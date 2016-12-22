@@ -67,7 +67,15 @@ namespace UWPEindopdracht.Multiplayer
         }
         public override string GetDescription()
         {
-           return Description;
+            Name = Targets[0].Name;
+            var span = GetSpentTime();
+            if (span < TimeSpan.Zero)
+                span = TimeSpan.Zero;
+            return
+                "Walk to the marked point on the map! with other players!\n" +
+                $"\nYou'll get a bonus if the point is reached within {MaximumTime.TotalMinutes} minutes!" +
+                $"\nYour total score can be {TotalScore(span)}!\n" +
+                $"Amount of other users: {Participants.Count-1}";
         }
         
         public event PropertyChangedEventHandler PropertyChanged;
