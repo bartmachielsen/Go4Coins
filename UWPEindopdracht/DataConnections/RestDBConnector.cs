@@ -131,7 +131,7 @@ namespace UWPEindopdracht.DataConnections
             Uri uri = new Uri($"{Host}/assignments?apikey={ApiKey}");
             var header = await Get(uri);
             var response = await ConvertResponseMessageToContent(header);
-            if (!header.IsSuccessStatusCode) return new List<MultiplayerAssignmentDetails>();
+            if (!header.IsSuccessStatusCode) return null;
             RestDBHelper.CheckErrors(response);
             return RestDBHelper.GetAssignments(response);
         }

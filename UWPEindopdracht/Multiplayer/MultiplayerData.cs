@@ -26,7 +26,7 @@ namespace UWPEindopdracht.Multiplayer
 
         public async Task RegisterMultiplayerUser()
         {
-
+            System.Diagnostics.Debug.WriteLine("Registering to database!");
             var localSettings =
                 ApplicationData.Current.LocalSettings;
             if (Db == null)
@@ -104,6 +104,7 @@ namespace UWPEindopdracht.Multiplayer
 
         public async Task LoadRewards()
         {
+            System.Diagnostics.Debug.WriteLine("Loading rewards!");
             try
             {
                 Rewards = await Db.GetRewards();
@@ -118,8 +119,9 @@ namespace UWPEindopdracht.Multiplayer
        
         public async Task UpdateAssignments()
         {
+            System.Diagnostics.Debug.WriteLine("Updating multiplayer assignments!");
             List<MultiplayerAssignmentDetails> assignmentDetailses = await Db.GetMultiplayerAssignments();
-
+            if (assignmentDetailses == null) return;
             foreach (var assignment in assignmentDetailses)
             {
                 var exists = false;
