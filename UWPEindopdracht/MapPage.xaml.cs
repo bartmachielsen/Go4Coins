@@ -488,10 +488,7 @@ namespace UWPEindopdracht
                 var loc = await GPSHelper.getLocation();
                 if (loc != null)
                 {
-                    var assignment = new MultiplayerAssignmentDetails(4, null, _multiplayerData.User.id);
-                    assignment.Participants.Add(_multiplayerData.User.id);
-                    _multiplayerData.Db.UploadMultiplayerAssignmentDetail(assignment);
-
+                    updateAssignments = true;
                     var dialog = new MultiplayerAssignments(_multiplayerData);
 
                     await ShowDialog(dialog);

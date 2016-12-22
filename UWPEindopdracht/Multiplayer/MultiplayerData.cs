@@ -144,9 +144,9 @@ namespace UWPEindopdracht.Multiplayer
                 assigment.CurrentUser = User.id;
                 if ((!users.Exists((user => user.IsAlive())) && (assigment.Administrator == User.id || assigment.Participants.Contains(User.id)))
                     || !assignmentDetailses.Exists((details => assigment.Id == details.Id))
-                    || assigment.Closed)
+                    || assigment.Closed )
                 {
-                    removal.Add(assigment);
+                    //removal.Add(assigment);
                 }
             }
             foreach (var remover in removal)
