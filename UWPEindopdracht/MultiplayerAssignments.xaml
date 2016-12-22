@@ -8,7 +8,9 @@
     xmlns:multiplayer="using:UWPEindopdracht.Multiplayer"
     mc:Ignorable="d"
     PrimaryButtonText="OK"
-    IsPrimaryButtonEnabled="True">
+    IsPrimaryButtonEnabled="True"
+    SecondaryButtonText="Create New"
+    SecondaryButtonClick="MultiplayerAssignments_OnSecondaryButtonClick">
     
     
 
@@ -16,7 +18,7 @@
     <GridView    
             HorizontalAlignment="Center" 
             VerticalAlignment="Center"
-            ItemsSource="{x:Bind Assignments, Mode=OneWay}">
+            ItemsSource="{x:Bind _data.MultiplayerAssignmentDetailses, Mode=OneWay}">
         <GridView.ItemTemplate >
             <DataTemplate x:DataType="multiplayer:MultiplayerAssignmentDetails">
                 <Grid Width="300">

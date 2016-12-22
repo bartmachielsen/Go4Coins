@@ -36,6 +36,8 @@ namespace UWPEindopdracht
         private Assignment _assignment;
         private readonly MultiplayerData _multiplayerData = new MultiplayerData();
         private readonly Random _random = new Random();
+        private bool updateAssignments = false;
+        private bool assignmentsLoaded = false;
 
         public MapPage()
         {
@@ -63,7 +65,6 @@ namespace UWPEindopdracht
         {
             await _multiplayerData.RegisterMultiplayerUser();
             await _multiplayerData.LoadRewards();
-            await _multiplayerData.LoadAssignments();
             LiveUpdateUser();
         }
 
@@ -74,6 +75,18 @@ namespace UWPEindopdracht
                 await Task.Delay(MultiplayerData.ServerTimeOut*1000);
                 await UpdateUserDetails();
                 await CheckIfLocationUpdate(null);
+                if (updateAssignments)
+                {
+                    await _multiplayerData.UpdateAssignments();
+                    assignmentsLoaded = true;
+                }
+                var details = _assignment as MultiplayerAssignmentDetails;
+                if (details != null)
+                {
+                    if (details.syncNeeded)
+                        await _multiplayerData.Db.UpdateMultiplayerAssignmentDetail(details);
+                    await _multiplayerData.Db.GetMultiplayerAssignment(details);
+                }
             }
         }
 
@@ -483,7 +496,12 @@ namespace UWPEindopdracht
                     dialog.Assignments.Add(assignment);
 
                     await ShowDialog(dialog);
-                    //await SetAssignment(loc, GetRandomAssignment(), true);
+                    updateAssignments = false;
+                    if (dialog.selected != null)
+                    {
+                        dialog.selected.CurrentUser = _multiplayerData.User.id;
+                        await SetAssignment(loc, dialog.selected);
+                    }
                 }
             };
         }
