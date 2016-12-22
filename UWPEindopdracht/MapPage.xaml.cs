@@ -435,27 +435,31 @@ namespace UWPEindopdracht
             }
         }
 
-        private async void NewAssignmentButton_Click(object sender, RoutedEventArgs e)
+        private void NewAssignmentButton_Click(object sender, RoutedEventArgs e)
         {
             var stack = new StackPanel();
-            NewAssignmentButton.Flyout = new Flyout() {Content = stack};
+            var style = new Style(typeof(FlyoutPresenter));
+            style.Setters.Add(new Setter(BackgroundProperty, new SolidColorBrush(Colors.Transparent)));
+            style.Setters.Add(new Setter(BorderThicknessProperty, new Thickness(0)));
+            NewAssignmentButton.Flyout = new Flyout() { Content = stack };
+            NewAssignmentButton.Flyout.SetValue(Flyout.FlyoutPresenterStyleProperty, style);
             if (_assignment != null)
             {
-                var current = new Button() { Content = "Currently playing", HorizontalAlignment = HorizontalAlignment.Stretch, Margin = new Thickness(0, 0, 0, 10) };
+                var current = new Button() { Content = "Currently playing", Style = (Style)Application.Current.Resources["FooterButtonStyle"], HorizontalAlignment = HorizontalAlignment.Stretch, Margin = new Thickness(0, 0, 0, 10) };
                 stack.Children.Add(current);
                 current.Click += async (o, args) =>
                 {
                     NewAssignmentButton.Flyout.Hide();
-                    var dialog = new AssignmentDialog(_assignment, await ImageLoader.GetBestUrlFromPlace(_assignment),true);
+                    var dialog = new AssignmentDialog(_assignment, await ImageLoader.GetBestUrlFromPlace(_assignment), true);
                     await ShowDialog(dialog);
                     if (dialog.Accepted) return;
                     // TODO REMOVE COINS BECAUSE USER HAS CANCELED
                     await SetAssignment(null, null);
                 };
-                
+
             }
-            var multiplayer = new Button() {Content = "Multiplayer", HorizontalAlignment = HorizontalAlignment.Stretch, Margin = new Thickness(0,0,0,10)};
-            var singleplayer = new Button() { Content = "Singleplayer", HorizontalAlignment = HorizontalAlignment.Stretch};
+            var multiplayer = new Button() { Content = "Multiplayer", Style = (Style)Application.Current.Resources["FooterButtonStyle"], HorizontalAlignment = HorizontalAlignment.Stretch, Margin = new Thickness(0, 0, 0, 10) };
+            var singleplayer = new Button() { Content = "Singleplayer", Style = (Style)Application.Current.Resources["FooterButtonStyle"], HorizontalAlignment = HorizontalAlignment.Stretch };
             stack.Children.Add(multiplayer);
             stack.Children.Add(singleplayer);
             singleplayer.Click += async (o, args) =>
@@ -484,11 +488,12 @@ namespace UWPEindopdracht
                 var loc = await GPSHelper.getLocation();
                 if (loc != null)
                 {
-                    updateAssignments = true;
+                    var assignment = new MultiplayerAssignmentDetails(4, null, _multiplayerData.User.id);
+                    assignment.Participants.Add(_multiplayerData.User.id);
+                    _multiplayerData.Db.UploadMultiplayerAssignmentDetail(assignment);
+
                     var dialog = new MultiplayerAssignments(_multiplayerData);
-                    //while (!assignmentsLoaded)
-                    //{
-                    //}
+
                     await ShowDialog(dialog);
                     updateAssignments = false;
                     if (dialog.selected != null)

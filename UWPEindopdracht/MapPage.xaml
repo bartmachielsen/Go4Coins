@@ -34,6 +34,7 @@
             Name="MapControl"
             Center="{Binding location, Mode=TwoWay}"
             MapServiceToken="{StaticResource ServiceToken}"
+            ZoomLevel="50"
             PanInteractionMode="Disabled"
             ZoomInteractionMode="Disabled"
             RotateInteractionMode="Disabled"
