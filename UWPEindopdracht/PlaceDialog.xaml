@@ -81,7 +81,6 @@
             Grid.Row="4"
             Grid.Column="0"
             Style="{StaticResource FooterButtonStyle}"
-            Content="Back"
             Width="200"
             Click="BackButton_Click"
             />
