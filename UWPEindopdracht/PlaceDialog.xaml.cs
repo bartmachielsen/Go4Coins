@@ -42,24 +42,19 @@ namespace UWPEindopdracht
 
         private void LoadDetails()
         {
-            Title = place.Name;
-            if(place.Types != null)
-                TypeBlock.Text = $"[{string.Join(", ", place.Types)}]";
-            Distance.Text = "";
-
-        }
-
-        private void ContentDialog_PrimaryButtonClick(ContentDialog sender, ContentDialogButtonClickEventArgs args)
-        {
-        }
-
-        private void ContentDialog_SecondaryButtonClick(ContentDialog sender, ContentDialogButtonClickEventArgs args)
-        {
+            Title.Text = place.Name;
+            TypeInfoText.Text = place.Types != null ? $"[{string.Join(", ", place.Types)}]" : "No type";
+            DistInfoText.Text = $"Distance: {place.Distance / 1000} km";
         }
 
         private void NextImage(object sender, TappedRoutedEventArgs e)
         {
             // TODO GO TO NEXT PICTURE, LOAD MORE PICTURES THEN ONE
+        }
+
+        private void BackButton_Click(object sender, RoutedEventArgs e)
+        {
+            Hide();
         }
     }
 }
