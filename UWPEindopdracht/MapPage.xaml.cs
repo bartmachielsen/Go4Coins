@@ -482,9 +482,10 @@ namespace UWPEindopdracht
                 var loc = await GPSHelper.getLocation();
                 if (loc != null)
                 {
-                    updateAssignments = true;
+                    
                     var dialog = new MultiplayerAssignments(_multiplayerData);
-
+                    await _multiplayerData.UpdateAssignments();
+                    updateAssignments = true;
                     await ShowDialog(dialog);
                     updateAssignments = false;
                     if (dialog.selected != null)

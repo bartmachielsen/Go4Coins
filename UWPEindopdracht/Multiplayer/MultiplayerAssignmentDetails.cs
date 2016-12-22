@@ -95,6 +95,8 @@ namespace UWPEindopdracht.Multiplayer
 
         public override async Task<Place[]> PickTargetPlace(List<Place> places, GCoordinate currentPosition)
         {
+            if (CurrentUser != Administrator)
+                Skippable = false;
             if (Targets != null)
                 return Targets;
             if (Administrator == CurrentUser)
