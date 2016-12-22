@@ -62,5 +62,16 @@ namespace UWPEindopdracht
             _data.MultiplayerAssignmentDetailses.Add(assignment);
             selected = assignment;
         }
+
+        private async void StopAssignment(object sender, RoutedEventArgs e)
+        {
+            var assignment = ((Button)sender).DataContext as MultiplayerAssignmentDetails;
+            if (assignment != null)
+            {
+                assignment.Closed = true;
+                await _data.Db.UpdateMultiplayerAssignmentDetail(assignment);
+            }
+
+        }
     }
 }

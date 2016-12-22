@@ -23,6 +23,7 @@ namespace UWPEindopdracht
     {
         private Assignment _assignment;
         private string _imageURL;
+        private bool loaded;
         public bool Accepted = true;
         public AssignmentDialog(Assignment assignment, string imageURL, bool loaded = false)
         {
@@ -33,6 +34,7 @@ namespace UWPEindopdracht
                 SkipButton.Content = "Stop";
             }
             _imageURL = imageURL;
+            this.loaded = loaded;
             LoadDetails();
         }
 
@@ -42,7 +44,7 @@ namespace UWPEindopdracht
             AssignmentName.Text = _assignment.Name;
             if(_imageURL != null)
                 AssignmentImage.Source = new BitmapImage(new Uri(_imageURL));
-            SkipButton.IsEnabled = _assignment.Skippable;
+            SkipButton.IsEnabled = _assignment.Skippable || loaded;
         }
 
         private void StartButton_Click(object sender, RoutedEventArgs e)

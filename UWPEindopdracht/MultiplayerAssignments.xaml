@@ -21,20 +21,26 @@
             ItemsSource="{x:Bind _data.MultiplayerAssignmentDetailses, Mode=OneWay}">
         <GridView.ItemTemplate >
             <DataTemplate x:DataType="multiplayer:MultiplayerAssignmentDetails">
-                <Grid Width="300">
+                <Grid Width="360">
                     <Grid.ColumnDefinitions>
-                        <ColumnDefinition Width="Auto"/>
                         <ColumnDefinition Width="*"/>
-                        <ColumnDefinition Width="Auto"/>
+                        <ColumnDefinition Width="20"/>
+                        <ColumnDefinition Width="70"/>
+                        <ColumnDefinition Width="20"/>
+                        <ColumnDefinition Width="70"/>
 
                     </Grid.ColumnDefinitions>
                     <TextBlock Text="{x:Bind Description, Mode=OneWay}" Margin="0,0,10,0"/>
                     <Button 
                             Grid.Column="2" 
-                            Width="100" 
                             Content="{x:Bind ButtonText, Mode=OneWay}" 
                             IsEnabled="{x:Bind Available, Mode=OneWay}"
                             Click="OnJoinClicked"/>
+                    <Button 
+                            Grid.Column="4"
+                            Content="Stop" 
+                            Visibility="{x:Bind Stoppable, Mode=OneWay}"
+                            Click="StopAssignment"/>
                 </Grid>
 
             </DataTemplate>

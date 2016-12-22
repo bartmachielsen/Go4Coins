@@ -28,19 +28,13 @@ namespace UWPEindopdracht.Multiplayer
         [JsonIgnore] public bool syncNeeded = false;
 
         [JsonIgnore]
-        public bool Available => (Participants.Count) < MaxJoiners && 
-                                 Administrator != CurrentUser && CurrentUser != null;
+        public bool Available => (Participants.Count) < MaxJoiners;
 
         [JsonIgnore]
-        public string ButtonText {get {
-            if (Participants.Contains(CurrentUser))
-            {
-                return "rejoin";
-            }
-            else
-            {
-                return "Join";
-            } } }
+        public string ButtonText => "Join";
+
+        [JsonIgnore]
+        public Visibility Stoppable => CurrentUser == Administrator ? Visibility.Visible : Visibility.Collapsed;
 
         public string Description { get; private set; } = "Multiplayer game";
     
@@ -51,6 +45,8 @@ namespace UWPEindopdracht.Multiplayer
             MaxDistance = 3000;
             MinDistance = 800;
             NeededDistance = 30;
+            if(CurrentUser != administrator)
+                Skippable = false;
             MaxSpeed = 40;
             TimeMultiplier = 0.6;
             MaxJoiners = maxJoiners;

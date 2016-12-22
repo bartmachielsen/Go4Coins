@@ -146,7 +146,7 @@ namespace UWPEindopdracht.Multiplayer
                     || !assignmentDetailses.Exists((details => assigment.Id == details.Id))
                     || assigment.Closed )
                 {
-                    //removal.Add(assigment);
+                    removal.Add(assigment);
                 }
             }
             foreach (var remover in removal)
