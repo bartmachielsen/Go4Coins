@@ -7,8 +7,8 @@
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     mc:Ignorable="d"
     Background="White"
-    Height="430"
-    Margin="0,55"
+    Height="420"
+    Margin="0,100"
     >
 
     <ContentDialog.Resources>
@@ -32,7 +32,7 @@
             <RowDefinition Height="200"/>
             <RowDefinition Height="40"/>
             <RowDefinition Height="40"/>
-            <RowDefinition Height="45"/>
+            <RowDefinition Height="60"/>
         </Grid.RowDefinitions>
 
         <TextBlock
