@@ -55,7 +55,7 @@ namespace UWPEindopdracht.JSON
                 var place = new Place(HttpConnector.Priority.Normal, 
                     false, null, new GCoordinate((double)jsonplace.geometry.location.lat,
                                                 (double)jsonplace.geometry.location.lng),
-                    (string)jsonplace.name, null, (string)jsonplace.id, typeList.ToArray(),null, jsonplace.icon, (string)jsonplace.id);
+                    (string)jsonplace.name, null, (string)jsonplace.id, typeList.ToArray(),null, (string)jsonplace.icon, (string)jsonplace.id);
                 if (jsonplace.geometry.viewport != null)
                 {
                     var viewports = (JObject) jsonplace.geometry.viewport;
