@@ -20,23 +20,19 @@ namespace UWPEindopdracht
 {
     public sealed partial class MultiplayerSettings : ContentDialog
     {
-        private User _user;   
+        private User _user; 
+          
         public MultiplayerSettings(User user)
         {
             this._user = user;
             this.InitializeComponent();
-            UsernameBox.Text = user.Name;
-            
-        }
-        
-
-        private void ContentDialog_PrimaryButtonClick(ContentDialog sender, ContentDialogButtonClickEventArgs args)
-        {
-            _user.Name = UsernameBox.Text;
+            UsernameText.Text = user.Name;
         }
 
-        private void ContentDialog_SecondaryButtonClick(ContentDialog sender, ContentDialogButtonClickEventArgs args)
+        private void BackButton_Click(object sender, RoutedEventArgs e)
         {
+            _user.Name = UsernameText.Text;
+            Hide();
         }
     }
 }

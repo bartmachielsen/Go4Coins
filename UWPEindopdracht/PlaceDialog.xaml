@@ -6,16 +6,87 @@
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     mc:Ignorable="d"
-    Title="[PLACENAME]"
-    PrimaryButtonText="Button1"
-    SecondaryButtonText="Button2"
-    PrimaryButtonClick="ContentDialog_PrimaryButtonClick"
-    SecondaryButtonClick="ContentDialog_SecondaryButtonClick">
+    Background="White"
+    Height="430"
+    Margin="0,55"
+    >
 
-    <StackPanel>
-        <Image Name="PlaceImage"  Tapped="NextImage"/>
-        <TextBlock Name="TypeBlock" Text=""/>
-        <TextBlock Name="Distance"/>
-        
-    </StackPanel>
+    <ContentDialog.Resources>
+        <Style x:Key="InfoStyle" TargetType="TextBlock">
+            <Setter Property="TextAlignment" Value="Center"/>
+            <Setter Property="VerticalAlignment" Value="Center"/>
+            <Setter Property="TextWrapping" Value="Wrap"/>
+            <Setter Property="Foreground" Value="Blue"/>
+            <Setter Property="FontSize" Value="18"/>
+        </Style>
+    </ContentDialog.Resources>
+    <Grid 
+        Margin="0,10"
+        >
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="280"/>
+        </Grid.ColumnDefinitions>
+
+        <Grid.RowDefinitions>
+            <RowDefinition Height="60"/>
+            <RowDefinition Height="200"/>
+            <RowDefinition Height="40"/>
+            <RowDefinition Height="40"/>
+            <RowDefinition Height="45"/>
+        </Grid.RowDefinitions>
+
+        <TextBlock
+            x:Name="Title"
+            TextWrapping="Wrap"
+            TextAlignment="Center"
+            Grid.ColumnSpan="2"
+            Style="{StaticResource HeaderTextStyle}"
+            Text="Title"
+            />
+        <Grid 
+            Grid.Row="1"
+            Grid.Column="0"
+            BorderBrush="Blue"
+            HorizontalAlignment="Center"
+            VerticalAlignment="Center"
+            >
+            <Border
+                BorderThickness="1.5"
+                BorderBrush="Blue"
+                >
+                <Image
+                    x:Name="PlaceImage"
+                    Source="Assets/unavailable-image.png"
+                    MaxHeight="200"
+                    HorizontalAlignment="Center"
+                    VerticalAlignment="Center"
+                    />
+            </Border>
+        </Grid>
+        <TextBlock
+            Grid.Row="2"
+            Grid.Column="0"
+            x:Name="TypeInfoText" 
+            Text="Time: " 
+            Style="{StaticResource InfoStyle}"
+            />
+        <TextBlock
+            Grid.Row="3"
+            Grid.Column="0"
+            x:Name="DistInfoText" 
+            Text="Distance: " 
+            Style="{StaticResource InfoStyle}"
+            />
+        <Button
+            Grid.Row="4"
+            Grid.Column="0"
+            Content="Back"
+            Width="200"
+            Style="{StaticResource FooterButtonStyle}"
+            Click="BackButton_Click"
+            />
+        <Button
+            Grid.Row="4"
+            Grid.Column="0" Style="{StaticResource ButtonStyle}"/>
+    </Grid>
 </ContentDialog>

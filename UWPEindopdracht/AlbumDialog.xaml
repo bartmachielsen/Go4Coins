@@ -20,16 +20,6 @@
             <Setter Property="VerticalAlignment" Value="Center"/>
             <Setter Property="HorizontalAlignment" Value="Center"/>
         </Style>
-        <Style x:Key="OpenButtonStyle" TargetType="Button">
-            <Setter Property="Content" Value="Open"/>
-            <Setter Property="FontSize" Value="12"/>
-            <Setter Property="Background" Value="White"/>
-            <Setter Property="Foreground" Value="Blue"/>
-            <Setter Property="BorderBrush" Value="Blue"/>
-            <Setter Property="BorderThickness" Value="1"/>
-            <Setter Property="VerticalAlignment" Value="Center"/>
-            <Setter Property="HorizontalAlignment" Value="Center"/>
-        </Style>
         <Style x:Key="CategoryButtonStyle" TargetType="Button">
             <Setter Property="Content" Value="&#xE780;"/>
             <Setter Property="Background" Value="White"/>
@@ -187,8 +177,11 @@
                         />
                     <Button 
                         Grid.Column="1"
-                        Style="{StaticResource OpenButtonStyle}"
+                        Style="{StaticResource FooterButtonStyle}"
                         Click="OpenNormalChest_Click"
+                        Content="Open"
+                        BorderThickness="1"
+                        FontSize="12"
                         />
                 </Grid>
 
@@ -209,8 +202,11 @@
                         />
                     <Button 
                         Grid.Column="1"
-                        Style="{StaticResource OpenButtonStyle}"
+                        Style="{StaticResource FooterButtonStyle}"
                         Click="OpenRareChest_Click"
+                        Content="Open"
+                        BorderThickness="1"
+                        FontSize="12"
                         />
                 </Grid>
 
@@ -231,8 +227,11 @@
                         />
                     <Button 
                         Grid.Column="1"
-                        Style="{StaticResource OpenButtonStyle}"
+                        Style="{StaticResource FooterButtonStyle}"
                         Click="OpenLargeChest_Click"
+                        Content="Open"
+                        BorderThickness="1"
+                        FontSize="12"
                         />
                 </Grid>
             </Grid>
