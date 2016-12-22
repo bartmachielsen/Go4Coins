@@ -102,6 +102,7 @@
       <DependentUpon>AssignmentDialog.xaml</DependentUpon>
     </Compile>
     <Compile Include="Assignments\Assignment.cs" />
+    <Compile Include="Assignments\AssistedAssignment.cs" />
     <Compile Include="Assignments\PhotoAssignment.cs" />
     <Compile Include="DataConnections\GooglePlacesConnector.cs" />
     <Compile Include="DataConnections\GoogleStreetviewConnector.cs" />
@@ -119,6 +120,9 @@
       <DependentUpon>MapPage.xaml</DependentUpon>
     </Compile>
     <Compile Include="DataConnections\PlaceLoader.cs" />
+    <Compile Include="MultiplayerAssignments.xaml.cs">
+      <DependentUpon>MultiplayerAssignments.xaml</DependentUpon>
+    </Compile>
     <Compile Include="MultiplayerSettings.xaml.cs">
       <DependentUpon>MultiplayerSettings.xaml</DependentUpon>
     </Compile>
@@ -640,6 +644,10 @@
     <Page Include="MapPage.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
+    </Page>
+    <Page Include="MultiplayerAssignments.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="MultiplayerSettings.xaml">
       <SubType>Designer</SubType>

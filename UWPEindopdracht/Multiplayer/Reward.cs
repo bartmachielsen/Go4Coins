@@ -9,7 +9,7 @@ namespace UWPEindopdracht.Multiplayer
 {
     public enum RewardValue
     {
-        Legendary, Epic, Rare, Normal
+        Legendary=1, Epic=2, Rare=3, Normal=4
     }
 
     public class Reward

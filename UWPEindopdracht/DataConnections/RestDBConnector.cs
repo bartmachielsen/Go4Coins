@@ -11,7 +11,7 @@ using UnicodeEncoding = Windows.Storage.Streams.UnicodeEncoding;
 
 namespace UWPEindopdracht.DataConnections
 {
-    class RestDBConnector : HttpConnector,IApiKeyConnector
+    public class RestDBConnector : HttpConnector,IApiKeyConnector
     {
         public string ApiKey { get; set; } = "711dc584f7d33bf508b643a165c95bc9a4129";
 
@@ -92,7 +92,17 @@ namespace UWPEindopdracht.DataConnections
                     Post(uri,
                         new HttpStringContent(RestDBHelper.ConvertReward(reward), UnicodeEncoding.Utf8,
                             "application/json"));
-            
+
+        }
+
+        public async void UpdateReward(Reward reward)
+        {
+            Uri uri = new Uri($"{Host}/rewards/{reward.id}?apikey={ApiKey}");
+            var header =
+                await
+                    Put(uri,
+                        new HttpStringContent(RestDBHelper.ConvertReward(reward), UnicodeEncoding.Utf8,
+                            "application/json"));
         }
 
         public async Task<List<Reward>> GetRewards()
@@ -113,8 +123,8 @@ namespace UWPEindopdracht.DataConnections
                     Post(uri,
                         new HttpStringContent(RestDBHelper.ConvertMultiplayerAssignmentDetails(detail), UnicodeEncoding.Utf8,
                             "application/json"));
-            System.Diagnostics.Debug.WriteLine(await ConvertResponseMessageToContent(header));
-
+            detail.Id = RestDBHelper.getID(await ConvertResponseMessageToContent(header));
+            System.Diagnostics.Debug.WriteLine(detail.Id);
         }
         public async Task<List<MultiplayerAssignmentDetails>> GetMultiplayerAssignments()
         {
@@ -124,6 +134,16 @@ namespace UWPEindopdracht.DataConnections
             if (!header.IsSuccessStatusCode) return new List<MultiplayerAssignmentDetails>();
             RestDBHelper.CheckErrors(response);
             return RestDBHelper.GetAssignments(response);
+        }
+
+        public async void UpdateMultiplayerAssignmentDetail(MultiplayerAssignmentDetails assignment)
+        {
+            Uri uri = new Uri($"{Host}/assignments/{assignment.Id}?apikey={ApiKey}");
+            var header =
+                await
+                    Put(uri,
+                        new HttpStringContent(RestDBHelper.ConvertMultiplayerAssignmentDetails(assignment), UnicodeEncoding.Utf8,
+                            "application/json"));
         }
     }
 }

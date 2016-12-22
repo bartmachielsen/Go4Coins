@@ -7,6 +7,7 @@ using System.Threading.Tasks;
 using Windows.Devices.Geolocation;
 using Windows.Devices.Geolocation.Geofencing;
 using Windows.Foundation;
+using Windows.Media;
 using Windows.Services.Maps;
 using UWPEindopdracht.Places;
 
@@ -118,12 +119,18 @@ namespace UWPEindopdracht.GPSConnections
             var result = await MapLocationFinder.FindLocationsAtAsync(getPointOutLocation(coordinate));
             return result.Status == MapLocationFinderStatus.Success ? result.Locations.ElementAt(0).Address.Town : null;
         }
+
         public static async Task<MapRoute> calculateRouteBetween(GCoordinate start, GCoordinate end)
         {
-            var result = (await MapRouteFinder.GetWalkingRouteAsync(getPointOutLocation(start),getPointOutLocation(end)));
+            var result = await getRouteResult(start, end);
             if (result.Status == MapRouteFinderStatus.Success)
                 return result.Route;
             return null;
+        }
+
+        public static async Task<MapRouteFinderResult> getRouteResult(GCoordinate start, GCoordinate end)
+        {
+            return await MapRouteFinder.GetWalkingRouteAsync(getPointOutLocation(start), getPointOutLocation(end));
         }
 
         public static GCoordinate GetGcoordinate(Geopoint center)
