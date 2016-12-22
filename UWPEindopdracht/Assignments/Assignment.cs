@@ -15,17 +15,18 @@ namespace UWPEindopdracht
     {
         public string Name { get; set; } = "Assignment";
         protected int MaxDistance { get; set; }
+        
         public bool PictureNeeded { get; set; } = false;
         private SpeedChecker _speedControl = new SpeedChecker();
         protected int MinDistance { get; set; }
         public int NeededDistance { get; set; }
         protected int? MaxSpeed { get; set; }
-        public Place[] Targets { get; private set; }
+        public Place[] Targets { get; set; }
         public Place CurrentLocation { get; set; }
         private List<Place> _reachedTargets = new List<Place>();
         protected double TimeMultiplier { private get; set; } = 1;
         private int errorsWithLoading = 0;
-        private DateTime _start;
+        public DateTime Start;
 
         public bool ShowPinPoint { get; protected set; } = true;
         protected TimeSpan MaximumTime { get; set; }
@@ -36,9 +37,10 @@ namespace UWPEindopdracht
 
         public virtual async Task FillTarget(List<Place> places, GCoordinate currentPosition)
         {
-            Targets = await PickTargetPlace(places, currentPosition);
-            if (Targets == null)
+            var tTargets = await PickTargetPlace(places, currentPosition);
+            if (tTargets == null)
                 return;
+            Targets = tTargets;
             var route = await GPSHelper.calculateRouteBetween(currentPosition, Targets[0].Location);
             if(route != null)
                 MaximumTime = TimeSpan.FromMinutes(route.EstimatedDuration.TotalMinutes*TimeMultiplier);
@@ -111,7 +113,7 @@ namespace UWPEindopdracht
 
         public TimeSpan GetSpentTime()
         {
-         return DateTime.Now - _start;
+         return DateTime.Now - Start;
         }
 
         public virtual async Task<string> GetDistanceText(GCoordinate currentPoint)
@@ -128,7 +130,7 @@ namespace UWPEindopdracht
         {
             if (Targets == null)
                 return "";
-            TimeSpan span = MaximumTime - DateTime.Now.Subtract(_start);
+            TimeSpan span = MaximumTime - DateTime.Now.Subtract(Start);
             string hours = "";
             if (span.Hours > 0)
                 hours = Math.Abs(span.Hours) + ":";
@@ -175,9 +177,9 @@ namespace UWPEindopdracht
             }
         }
 
-        public void StartAssignment()
+        public virtual void StartAssignment()
         {
-            _start = DateTime.Now;
+            Start = DateTime.Now;
             foreach (var target in Targets)
             {
                 target.visited = false;
@@ -202,6 +204,11 @@ namespace UWPEindopdracht
             if(MaxSpeed != null)
                 _speedControl.MaxSpeed = MaxSpeed.Value;
             _speedControl.RegisterLocationChange(coordinate);
+        }
+
+        public virtual bool LoadPlaces()
+        {
+            return true;
         }
     }
 

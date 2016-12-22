@@ -270,7 +270,8 @@ namespace UWPEindopdracht
             if (loc == null || newAssignment == null)
                 return;
             ShowLoading();
-            await _multiplayerData.placeLoader.LoadPlaces(loc);
+            if (newAssignment.LoadPlaces())
+                await _multiplayerData.placeLoader.LoadPlaces(loc);
 
             try
             {

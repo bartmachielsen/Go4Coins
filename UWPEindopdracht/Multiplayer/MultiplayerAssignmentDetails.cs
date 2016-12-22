@@ -28,14 +28,12 @@ namespace UWPEindopdracht.Multiplayer
         [JsonIgnore] public bool syncNeeded = false;
 
         [JsonIgnore]
-        public bool Available => (
-                                     Participants.Count) < MaxJoiners && 
-                                 Administrator != CurrentUser && CurrentUser != null && 
-                                 !Participants.Contains(CurrentUser);
+        public bool Available => (Participants.Count) < MaxJoiners && 
+                                 Administrator != CurrentUser && CurrentUser != null;
 
         [JsonIgnore]
         public string ButtonText {get {
-            if (Administrator == CurrentUser)
+            if (Participants.Contains(CurrentUser))
             {
                 return "rejoin";
             }
@@ -55,7 +53,6 @@ namespace UWPEindopdracht.Multiplayer
             NeededDistance = 30;
             MaxSpeed = 40;
             TimeMultiplier = 0.6;
-
             MaxJoiners = maxJoiners;
             Id = id;
             Administrator = administrator;
@@ -102,6 +99,22 @@ namespace UWPEindopdracht.Multiplayer
                 return await base.PickTargetPlace(places, currentPosition);
             }
             return null;
+        }
+        public override bool LoadPlaces()
+        {
+            return CurrentUser == null || Administrator == CurrentUser;
+        }
+
+        public override void StartAssignment()
+        {
+            if (CurrentUser == Administrator)
+            {
+                base.StartAssignment();
+            }
+            else
+            {
+                System.Diagnostics.Debug.WriteLine("NO ADMIN SO NO STARTING!");
+            }
         }
     }
 }

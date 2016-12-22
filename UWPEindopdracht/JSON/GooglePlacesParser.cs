@@ -52,15 +52,10 @@ namespace UWPEindopdracht.JSON
                     typeList.Add((string)type);
                 }
                 
-                var place = new Place
-                {
-                    PlaceId = (string)jsonplace.id,
-                    Location = new GCoordinate((double)jsonplace.geometry.location.lat, 
+                var place = new Place(HttpConnector.Priority.Normal, 
+                    false, null, new GCoordinate((double)jsonplace.geometry.location.lat,
                                                 (double)jsonplace.geometry.location.lng),
-                    Name = (string)jsonplace.name,
-                    Types = typeList.ToArray(),
-                    IconLink = jsonplace.icon
-                };
+                    (string)jsonplace.name, null, (string)jsonplace.id, typeList.ToArray(),null, jsonplace.icon, (string)jsonplace.id);
                 if (jsonplace.geometry.viewport != null)
                 {
                     var viewports = (JObject) jsonplace.geometry.viewport;

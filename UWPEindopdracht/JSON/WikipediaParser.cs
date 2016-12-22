@@ -19,12 +19,10 @@ namespace UWPEindopdracht.JSON
 
             foreach (dynamic jsonplace in json.query.geosearch)
             {
-                places.Add(new Place()
-                {
-                    Name = (string) jsonplace.title,
-                    Distance = (double) jsonplace.dist,
-                    Location = new GCoordinate((double) jsonplace.lat, (double) jsonplace.lon)
-                });
+                places.Add(new Place(HttpConnector.Priority.Normal, false, (double) jsonplace.dist,
+                    new GCoordinate((double) jsonplace.lat, (double) jsonplace.lon), (string) jsonplace.title, null,
+                    null, null, null, null, null));
+               
             }
             return places;
         }
