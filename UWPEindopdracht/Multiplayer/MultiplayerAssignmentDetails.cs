@@ -14,8 +14,11 @@ namespace UWPEindopdracht.Multiplayer
     public class MultiplayerAssignmentDetails : Assignment, INotifyPropertyChanged
     {
         public List<string> Participants = new List<string>();
-        public List<string> Joiners = new List<string>();
         public int MaxJoiners = 5;
+        public bool Closed = false;
+
+
+
         [JsonIgnore]
         public string Id;
 
@@ -26,10 +29,20 @@ namespace UWPEindopdracht.Multiplayer
 
         [JsonIgnore]
         public bool Available => (
-                                     Joiners.Count + Participants.Count) < MaxJoiners && 
+                                     Participants.Count) < MaxJoiners && 
                                  Administrator != CurrentUser && CurrentUser != null && 
-                                 !Participants.Contains(CurrentUser) &&
-                                 !Joiners.Contains(CurrentUser);
+                                 !Participants.Contains(CurrentUser);
+
+        [JsonIgnore]
+        public string ButtonText {get {
+            if (Administrator == CurrentUser)
+            {
+                return "rejoin";
+            }
+            else
+            {
+                return "Join";
+            } } }
 
         public string Description { get; private set; } = "Multiplayer game";
     
@@ -69,7 +82,6 @@ namespace UWPEindopdracht.Multiplayer
             OnPropertyChanged("Name");
             Participants = assignment.Participants;
             OnPropertyChanged("Participants");
-            Joiners = assignment.Joiners;
             OnPropertyChanged("Joiners");
             MaxJoiners = assignment.MaxJoiners;
             OnPropertyChanged("MaxJoiners");

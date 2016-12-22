@@ -142,8 +142,9 @@ namespace UWPEindopdracht.Multiplayer
                 if (assigment.Participants.Contains(User.id))
                     users.Add(User);
                 assigment.CurrentUser = User.id;
-                if (!users.Exists((user => user.IsAlive())) && (assigment.Administrator == User.id || assigment.Participants.Contains(User.id))
-                    || !assignmentDetailses.Exists((details => assigment.Id == details.Id)))
+                if ((!users.Exists((user => user.IsAlive())) && (assigment.Administrator == User.id || assigment.Participants.Contains(User.id)))
+                    || !assignmentDetailses.Exists((details => assigment.Id == details.Id))
+                    || assigment.Closed)
                 {
                     removal.Add(assigment);
                 }

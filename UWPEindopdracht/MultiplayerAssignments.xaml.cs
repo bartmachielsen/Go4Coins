@@ -46,7 +46,7 @@ namespace UWPEindopdracht
             {  
                 // todo check if not already joined!
                 
-                assignment.Joiners.Add(_data.User.id);
+                assignment.Participants.Add(_data.User.id);
                 assignment.OnPropertyChanged("Available");
                 selected = assignment;
                 await _data.Db.UpdateMultiplayerAssignmentDetail(assignment);
