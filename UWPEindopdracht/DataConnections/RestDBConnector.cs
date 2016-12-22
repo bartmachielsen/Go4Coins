@@ -135,5 +135,15 @@ namespace UWPEindopdracht.DataConnections
             RestDBHelper.CheckErrors(response);
             return RestDBHelper.GetAssignments(response);
         }
+
+        public async void UpdateMultiplayerAssignmentDetail(MultiplayerAssignmentDetails assignment)
+        {
+            Uri uri = new Uri($"{Host}/assignments/{assignment.Id}?apikey={ApiKey}");
+            var header =
+                await
+                    Put(uri,
+                        new HttpStringContent(RestDBHelper.ConvertMultiplayerAssignmentDetails(assignment), UnicodeEncoding.Utf8,
+                            "application/json"));
+        }
     }
 }

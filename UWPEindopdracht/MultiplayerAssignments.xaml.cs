@@ -88,8 +88,10 @@ namespace UWPEindopdracht
             var assignment = ((Button) sender).DataContext as MultiplayerAssignmentDetails;
             if (assignment != null)
             {  
+                
                 assignment.Joiners.Add(_data.User.id);
                 assignment.OnPropertyChanged("Available");
+                _data.Db.UpdateMultiplayerAssignmentDetail(assignment);
                 _timer.Stop();
                 Hide();
             }

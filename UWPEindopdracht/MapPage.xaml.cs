@@ -475,6 +475,7 @@ namespace UWPEindopdracht
                     _multiplayerData.Db.UploadMultiplayerAssignmentDetail(assignment);
 
                     var dialog = new MultiplayerAssignments(_multiplayerData);
+                    dialog.Assignments.Add(assignment);
                     
                     await ShowDialog(dialog);
                     //await SetAssignment(loc, GetRandomAssignment(), true);
