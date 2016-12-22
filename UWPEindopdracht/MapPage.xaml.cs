@@ -438,12 +438,11 @@ namespace UWPEindopdracht
         private void NewAssignmentButton_Click(object sender, RoutedEventArgs e)
         {
             var stack = new StackPanel();
-            var flyoutPresenter = new FlyoutPresenter()
-            {
-                Background = new SolidColorBrush(Colors.Transparent),
-                BorderThickness = new Thickness(0)
-            };
-            NewAssignmentButton.Flyout = new Flyout() { Content = stack, FlyoutPresenterStyle = flyoutPresenter.Style };
+            var style = new Style(typeof(FlyoutPresenter));
+            style.Setters.Add(new Setter(BackgroundProperty, new SolidColorBrush(Colors.Transparent)));
+            style.Setters.Add(new Setter(BorderThicknessProperty, new Thickness(0)));
+            NewAssignmentButton.Flyout = new Flyout() { Content = stack };
+            NewAssignmentButton.Flyout.SetValue(Flyout.FlyoutPresenterStyleProperty, style);
             if (_assignment != null)
             {
                 var current = new Button() { Content = "Currently playing", Style = (Style)Application.Current.Resources["FooterButtonStyle"], HorizontalAlignment = HorizontalAlignment.Stretch, Margin = new Thickness(0, 0, 0, 10) };
