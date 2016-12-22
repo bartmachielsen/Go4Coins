@@ -54,13 +54,7 @@ namespace UWPEindopdracht
             MapControl.ZoomInteractionMode = MapInteractionMode.GestureAndControl;
             MapControl.ZoomLevel = 16;
         }
-
-     
-   
-
-
         
-       
         private async void LoadMultiplayerDetails()
         {
             await _multiplayerData.RegisterMultiplayerUser();
