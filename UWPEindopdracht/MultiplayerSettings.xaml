@@ -34,6 +34,7 @@
                 <Style x:Key="TextBoxStyle" TargetType="TextBox">
                     <Setter Property="MinWidth" Value="{ThemeResource TextControlThemeMinWidth}"/>
                     <Setter Property="MinHeight" Value="{ThemeResource TextControlThemeMinHeight}"/>
+                    <Setter Property="MaxWidth" Value="250"/>
                     <Setter Property="Foreground" Value="Blue"/>
                     <Setter Property="Background" Value="White"/>
                     <Setter Property="BorderBrush" Value="{ThemeResource SystemControlForegroundChromeDisabledLowBrush}"/>
