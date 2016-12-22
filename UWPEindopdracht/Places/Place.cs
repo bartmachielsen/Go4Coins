@@ -63,29 +63,22 @@ namespace UWPEindopdracht.Places
         [JsonIgnore]
         public MapIcon Icon { get; set; }
 
-        /// <summary>
-        /// Base Constructor for making a Place
-        /// </summary>
-        /// <param name="location"><see cref="location"/></param>
-        /// <param name="name"><see cref="name"/></param>
-        /// <param name="distance"><see cref="distance"/></param>
-        /// <param name="types"><see cref="types"/></param>
-        /// <param name="imageLocation"><see cref="imageLocation"/></param>
-        public Place(string placeId, GCoordinate location, string name, string[] types, string imageLocation, string icon)
+        public Place(HttpConnector.Priority sourcePriority, bool visited, double? distance, GCoordinate location, string name, GCoordinate[] viewports, string id, string[] types, string imageLocation, string iconLink, string placeId)
         {
-            PlaceId = placeId;
+            SourcePriority = sourcePriority;
+            this.visited = visited;
+            Distance = distance;
             Location = location;
             Name = name;
+            Viewports = viewports;
+            Id = id;
             Types = types;
             ImageLocation = imageLocation;
-            IconLink = icon;
+            IconLink = iconLink;
+            PlaceId = placeId;
         }
 
-        public Place()
-        {
-            
-        }
-
+       
         public bool IsCity()
         {
             if (Types == null)

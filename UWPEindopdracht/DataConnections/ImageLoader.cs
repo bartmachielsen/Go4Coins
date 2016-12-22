@@ -13,7 +13,7 @@ namespace UWPEindopdracht.DataConnections
         public static int MaxHeight = 100;
         public static async Task<string> GetBestUrlFromPlace(Assignment assignment)
         {
-            if (!assignment.ShowPicture) return null;
+            if (!assignment.ShowPicture || assignment.Targets == null) return null;
             return await GetBestUrlFromPlace(assignment.Targets[0]);
         }
 
