@@ -126,8 +126,9 @@ namespace UWPEindopdracht.JSON
             dynamic json = JsonConvert.DeserializeObject(response);
             foreach (var jsonelement in json)
             {
-                assignment.Add(
-                    JsonConvert.DeserializeObject<MultiplayerAssignmentDetails>(JsonConvert.SerializeObject(jsonelement.assignmentdetail)));
+                MultiplayerAssignmentDetails assi = JsonConvert.DeserializeObject<MultiplayerAssignmentDetails>(JsonConvert.SerializeObject(jsonelement.assignmentdetail));
+                assi.Id = (string)jsonelement._id;
+                assignment.Add(assi);
             }
             return assignment;
         }

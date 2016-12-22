@@ -458,6 +458,28 @@ namespace UWPEindopdracht
                     await SetAssignment(loc, GetRandomAssignment(), true);
                 }
             };
+
+            multiplayer.Click += async (o, args) =>
+            {
+                if (_assignment != null)
+                {
+                    TakeAssignmentErrorAnimation.Begin();
+                    return;
+                }
+                NewAssignmentButton.Flyout.Hide();
+                var loc = await GPSHelper.getLocation();
+                if (loc != null)
+                {
+                    var assignment = new MultiplayerAssignmentDetails(4,null, _multiplayerData.User.id);
+                    assignment.Participants.Add(_multiplayerData.User.id);
+                    _multiplayerData.Db.UploadMultiplayerAssignmentDetail(assignment);
+
+                    var dialog = new MultiplayerAssignments(_multiplayerData);
+                    
+                    await ShowDialog(dialog);
+                    //await SetAssignment(loc, GetRandomAssignment(), true);
+                }
+            };
         }
 
         private Assignment GetRandomAssignment()

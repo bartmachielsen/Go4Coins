@@ -9,7 +9,7 @@ using UWPEindopdracht.GPSConnections;
 
 namespace UWPEindopdracht.Multiplayer
 {
-    class MultiplayerData
+    public class MultiplayerData
     {
         public static int ServerTimeOut = 4;
         public static bool NoInternetConfirmed = false;

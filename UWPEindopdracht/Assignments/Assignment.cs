@@ -13,6 +13,7 @@ namespace UWPEindopdracht
 {
     public abstract class Assignment
     {
+        public string Name { get; set; } = "Assignment";
         protected int MaxDistance { get; set; }
         public bool PictureNeeded { get; set; } = false;
         private SpeedChecker _speedControl = new SpeedChecker();
@@ -38,7 +39,8 @@ namespace UWPEindopdracht
             Targets = await PickTargetPlace(places, currentPosition);
             var route = await GPSHelper.calculateRouteBetween(currentPosition, Targets[0].Location);
             if(route != null)
-                MaximumTime = TimeSpan.FromMinutes(route.EstimatedDuration.TotalMinutes*TimeMultiplier);  
+                MaximumTime = TimeSpan.FromMinutes(route.EstimatedDuration.TotalMinutes*TimeMultiplier);
+            
         }
 
         public abstract string GetDescription();
@@ -215,6 +217,7 @@ namespace UWPEindopdracht
         
         public override string GetDescription()
         {
+            Name = Targets[0].Name;
             return
                 "Walk to the marked point on the map!\n" +
                 $"\nYou'll get a bonus if the point is reached within {MaximumTime.TotalMinutes} minutes!" +
@@ -228,7 +231,6 @@ namespace UWPEindopdracht
     {
         public SearchAssignment()
         {
-            MaximumTime = TimeSpan.FromHours(1);
             MaxSpeed = null;
             PictureNeeded = true;
             MaxDistance = 1000;
@@ -243,7 +245,7 @@ namespace UWPEindopdracht
 
         public override string GetDescription()
         {
-
+            Name = Targets[0].Name;
             return
                 "Search the point given below!\n" +
                 $"\nName: {Targets[0].Name}" +

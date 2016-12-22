@@ -39,7 +39,7 @@ namespace UWPEindopdracht
         private void LoadDetails()
         {
             AssignmentDetails.Text = _assignment.GetDescription();
-            AssignmentName.Text = _assignment.Targets[0].Name;
+            AssignmentName.Text = _assignment.Name;
             if(_imageURL != null)
                 AssignmentImage.Source = new BitmapImage(new Uri(_imageURL));
             SkipButton.IsEnabled = _assignment.Skippable;

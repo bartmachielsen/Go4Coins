@@ -11,7 +11,7 @@ using UWPEindopdracht.Places;
 
 namespace UWPEindopdracht
 {
-    class PlaceLoader
+    public class PlaceLoader
     {
         private static int _maxDistanceToPlace = 3000;
         public List<Place> Places = new List<Place>();
