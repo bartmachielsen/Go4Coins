@@ -506,7 +506,9 @@
                     >
                     <ListView.ItemTemplate>
                         <DataTemplate x:DataType="multiplayer:Reward">
-                            <Grid Style="{StaticResource InformationGridItemStyle}">
+                            <Grid 
+                                Style="{StaticResource InformationGridItemStyle}"
+                                >
                                 <Grid.ColumnDefinitions>
                                     <ColumnDefinition Width="3*"/>
                                     <ColumnDefinition Width="4*"/>
@@ -515,14 +517,35 @@
                                     <RowDefinition Height="*"/>
                                     <RowDefinition Height="7*"/>
                                 </Grid.RowDefinitions>
-                                <Grid HorizontalAlignment="Center" VerticalAlignment="Center" Grid.RowSpan="2">
-                                    <Border BorderThickness="4" BorderBrush="{x:Bind rareColor, Mode=OneWay}">
-                                        <Image Source="{x:Bind UnlockedImageLocation, Mode=OneWay}"/>
+                                <Grid 
+                                    HorizontalAlignment="Center" 
+                                    VerticalAlignment="Center" 
+                                    Grid.RowSpan="2"
+                                    >
+                                    <Border 
+                                        BorderThickness="4" 
+                                        BorderBrush="{x:Bind rareColor, Mode=OneWay}"
+                                        >
+                                        <Image 
+                                            Source="{x:Bind UnlockedImageLocation, Mode=OneWay}"
+                                            />
                                     </Border>
                                 </Grid>
-                                <TextBlock Style="{StaticResource InformationGridTitleStyle}" Padding="5,0,0,0" Text="{x:Bind Name}"/>
-                                <ScrollViewer Grid.Row="1" Grid.Column="1" Padding="5,5,0,0" VerticalScrollBarVisibility="Hidden" HorizontalScrollBarVisibility="Disabled">
-                                    <TextBlock Style="{StaticResource InformationGridInfoStyle}" Text="{x:Bind Description}"/>
+                                <TextBlock 
+                                    Style="{StaticResource InformationGridTitleStyle}" 
+                                    Padding="5,0,0,0" Text="{x:Bind Name}"
+                                    />
+                                <ScrollViewer 
+                                    Grid.Row="1" 
+                                    Grid.Column="1" 
+                                    Padding="5,5,0,0" 
+                                    VerticalScrollBarVisibility="Hidden" 
+                                    HorizontalScrollBarVisibility="Disabled"
+                                    >
+                                    <TextBlock 
+                                        Style="{StaticResource InformationGridInfoStyle}" 
+                                        Text="{x:Bind Description}"
+                                        />
                                 </ScrollViewer>
                             </Grid>
                         </DataTemplate>
