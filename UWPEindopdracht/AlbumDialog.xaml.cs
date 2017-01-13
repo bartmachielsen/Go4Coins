@@ -118,8 +118,8 @@ namespace UWPEindopdracht
                 toggleButton(Normal, null);
                 updateAllLists();
 
-                button.Content =
-                    new BitmapImage(new Uri(this.BaseUri, $"/Assets/ShopAndAlbum/{button.Name}{selecttext}.png"));
+                Image image = (Image) button.Content;
+                image.Source = new BitmapImage(new Uri(this.BaseUri, $"/Assets/ShopAndAlbum/{button.Name}{selecttext}.png"));
                 button.Padding = new Thickness(0, 0, 0, 0);
                 button.Style = (Style)Application.Current.Resources["RarityButtonStyle"];
 
@@ -137,8 +137,8 @@ namespace UWPEindopdracht
                 var select = "";
                 if (values.Contains(val))
                     select = "Selected";
-                button.Content =
-                    new BitmapImage(new Uri(this.BaseUri, $"/Assets/ShopAndAlbum/{button.Name}{select}.png"));
+                Image image = (Image)button.Content;
+                image.Source = new BitmapImage(new Uri(this.BaseUri, $"/Assets/ShopAndAlbum/{button.Name}{select}.png"));
                 button.Padding = new Thickness(0, 0, 0, 0);
                 button.Style = (Style) Application.Current.Resources["RarityButtonStyle"];
             }
