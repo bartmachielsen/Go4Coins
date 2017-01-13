@@ -101,6 +101,50 @@ namespace UWPEindopdracht
             ShowReward();
         }
 
+        private void toggleButton(object sender, RoutedEventArgs e)
+        {
+            Button button = (Button)sender;
+            if (button.Name == "All")
+            {
+                var selecttext = "selected";
+                if(values.Count != Enum.GetValues(typeof(RewardValue)).Length) { 
+                    values.Clear();
+                    selecttext = "";
+                }
+                toggleButton(Legendary, null);
+                toggleButton(Epic, null);
+                toggleButton(Rare, null);
+                toggleButton(Normal, null);
+                updateAllLists();
+
+                button.Content =
+                    new BitmapImage(new Uri(this.BaseUri, $"/Assets/ShopAndAlbum/{button.Name}{selecttext}.png"));
+                button.Padding = new Thickness(0, 0, 0, 0);
+                button.Style = (Style)Application.Current.Resources["RarityButtonStyle"];
+
+
+            }
+            else
+            {
+                RewardValue val = (RewardValue) Enum.Parse(typeof(RewardValue), button.Name);
+                if (values.Contains(val))
+                    values.Remove(val);
+                else
+                {
+                    values.Add(val);
+                }
+                var select = "";
+                if (values.Contains(val))
+                    select = "selected";
+                button.Content =
+                    new BitmapImage(new Uri(this.BaseUri, $"/Assets/ShopAndAlbum/{button.Name}{select}.png"));
+                button.Padding = new Thickness(0, 0, 0, 0);
+                button.Style = (Style) Application.Current.Resources["RarityButtonStyle"];
+            }
+            if(e != null)
+                updateAllLists();
+        }
+
         private void OpenLargeChest_Click(object sender, RoutedEventArgs e)
         {
             if (!_user.Chests.Contains(typeof(LargeChest).Name)) return;
