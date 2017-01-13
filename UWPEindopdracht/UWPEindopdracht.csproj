@@ -606,7 +606,8 @@
     <Content Include="Assets\Reward\Marvel\wolfsbane.png" />
     <Content Include="Assets\Reward\Marvel\wolverine.png" />
     <Content Include="Assets\Reward\Marvel\x-23.png" />
-    <Content Include="Assets\ShopAndAlbum\all.png" />
+    <Content Include="Assets\ShopAndAlbum\All.png" />
+    <Content Include="Assets\ShopAndAlbum\AllSelected.png" />
     <Content Include="Assets\ShopAndAlbum\chest.png" />
     <Content Include="Assets\ShopAndAlbum\chest2.png" />
     <Content Include="Assets\ShopAndAlbum\coin.png" />
@@ -615,9 +616,17 @@
     <Content Include="Assets\ShopAndAlbum\dc-logo.png" />
     <Content Include="Assets\ShopAndAlbum\disney-logo.png" />
     <Content Include="Assets\ShopAndAlbum\dreamworks.png" />
+    <Content Include="Assets\ShopAndAlbum\Epic.png" />
+    <Content Include="Assets\ShopAndAlbum\EpicSelected.png" />
+    <Content Include="Assets\ShopAndAlbum\Legendary.png" />
+    <Content Include="Assets\ShopAndAlbum\LegendarySelected.png" />
     <Content Include="Assets\ShopAndAlbum\marvel-logo.png" />
     <Content Include="Assets\ShopAndAlbum\menuButton.png" />
     <Content Include="Assets\MapPage\store.png" />
+    <Content Include="Assets\ShopAndAlbum\Normal.png" />
+    <Content Include="Assets\ShopAndAlbum\NormalSelected.png" />
+    <Content Include="Assets\ShopAndAlbum\Rare.png" />
+    <Content Include="Assets\ShopAndAlbum\RareSelected.png" />
     <Content Include="Assets\ShopAndAlbum\warnerbros.png" />
     <Content Include="Assets\unavailable-image.png" />
     <Content Include="Properties\Default.rd.xml" />
