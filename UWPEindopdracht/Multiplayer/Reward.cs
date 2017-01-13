@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Windows.UI;
+using Windows.UI.Xaml.Media;
 using Newtonsoft.Json;
 
 namespace UWPEindopdracht.Multiplayer
@@ -22,7 +24,33 @@ namespace UWPEindopdracht.Multiplayer
         public string Description { get; set; }
         public string Categorie { get; set; }
 
+        public bool inInventory { get; set; } = false;
+
+        public string Image
+        {
+            get
+            {
+                if(inInventory)
+                    return UnlockedImageLocation;
+                return LockedImageLocation;
+            }
+        }
+
         public RewardValue Value { get; set; }
+
+        public SolidColorBrush rareColor
+        {
+            get
+            {
+              if((int)Value == 1)
+                    return new SolidColorBrush(Colors.Orange);
+                if ((int)Value == 2)
+                    return new SolidColorBrush(Colors.Purple);
+                if ((int)Value == 3)
+                    return new SolidColorBrush(Colors.Blue);
+                return new SolidColorBrush(Colors.Gray);
+            }
+        }
 
         public Reward(string _id, string name, string unlockedImageLocation, string lockedImageLocation, string description, string categorie, RewardValue value)
         {

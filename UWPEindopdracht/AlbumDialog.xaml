@@ -495,7 +495,7 @@
                                     <RowDefinition Height="7*"/>
                                 </Grid.RowDefinitions>
                                 <Grid HorizontalAlignment="Center" VerticalAlignment="Center" Grid.RowSpan="2">
-                                    <Border BorderThickness="4" BorderBrush="Orange">
+                                    <Border BorderThickness="4" BorderBrush="{x:Bind rareColor, Mode=OneWay}">
                                         <Image Source="{x:Bind UnlockedImageLocation, Mode=OneWay}"/>
                                     </Border>
                                 </Grid>

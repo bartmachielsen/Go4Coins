@@ -26,18 +26,68 @@ namespace UWPEindopdracht
     {
         ObservableCollection<BitmapImage> _images = new ObservableCollection<BitmapImage>();
         ObservableCollection<Reward> won = new ObservableCollection<Reward>();
-        Thickness _size = new Thickness(2);
+        
+            Thickness _size = new Thickness(2);
         private User _user;
         private List<Reward> _rewards;
+
+        ObservableCollection<Reward> marvelList = new ObservableCollection<Reward>();
+        ObservableCollection<Reward> dcList = new ObservableCollection<Reward>();
+        ObservableCollection<Reward> disneyList = new ObservableCollection<Reward>();
+        ObservableCollection<Reward> drList = new ObservableCollection<Reward>();
+        ObservableCollection<Reward> wList = new ObservableCollection<Reward>();
+
+
 
         public AlbumDialog(User user, List<Reward> rewards)
         {
             _rewards = rewards;
+            updateAllLists();
             _user = user;
+
             this.InitializeComponent();
            RefreshChests();
         }
-        
+
+        private void updateAllLists()
+        {
+            disneyList.Clear();
+            dcList.Clear();
+            marvelList.Clear();
+            wList.Clear();
+            drList.Clear();
+
+            foreach (var reward in _rewards)
+            {
+                if (_user.Rewards.Contains(reward.Name))
+                {
+                    reward.inInventory = true;
+                }
+                else
+                {
+                    reward.inInventory = false;
+                }
+                switch (reward.Categorie)
+                {
+                    case "Disney":
+                        disneyList.Add(reward);
+                        break;
+                    case "Dc":
+                        dcList.Add(reward);
+                        break;
+                    case "Marvel":
+                        marvelList.Add(reward);
+                        break;
+                    case "WarnerBros":
+                        wList.Add(reward);
+                        break;
+                    case "DreamWorks":
+                        drList.Add(reward);
+                        break;
+                }
+            }
+        }
+
         private void BackButton_Click(object sender, RoutedEventArgs e)
         {
             Hide();
@@ -96,6 +146,7 @@ namespace UWPEindopdracht
             BackButton.Visibility = Visibility.Collapsed;
             HeaderText.Visibility = Visibility.Collapsed;
             ChestGrid.Visibility = Visibility.Collapsed;
+            updateAllLists();
         }
 
         public void RefreshChests()
