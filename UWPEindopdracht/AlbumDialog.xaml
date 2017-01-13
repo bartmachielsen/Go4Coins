@@ -275,6 +275,8 @@
                 Margin="0,23"
                 />
 
+            
+
             <Grid
                 x:Name="InformationGrid"
                 Visibility="Collapsed"
@@ -283,14 +285,15 @@
                 Margin="0,40,0,0"
                 >
                 <Grid.RowDefinitions>
+                    
                     <RowDefinition Height="*"/>
                     <RowDefinition Height="6*"/>
                     <RowDefinition Height="6*"/>
                     <RowDefinition Height="2*"/>
                 </Grid.RowDefinitions>
-
+                
                 <TextBlock
-                    Text="Title"
+                    Name="SelectedNameBox"
                     FontSize="18"
                     Foreground="Blue"
                     HorizontalAlignment="Center"
@@ -303,9 +306,11 @@
                         >
                         <Border
                             BorderThickness="4"
-                            BorderBrush="Orange">
+                            BorderBrush="gray"
+                            Name="SelectedImageBorder">
+                            
                             <Image
-                                Source="Assets/Reward/Marvel/ironMan.png"
+                                Name="SelectedImageBox"
                                 />
                         </Border>
                     </Grid>
@@ -318,8 +323,8 @@
                         FontSize="12"
                         Foreground="Blue"
                         TextWrapping="Wrap"
-                        Text="Infomation about item, Infomation about item, Infomation about item, Infomation about item, Infomation about item, Infomation about item, Infomation about item, Infomation about item, Infomation about item, Infomation about item, Infomation about item, Infomation about item, Infomation about item, Infomation about item, Infomation about item, Infomation about item, Infomation about item, Infomation about item, Infomation about item, Infomation about item, Infomation about item, Infomation about item, Infomation about item, Infomation about item, Infomation about item, Infomation about item, Infomation about item, Infomation about item"></TextBlock>
-                </ScrollViewer>
+                        Name="SelectedDescriptionBox"/>
+                    </ScrollViewer>
                 <Button
                     Grid.Row="3"
                     Style="{StaticResource BackToAlbumButtonInfoStyle}"

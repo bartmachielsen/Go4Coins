@@ -24,17 +24,13 @@ namespace UWPEindopdracht.Multiplayer
         public string Description { get; set; }
         public string Categorie { get; set; }
 
-        public bool inInventory { get; set; } = false;
+        public int inInventory { get; set; } = 0;
 
-        public string Image
-        {
-            get
-            {
-                if(inInventory)
-                    return UnlockedImageLocation;
-                return LockedImageLocation;
-            }
-        }
+        public string Image => inInventory > 0 ? UnlockedImageLocation : LockedImageLocation;
+
+        public string niceName => inInventory > 1 ? Name + $" [{inInventory}x]" : Name;
+
+        public int coinValue => (int)(1000*(1/(double)(int)Value));
 
         public RewardValue Value { get; set; }
 

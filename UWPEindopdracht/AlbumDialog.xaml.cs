@@ -30,7 +30,6 @@ namespace UWPEindopdracht
             Thickness _size = new Thickness(2);
         private User _user;
         private List<Reward> _rewards;
-
         ObservableCollection<Reward> selectedList = new ObservableCollection<Reward>();
         private string focus = "Marvel";
 
@@ -43,7 +42,7 @@ namespace UWPEindopdracht
             updateAllLists();
 
             this.InitializeComponent();
-           RefreshChests();
+            RefreshChests();
         }
 
         private void updateAllLists()
@@ -53,7 +52,7 @@ namespace UWPEindopdracht
             foreach (var reward in _rewards)
             {
                 if (reward.Categorie != focus) continue;
-                reward.inInventory = _user.Rewards.Contains(reward.Name);
+                reward.inInventory = _user.Rewards.FindAll((s => s == reward.Name)).Count;
                 selectedList.Add(reward);
             }
         }
@@ -135,7 +134,16 @@ namespace UWPEindopdracht
 
         private void ShowInformation(object sender, TappedRoutedEventArgs e)
         {
-            throw new NotImplementedException();
+            var selected = (Reward)((Image) sender).DataContext;
+            SelectedNameBox.Text = selected.niceName;
+            SelectedImageBox.Source = new BitmapImage(new Uri(this.BaseUri, "/" + selected.Image));
+            SelectedImageBorder.BorderBrush = selected.rareColor;
+            SelectedImageBox.DataContext = selected;
+            // TODO ADD DATACONTEXT TO SELL BUTTON @NARD
+            SelectedDescriptionBox.Text = selected.Description;
+            InformationGrid.Visibility = Visibility.Visible;
+            CollectionsGrid.Visibility = Visibility.Collapsed;
+
         }
 
         private void Category1_Click(object sender, RoutedEventArgs e)
@@ -148,6 +156,16 @@ namespace UWPEindopdracht
             }
         }
 
+        private void sell_click(object sender, RoutedEventArgs e)
+        {
+            var datacontext = (Reward)((Button)sender).DataContext;
+            if (!_user.Rewards.Contains(datacontext.Name))
+                return;
+            _user.Rewards.Remove(datacontext.Name);
+            _user.Coins += datacontext.coinValue;
+            datacontext.inInventory -= 1;
+        }
+        
         private void Category2_Click(object sender, RoutedEventArgs e)
         {
             if (Category2.BorderThickness != _size)
