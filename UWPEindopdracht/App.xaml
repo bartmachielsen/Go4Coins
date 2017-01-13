@@ -22,6 +22,12 @@
                     </ControlTemplate>
                 </Setter.Value>
             </Setter>
+            <Setter Property="Height" Value="22"/>
+            <Setter Property="Width" Value="22"/>
+            <Setter Property="VerticalAlignment" Value="Top"/>
+            <Setter Property="HorizontalAlignment" Value="Right"/>
+            <Setter Property="Background" Value="Transparent"/>
+            <Setter Property="Padding" Value="0,0"/>
         </Style>
         
         <Style x:Key="FooterButtonStyle" TargetType="Button">
