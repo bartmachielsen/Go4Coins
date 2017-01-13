@@ -103,6 +103,7 @@ namespace UWPEindopdracht
 
         private void toggleButton(object sender, RoutedEventArgs e)
         {
+            System.Diagnostics.Debug.WriteLine(sender.GetType());
             Button button = (Button)sender;
             if (button.Name == "All")
             {
