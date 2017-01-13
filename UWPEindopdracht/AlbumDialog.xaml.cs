@@ -27,9 +27,11 @@ namespace UWPEindopdracht
         ObservableCollection<BitmapImage> _images = new ObservableCollection<BitmapImage>();
         Thickness _size = new Thickness(2);
         private User _user;
+        private List<Reward> _rewards;
 
-        public AlbumDialog(User user)
+        public AlbumDialog(User user, List<Reward> rewards)
         {
+            _rewards = rewards;
             _user = user;
             this.InitializeComponent();
            RefreshChests();
@@ -44,6 +46,10 @@ namespace UWPEindopdracht
         {
             if (!_user.Chests.Contains(typeof(BasicChest).Name)) return;
             _user.Chests.Remove(typeof(BasicChest).Name);
+            foreach (var reward in new BasicChest().GetRewards(_rewards))
+            {
+                _user.Rewards.Add(reward.Name);
+            }
             RefreshChests();
             ShowReward();
         }
@@ -52,6 +58,10 @@ namespace UWPEindopdracht
         {
             if (!_user.Chests.Contains(typeof(AdvancedChest).Name)) return;
             _user.Chests.Remove(typeof(AdvancedChest).Name);
+            foreach (var reward in new AdvancedChest().GetRewards(_rewards))
+            {
+                _user.Rewards.Add(reward.Name);
+            }
             RefreshChests();
             ShowReward();
         }
@@ -60,6 +70,10 @@ namespace UWPEindopdracht
         {
             if (!_user.Chests.Contains(typeof(LargeChest).Name)) return;
             _user.Chests.Remove(typeof(LargeChest).Name);
+            foreach (var reward in new LargeChest().GetRewards(_rewards))
+            {
+                _user.Rewards.Add(reward.Name);
+            }
             RefreshChests();
             ShowReward();
         }

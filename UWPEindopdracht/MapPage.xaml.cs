@@ -519,7 +519,7 @@ namespace UWPEindopdracht
         }
         private async void GoToAlbumButton_Click(object sender, RoutedEventArgs e)
         {
-            var a = new AlbumDialog(_multiplayerData.User);
+            var a = new AlbumDialog(_multiplayerData.User, _multiplayerData.Rewards);
             await a.ShowAsync();
         }
 

@@ -60,15 +60,21 @@ namespace UWPEindopdracht.Multiplayer
             while (chosen.Count < _amount)
             {
                 int previous = 0;
-                for(int i = Enum.GetValues(typeof(RewardValue)).Length; i >= 0; i++)
+                
+                var reversed = Enum.GetValues(typeof(RewardValue));
+                Array.Reverse(reversed);
+                int i = reversed.Length-1;
+                foreach (RewardValue value in reversed)
                 {
-                    var value = (RewardValue)Enum.GetValues(typeof(RewardValue)).GetValue(i);
+                    if (chosen.Count >= _amount)
+                        continue;
                     List<Reward> sorted = rewards.FindAll(reward => reward.Value == value);
                     int picked = random.Next(100);
+                    System.Diagnostics.Debug.WriteLine($"Must be between {previous} and {Chance[i]} and picked {picked}");
                     if (picked > previous && picked < Chance[i]) 
                         chosen.Add(sorted.ElementAt(random.Next(chosen.Count)));
                     previous = Chance[i];
-
+                    i--;
                 }
             }
             return chosen;
