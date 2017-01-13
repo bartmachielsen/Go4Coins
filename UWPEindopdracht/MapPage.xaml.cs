@@ -335,7 +335,12 @@ namespace UWPEindopdracht
                 {
                     newAssignment = GetRandomAssignment();
                 }
-                // TODO COINS PENALTY WHEN USER IS SKIPPING
+                if (_multiplayerData.User.Coins > 500)
+                    _multiplayerData.User.Coins -= 500;
+                else
+                {
+                    _multiplayerData.User.Coins = 0;
+                }
                 await SetAssignment(loc, newAssignment, selectNew);
             }
             else
@@ -488,7 +493,12 @@ namespace UWPEindopdracht
                     var dialog = new AssignmentDialog(_assignment, await ImageLoader.GetBestUrlFromPlace(_assignment), true);
                     await ShowDialog(dialog);
                     if (dialog.Accepted) return;
-                    // TODO REMOVE COINS BECAUSE USER HAS CANCELED
+                    if(_multiplayerData.User.Coins > 500)
+                        _multiplayerData.User.Coins -= 500;
+                    else
+                    {
+                        _multiplayerData.User.Coins = 0;
+                    }
                     await SetAssignment(null, null);
                 };
 
