@@ -106,7 +106,7 @@ namespace UWPEindopdracht
             Button button = (Button)sender;
             if (button.Name == "All")
             {
-                var selecttext = "selected";
+                var selecttext = "Selected";
                 if(values.Count != Enum.GetValues(typeof(RewardValue)).Length) { 
                     values.Clear();
                     selecttext = "";
@@ -135,7 +135,7 @@ namespace UWPEindopdracht
                 }
                 var select = "";
                 if (values.Contains(val))
-                    select = "selected";
+                    select = "Selected";
                 button.Content =
                     new BitmapImage(new Uri(this.BaseUri, $"/Assets/ShopAndAlbum/{button.Name}{select}.png"));
                 button.Padding = new Thickness(0, 0, 0, 0);
