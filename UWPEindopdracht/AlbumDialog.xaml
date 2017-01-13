@@ -305,7 +305,7 @@
                             BorderThickness="4"
                             BorderBrush="Orange">
                             <Image
-                                Source="Assets/Rewards/Marvel/ironMan.png"
+                                Source="Assets/Reward/Marvel/ironMan.png"
                                 />
                         </Border>
                     </Grid>
@@ -339,53 +339,17 @@
                     <RowDefinition Height="40"/>
                 </Grid.RowDefinitions>
                 
-                <Button
-                    x:Name="List1"
-                    Grid.Row="0"
-                    Content="MarvelInfo"
-                    Style="{StaticResource ListSelectionButtonStyle}"
-                    Visibility="Visible"
-                    Click="List1_Click"
-                    />
-                <Button
-                    x:Name="List2"
-                    Grid.Row="0"
-                    Content="DcInfo"
-                    Style="{StaticResource ListSelectionButtonStyle}"
-                    Click="List2_Click"
-                    />
-                <Button
-                    x:Name="List3"
-                    Grid.Row="0"
-                    Content="DisneyInfo"
-                    Style="{StaticResource ListSelectionButtonStyle}"
-                    Click="List3_Click"
-                    />
-                <Button
-                    x:Name="List4"
-                    Grid.Row="0"
-                    Content="WarnerBrosInfo"
-                    Style="{StaticResource ListSelectionButtonStyle}"
-                    Click="List4_Click"
-                    />
-                <Button
-                    x:Name="List5"
-                    Grid.Row="0"
-                    Content="DreamworksInfo"
-                    Style="{StaticResource ListSelectionButtonStyle}"
-                    Click="List5_Click"
-                    />
-                
+               
                 <GridView 
-                    IsEnabled="False"
-                    ItemsSource="{x:Bind _images}"
-                    Grid.Row="0" 
+                    ItemsSource="{x:Bind selectedList}"
+                    Grid.Row="0"
                     Width="283"
                     Margin="1.5,0,0,0"
+                    ShowsScrollingPlaceholders="False"
                     >
                     <GridView.ItemTemplate>
                         <DataTemplate 
-                            x:DataType="BitmapImage" 
+                            x:DataType="multiplayer:Reward" 
                             >
                             <Grid
                                 x:Name="GridViewItem"
@@ -399,10 +363,10 @@
                                 </Grid.RowDefinitions>
                                 <Image
                                     Tapped="ShowInformation"
-                                    Source="Assets/Rewards/Marvel/ironMan.png"
+                                    Source="{x:Bind Image}"
                                     />
                                 <TextBlock
-                                    Text="Titel"
+                                    Text="{x:Bind Name}"
                                     Grid.Row="1"
                                     FontSize= "13"
                                     Foreground="Blue"
@@ -429,7 +393,7 @@
                         Grid.Column="0"
                         Style="{StaticResource CategoryButtonStyle}"
                         BorderThickness="2"
-                        Click="Category1_Click"
+                        Click="Category1_Click" HorizontalAlignment="Right" Margin="0,0,6,0"
                         >
                         <Image Source="Assets/ShopAndAlbum/marvel-logo.png"/>
                     </Button>

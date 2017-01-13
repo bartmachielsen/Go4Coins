@@ -31,19 +31,16 @@ namespace UWPEindopdracht
         private User _user;
         private List<Reward> _rewards;
 
-        ObservableCollection<Reward> marvelList = new ObservableCollection<Reward>();
-        ObservableCollection<Reward> dcList = new ObservableCollection<Reward>();
-        ObservableCollection<Reward> disneyList = new ObservableCollection<Reward>();
-        ObservableCollection<Reward> drList = new ObservableCollection<Reward>();
-        ObservableCollection<Reward> wList = new ObservableCollection<Reward>();
+        ObservableCollection<Reward> selectedList = new ObservableCollection<Reward>();
+        private string focus = "Marvel";
 
 
 
         public AlbumDialog(User user, List<Reward> rewards)
         {
             _rewards = rewards;
-            updateAllLists();
             _user = user;
+            updateAllLists();
 
             this.InitializeComponent();
            RefreshChests();
@@ -51,40 +48,13 @@ namespace UWPEindopdracht
 
         private void updateAllLists()
         {
-            disneyList.Clear();
-            dcList.Clear();
-            marvelList.Clear();
-            wList.Clear();
-            drList.Clear();
+            selectedList.Clear();
 
             foreach (var reward in _rewards)
             {
-                if (_user.Rewards.Contains(reward.Name))
-                {
-                    reward.inInventory = true;
-                }
-                else
-                {
-                    reward.inInventory = false;
-                }
-                switch (reward.Categorie)
-                {
-                    case "Disney":
-                        disneyList.Add(reward);
-                        break;
-                    case "Dc":
-                        dcList.Add(reward);
-                        break;
-                    case "Marvel":
-                        marvelList.Add(reward);
-                        break;
-                    case "WarnerBros":
-                        wList.Add(reward);
-                        break;
-                    case "DreamWorks":
-                        drList.Add(reward);
-                        break;
-                }
+                if (reward.Categorie != focus) continue;
+                reward.inInventory = _user.Rewards.Contains(reward.Name);
+                selectedList.Add(reward);
             }
         }
 
@@ -172,9 +142,9 @@ namespace UWPEindopdracht
         {
             if (Category1.BorderThickness != _size)
             {
-                ClearAll();
                 Category1.BorderThickness = _size;
-                List1.Visibility = Visibility.Visible;
+                focus = "Marvel";
+                updateAllLists();
             }
         }
 
@@ -184,7 +154,8 @@ namespace UWPEindopdracht
             {
                 ClearAll();
                 Category2.BorderThickness = _size;
-                List2.Visibility = Visibility.Visible;
+                focus = "Dc";
+                updateAllLists();
             }
         }
 
@@ -194,7 +165,8 @@ namespace UWPEindopdracht
             {
                 ClearAll();
                 Category3.BorderThickness = _size;
-                List3.Visibility = Visibility.Visible;
+                focus = "Disney";
+                updateAllLists();
             }
         }
 
@@ -204,7 +176,8 @@ namespace UWPEindopdracht
             {
                 ClearAll();
                 Category4.BorderThickness = _size;
-                List4.Visibility = Visibility.Visible;
+                focus = "WarnerBros";
+                updateAllLists();
             }
         }
 
@@ -214,7 +187,8 @@ namespace UWPEindopdracht
             {
                 ClearAll();
                 Category5.BorderThickness = _size;
-                List5.Visibility = Visibility.Visible;
+                focus = "DreamWorks";
+                updateAllLists();
             }
         }
 
@@ -226,11 +200,7 @@ namespace UWPEindopdracht
             Category3.BorderThickness = size;
             Category4.BorderThickness = size;
             Category5.BorderThickness = size;
-            List1.Visibility = Visibility.Collapsed;
-            List2.Visibility = Visibility.Collapsed;
-            List3.Visibility = Visibility.Collapsed;
-            List4.Visibility = Visibility.Collapsed;
-            List5.Visibility = Visibility.Collapsed;
+            
         }
 
         private void List1_Click(object sender, RoutedEventArgs e)
