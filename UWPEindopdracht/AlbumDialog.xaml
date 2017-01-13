@@ -349,8 +349,48 @@
                 </Grid.RowDefinitions>
                 
                 <Button
-                    ></Button>
+                    x:Name="Legendary"
+                    Style="{StaticResource RarityButtonStyle}"
+                    Margin="0,15,103,0"
+                    Click="toggleButton"
+                    >
+                    <Image Source="Assets/ShopAndAlbum/LegendarySelected.png"/>
+                </Button>
+                <Button
+                    x:Name="Epic"
+                    Style="{StaticResource RarityButtonStyle}"
+                    Margin="0,15,78,0"
+                    Click="toggleButton"
+                    >
+                    <Image Source="Assets/ShopAndAlbum/EpicSelected.png"/>
+                </Button>
+                <Button
+                    x:Name="Rare"
+                    Style="{StaticResource RarityButtonStyle}"
+                    Margin="0,15,53,0"
+                    Click="toggleButton"
+                    >
+                    <Image Source="Assets/ShopAndAlbum/RareSelected.png"/>
+                </Button>
+                <Button
+                    x:Name="Normal"
+                    Style="{StaticResource RarityButtonStyle}"
+                    Margin="0,15,28,0"
+                    Click="toggleButton"
+                    >
+                    <Image Source="Assets/ShopAndAlbum/NormalSelected.png"/>
+                </Button>
+                <Button
+                    x:Name="All"
+                    Style="{StaticResource RarityButtonStyle}"
+                    Margin="0,15,3,0"
+                    Click="toggleButton"
+                    >
+                    <Image Source="Assets/ShopAndAlbum/AllSelected.png"/>
+                </Button>
+                
                 <ScrollViewer
+                    Grid.Row="0"
                     VerticalScrollBarVisibility="Hidden"
                     Margin="0,40,0,10"
                     >
