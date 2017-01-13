@@ -32,11 +32,16 @@ namespace UWPEindopdracht
         private List<Reward> _rewards;
         ObservableCollection<Reward> selectedList = new ObservableCollection<Reward>();
         private string focus = "Marvel";
-
+        private List<RewardValue> values = new List<RewardValue>();
+        
 
 
         public AlbumDialog(User user, List<Reward> rewards)
         {
+            foreach (RewardValue value in Enum.GetValues(typeof(RewardValue)))
+                values.Add(value);
+            
+
             _rewards = rewards;
             _user = user;
             updateAllLists();
@@ -51,10 +56,12 @@ namespace UWPEindopdracht
 
             foreach (var reward in _rewards)
             {
-                if (reward.Categorie != focus) continue;
+                if (reward.Categorie != focus || !values.Contains(reward.Value)) continue;
                 reward.inInventory = _user.Rewards.FindAll((s => s == reward.Name)).Count;
                 selectedList.Add(reward);
             }
+
+            // unlockedLabel.Text = ""+ _rewards.FindAll((reward => _user.Rewards.Contains(reward.Name))).Count;
         }
 
         private void BackButton_Click(object sender, RoutedEventArgs e)
@@ -139,6 +146,8 @@ namespace UWPEindopdracht
             SelectedImageBox.Source = new BitmapImage(new Uri(this.BaseUri, "/" + selected.Image));
             SelectedImageBorder.BorderBrush = selected.rareColor;
             SelectedImageBox.DataContext = selected;
+            SellButton.DataContext = selected;
+            SellButton.Visibility = selected.inInventory > 0 ? Visibility.Visible : Visibility.Collapsed;
             // TODO ADD DATACONTEXT TO SELL BUTTON @NARD
             SelectedDescriptionBox.Text = selected.Description;
             InformationGrid.Visibility = Visibility.Visible;
@@ -164,6 +173,11 @@ namespace UWPEindopdracht
             _user.Rewards.Remove(datacontext.Name);
             _user.Coins += datacontext.coinValue;
             datacontext.inInventory -= 1;
+
+            InformationGrid.Visibility = Visibility.Collapsed;
+            CollectionsGrid.Visibility = Visibility.Visible;
+            updateAllLists();
+
         }
         
         private void Category2_Click(object sender, RoutedEventArgs e)

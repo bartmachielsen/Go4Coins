@@ -290,6 +290,7 @@
                     <RowDefinition Height="6*"/>
                     <RowDefinition Height="6*"/>
                     <RowDefinition Height="2*"/>
+                    <RowDefinition Height="2*"/>
                 </Grid.RowDefinitions>
                 
                 <TextBlock
@@ -327,6 +328,13 @@
                     </ScrollViewer>
                 <Button
                     Grid.Row="3"
+                    Name="SellButton"
+                    Style="{StaticResource BackToAlbumButtonInfoStyle}"
+                    Content="Sell"
+                    Click="sell_click"
+                    />
+                <Button
+                    Grid.Row="4"
                     Style="{StaticResource BackToAlbumButtonInfoStyle}"
                     Click="BackToAlbumButton2_Click"
                     />
