@@ -6,6 +6,7 @@ using System.Runtime.InteropServices.WindowsRuntime;
 using System.Threading.Tasks;
 using Windows.Devices.Geolocation;
 using Windows.Devices.Geolocation.Geofencing;
+using Windows.Graphics.Imaging;
 using Windows.Storage;
 using Windows.Storage.Streams;
 using Windows.UI;
@@ -153,8 +154,10 @@ namespace UWPEindopdracht
                             user.Icon = new MapIcon
                             {
                                 Location = geopoint,
-                                Title = user.Name
-                            };
+                                Title = user.Name,
+                                Image = RandomAccessStreamReference.CreateFromUri(new Uri("ms-appx:///Assets/MapPage/stickman.png"))
+
+                        };
                             MapControl.MapElements.Add(user.Icon);
                         }
                         else
@@ -243,7 +246,11 @@ namespace UWPEindopdracht
             if (_multiplayerData.User == null) return;
             if (_multiplayerData.User.Icon == null)
             {
-                _multiplayerData.User.Icon = new MapIcon { Title = "Your Location" };
+                _multiplayerData.User.Icon = new MapIcon { Title = "Your Location", 
+                    Image = RandomAccessStreamReference.CreateFromUri(new Uri("ms-appx:///Assets/MapPage/stickman.png"))
+                    
+                };
+                
                 MapControl.MapElements.Add(_multiplayerData.User.Icon);
             }
             _multiplayerData.User.Icon.Location = location;
