@@ -71,8 +71,11 @@ namespace UWPEindopdracht.Multiplayer
                     List<Reward> sorted = rewards.FindAll(reward => reward.Value == value);
                     int picked = random.Next(100);
                     System.Diagnostics.Debug.WriteLine($"Must be between {previous} and {Chance[i]} and picked {picked}");
-                    if (picked > previous && picked < Chance[i]) 
-                        chosen.Add(sorted.ElementAt(random.Next(chosen.Count)));
+                    if (picked > previous && picked < Chance[i])
+                    {
+                        var pic = sorted.ElementAt(random.Next(sorted.Count));
+                        chosen.Add(pic);
+                    }
                     previous = Chance[i];
                     i--;
                 }

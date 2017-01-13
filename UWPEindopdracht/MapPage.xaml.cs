@@ -57,8 +57,22 @@ namespace UWPEindopdracht
         
         private async void LoadMultiplayerDetails()
         {
-            await _multiplayerData.RegisterMultiplayerUser();
-            await _multiplayerData.LoadRewards();
+            try
+            {
+                await _multiplayerData.RegisterMultiplayerUser();
+            }
+            catch (NoInternetException)
+            {
+                InternetException();
+            }
+            try
+            {
+                await _multiplayerData.LoadRewards();
+            }
+            catch (NoInternetException)
+            {
+                InternetException();
+            }
             LiveUpdateUser();
         }
 
@@ -80,7 +94,14 @@ namespace UWPEindopdracht
                     if (details.syncNeeded)
                         await _multiplayerData.Db.UpdateMultiplayerAssignmentDetail(details);
                     var existed = details.Targets == null;
-                    await _multiplayerData.Db.GetMultiplayerAssignment(details);
+                    try
+                    {
+                        await _multiplayerData.Db.GetMultiplayerAssignment(details);
+                    }
+                    catch (NoInternetException)
+                    {
+                        InternetException();
+                    }
                     if (existed && details.Targets != null)
                         SetAssignment(await GPSHelper.getLocation(), details);
                     

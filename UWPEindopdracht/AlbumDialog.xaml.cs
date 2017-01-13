@@ -25,6 +25,7 @@ namespace UWPEindopdracht
     public sealed partial class AlbumDialog : ContentDialog
     {
         ObservableCollection<BitmapImage> _images = new ObservableCollection<BitmapImage>();
+        ObservableCollection<Reward> won = new ObservableCollection<Reward>();
         Thickness _size = new Thickness(2);
         private User _user;
         private List<Reward> _rewards;
@@ -46,9 +47,12 @@ namespace UWPEindopdracht
         {
             if (!_user.Chests.Contains(typeof(BasicChest).Name)) return;
             _user.Chests.Remove(typeof(BasicChest).Name);
-            foreach (var reward in new BasicChest().GetRewards(_rewards))
+            var rewardsWon = new BasicChest().GetRewards(_rewards);
+            won.Clear();
+            foreach (var reward in rewardsWon)
             {
                 _user.Rewards.Add(reward.Name);
+                won.Add(reward);
             }
             RefreshChests();
             ShowReward();
@@ -58,10 +62,15 @@ namespace UWPEindopdracht
         {
             if (!_user.Chests.Contains(typeof(AdvancedChest).Name)) return;
             _user.Chests.Remove(typeof(AdvancedChest).Name);
-            foreach (var reward in new AdvancedChest().GetRewards(_rewards))
+            var rewardsWon = new AdvancedChest().GetRewards(_rewards);
+            won.Clear();
+            foreach (var reward in rewardsWon)
             {
                 _user.Rewards.Add(reward.Name);
+                won.Add(reward);
             }
+            
+            
             RefreshChests();
             ShowReward();
         }
@@ -70,9 +79,12 @@ namespace UWPEindopdracht
         {
             if (!_user.Chests.Contains(typeof(LargeChest).Name)) return;
             _user.Chests.Remove(typeof(LargeChest).Name);
-            foreach (var reward in new LargeChest().GetRewards(_rewards))
+            var rewardsWon = new LargeChest().GetRewards(_rewards);
+            won.Clear();
+            foreach (var reward in rewardsWon)
             {
                 _user.Rewards.Add(reward.Name);
+                won.Add(reward);
             }
             RefreshChests();
             ShowReward();

@@ -5,6 +5,7 @@
     xmlns:local="using:UWPEindopdracht"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:multiplayer="using:UWPEindopdracht.Multiplayer"
     mc:Ignorable="d"
     Title=""
     IsPrimaryButtonEnabled="False"
@@ -481,65 +482,32 @@
             <ScrollViewer
                 VerticalScrollBarVisibility="Hidden"
                 >
-                <StackPanel>
-                    <Grid Style="{StaticResource InformationGridItemStyle}">
-                        <Grid.ColumnDefinitions>
-                            <ColumnDefinition Width="3*"/>
-                            <ColumnDefinition Width="4*"/>
-                        </Grid.ColumnDefinitions>
-                        <Grid.RowDefinitions>
-                            <RowDefinition Height="*"/>
-                            <RowDefinition Height="7*"/>
-                        </Grid.RowDefinitions>
-                        <Grid HorizontalAlignment="Center" VerticalAlignment="Center" Grid.RowSpan="2">
-                            <Border BorderThickness="4" BorderBrush="Orange">
-                                <Image Source="Assets/Rewards/Marvel/ironMan.png"/>
-                            </Border>
-                        </Grid>
-                        <TextBlock Style="{StaticResource InformationGridTitleStyle}"/>
-                        <ScrollViewer Grid.Row="1" Grid.Column="1" VerticalScrollBarVisibility="Hidden" HorizontalScrollBarVisibility="Disabled">
-                            <TextBlock Style="{StaticResource InformationGridInfoStyle}"/>
-                        </ScrollViewer>
-                    </Grid>
-                    <Grid Style="{StaticResource InformationGridItemStyle}">
-                        <Grid.ColumnDefinitions>
-                            <ColumnDefinition Width="3*"/>
-                            <ColumnDefinition Width="4*"/>
-                        </Grid.ColumnDefinitions>
-                        <Grid.RowDefinitions>
-                            <RowDefinition Height="*"/>
-                            <RowDefinition Height="7*"/>
-                        </Grid.RowDefinitions>
-                        <Grid HorizontalAlignment="Center" VerticalAlignment="Center" Grid.RowSpan="2">
-                            <Border BorderThickness="4" BorderBrush="Orange">
-                                <Image Source="Assets/Rewards/Marvel/ironMan.png"/>
-                            </Border>
-                        </Grid>
-                        <TextBlock Style="{StaticResource InformationGridTitleStyle}"/>
-                        <ScrollViewer Grid.Row="1" Grid.Column="1" VerticalScrollBarVisibility="Hidden" HorizontalScrollBarVisibility="Disabled">
-                            <TextBlock Style="{StaticResource InformationGridInfoStyle}"/>
-                        </ScrollViewer>
-                    </Grid>
-                    <Grid Style="{StaticResource InformationGridItemStyle}">
-                        <Grid.ColumnDefinitions>
-                            <ColumnDefinition Width="3*"/>
-                            <ColumnDefinition Width="4*"/>
-                        </Grid.ColumnDefinitions>
-                        <Grid.RowDefinitions>
-                            <RowDefinition Height="*"/>
-                            <RowDefinition Height="7*"/>
-                        </Grid.RowDefinitions>
-                        <Grid HorizontalAlignment="Center" VerticalAlignment="Center" Grid.RowSpan="2">
-                            <Border BorderThickness="4" BorderBrush="Orange">
-                                <Image Source="Assets/Rewards/Marvel/ironMan.png"/>
-                            </Border>
-                        </Grid>
-                        <TextBlock Style="{StaticResource InformationGridTitleStyle}"/>
-                        <ScrollViewer Grid.Row="1" Grid.Column="1" VerticalScrollBarVisibility="Hidden" HorizontalScrollBarVisibility="Disabled">
-                            <TextBlock Style="{StaticResource InformationGridInfoStyle}"/>
-                        </ScrollViewer>
-                    </Grid>
-                    <!--<Grid Style="{StaticResource InformationGridItemStyle}">
+                <ListView ItemsSource="{x:Bind won, Mode=OneWay}">
+                    <ListView.ItemTemplate>
+                        <DataTemplate x:DataType="multiplayer:Reward">
+                            <Grid Style="{StaticResource InformationGridItemStyle}">
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="3*"/>
+                                    <ColumnDefinition Width="4*"/>
+                                </Grid.ColumnDefinitions>
+                                <Grid.RowDefinitions>
+                                    <RowDefinition Height="*"/>
+                                    <RowDefinition Height="7*"/>
+                                </Grid.RowDefinitions>
+                                <Grid HorizontalAlignment="Center" VerticalAlignment="Center" Grid.RowSpan="2">
+                                    <Border BorderThickness="4" BorderBrush="Orange">
+                                        <Image Source="{x:Bind UnlockedImageLocation, Mode=OneWay}" Width="100" Height="100"/>
+                                    </Border>
+                                </Grid>
+                                <TextBlock Style="{StaticResource InformationGridTitleStyle}" Text="{x:Bind Name}"/>
+                                <ScrollViewer Grid.Row="1" Grid.Column="1" VerticalScrollBarVisibility="Hidden" HorizontalScrollBarVisibility="Disabled">
+                                    <TextBlock Style="{StaticResource InformationGridInfoStyle}" Text="{x:Bind Description}"/>
+                                </ScrollViewer>
+                            </Grid>
+                        </DataTemplate>
+                    </ListView.ItemTemplate>
+                </ListView>
+                <!--<Grid Style="{StaticResource InformationGridItemStyle}">
                         <Grid.ColumnDefinitions>
                             <ColumnDefinition Width="3*"/>
                             <ColumnDefinition Width="4*"/>
@@ -558,7 +526,7 @@
                             <TextBlock Style="{StaticResource InformationGridInfoStyle}"/>
                         </ScrollViewer>
                     </Grid>-->
-                </StackPanel>
+                
             </ScrollViewer>
             <Button
                 Grid.Row="1"
