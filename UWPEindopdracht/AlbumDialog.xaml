@@ -275,6 +275,8 @@
                 Margin="0,23"
                 />
 
+            
+
             <Grid
                 x:Name="InformationGrid"
                 Visibility="Collapsed"
@@ -283,14 +285,15 @@
                 Margin="0,40,0,0"
                 >
                 <Grid.RowDefinitions>
+                    
                     <RowDefinition Height="*"/>
                     <RowDefinition Height="6*"/>
                     <RowDefinition Height="6*"/>
                     <RowDefinition Height="2*"/>
                 </Grid.RowDefinitions>
-
+                
                 <TextBlock
-                    Text="Title"
+                    Name="SelectedNameBox"
                     FontSize="18"
                     Foreground="Blue"
                     HorizontalAlignment="Center"
@@ -303,9 +306,11 @@
                         >
                         <Border
                             BorderThickness="4"
-                            BorderBrush="Orange">
+                            BorderBrush="gray"
+                            Name="SelectedImageBorder">
+                            
                             <Image
-                                Source="Assets/Rewards/Marvel/ironMan.png"
+                                Name="SelectedImageBox"
                                 />
                         </Border>
                     </Grid>
@@ -318,8 +323,8 @@
                         FontSize="12"
                         Foreground="Blue"
                         TextWrapping="Wrap"
-                        Text="Infomation about item, Infomation about item, Infomation about item, Infomation about item, Infomation about item, Infomation about item, Infomation about item, Infomation about item, Infomation about item, Infomation about item, Infomation about item, Infomation about item, Infomation about item, Infomation about item, Infomation about item, Infomation about item, Infomation about item, Infomation about item, Infomation about item, Infomation about item, Infomation about item, Infomation about item, Infomation about item, Infomation about item, Infomation about item, Infomation about item, Infomation about item, Infomation about item"></TextBlock>
-                </ScrollViewer>
+                        Name="SelectedDescriptionBox"/>
+                    </ScrollViewer>
                 <Button
                     Grid.Row="3"
                     Style="{StaticResource BackToAlbumButtonInfoStyle}"
@@ -339,53 +344,17 @@
                     <RowDefinition Height="40"/>
                 </Grid.RowDefinitions>
                 
-                <Button
-                    x:Name="List1"
-                    Grid.Row="0"
-                    Content="MarvelInfo"
-                    Style="{StaticResource ListSelectionButtonStyle}"
-                    Visibility="Visible"
-                    Click="List1_Click"
-                    />
-                <Button
-                    x:Name="List2"
-                    Grid.Row="0"
-                    Content="DcInfo"
-                    Style="{StaticResource ListSelectionButtonStyle}"
-                    Click="List2_Click"
-                    />
-                <Button
-                    x:Name="List3"
-                    Grid.Row="0"
-                    Content="DisneyInfo"
-                    Style="{StaticResource ListSelectionButtonStyle}"
-                    Click="List3_Click"
-                    />
-                <Button
-                    x:Name="List4"
-                    Grid.Row="0"
-                    Content="WarnerBrosInfo"
-                    Style="{StaticResource ListSelectionButtonStyle}"
-                    Click="List4_Click"
-                    />
-                <Button
-                    x:Name="List5"
-                    Grid.Row="0"
-                    Content="DreamworksInfo"
-                    Style="{StaticResource ListSelectionButtonStyle}"
-                    Click="List5_Click"
-                    />
-                
+               
                 <GridView 
-                    IsEnabled="False"
-                    ItemsSource="{x:Bind _images}"
-                    Grid.Row="0" 
+                    ItemsSource="{x:Bind selectedList}"
+                    Grid.Row="0"
                     Width="283"
                     Margin="1.5,0,0,0"
+                    ShowsScrollingPlaceholders="False"
                     >
                     <GridView.ItemTemplate>
                         <DataTemplate 
-                            x:DataType="BitmapImage" 
+                            x:DataType="multiplayer:Reward" 
                             >
                             <Grid
                                 x:Name="GridViewItem"
@@ -399,10 +368,10 @@
                                 </Grid.RowDefinitions>
                                 <Image
                                     Tapped="ShowInformation"
-                                    Source="Assets/Rewards/Marvel/ironMan.png"
+                                    Source="{x:Bind Image}"
                                     />
                                 <TextBlock
-                                    Text="Titel"
+                                    Text="{x:Bind Name}"
                                     Grid.Row="1"
                                     FontSize= "13"
                                     Foreground="Blue"
@@ -429,7 +398,7 @@
                         Grid.Column="0"
                         Style="{StaticResource CategoryButtonStyle}"
                         BorderThickness="2"
-                        Click="Category1_Click"
+                        Click="Category1_Click" HorizontalAlignment="Right" Margin="0,0,6,0"
                         >
                         <Image Source="Assets/ShopAndAlbum/marvel-logo.png"/>
                     </Button>
@@ -495,7 +464,7 @@
                                     <RowDefinition Height="7*"/>
                                 </Grid.RowDefinitions>
                                 <Grid HorizontalAlignment="Center" VerticalAlignment="Center" Grid.RowSpan="2">
-                                    <Border BorderThickness="4" BorderBrush="Orange">
+                                    <Border BorderThickness="4" BorderBrush="{x:Bind rareColor, Mode=OneWay}">
                                         <Image Source="{x:Bind UnlockedImageLocation, Mode=OneWay}"/>
                                     </Border>
                                 </Grid>
