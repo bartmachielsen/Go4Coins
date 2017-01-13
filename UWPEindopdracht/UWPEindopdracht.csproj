@@ -151,6 +151,7 @@
   <ItemGroup>
     <Content Include="Assets\MapPage\album.png" />
     <Content Include="Assets\MapPage\new.png" />
+    <Content Include="Assets\MapPage\stickman.png" />
     <Content Include="Assets\Reward\DcGrey\alanScottGrey.png" />
     <Content Include="Assets\Reward\DcGrey\aquamanGrey.png" />
     <Content Include="Assets\Reward\DcGrey\atrocitusGrey.png" />

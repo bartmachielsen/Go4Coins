@@ -29,16 +29,6 @@ namespace UWPEindopdracht
             this.InitializeComponent();
         }
 
-       
-        private void ContentDialog_PrimaryButtonClick(ContentDialog sender, ContentDialogButtonClickEventArgs args)
-        {
-        }
-
-        private void ContentDialog_SecondaryButtonClick(ContentDialog sender, ContentDialogButtonClickEventArgs args)
-        {
-
-        }
-
         private async void OnJoinClicked(object sender, RoutedEventArgs e)
         {
             var assignment = ((Button) sender).DataContext as MultiplayerAssignmentDetails;
@@ -54,15 +44,6 @@ namespace UWPEindopdracht
             }
         }
 
-        private void MultiplayerAssignments_OnSecondaryButtonClick(ContentDialog sender, ContentDialogButtonClickEventArgs args)
-        {
-            // TODO CHECK IF NOT ALREADY JOINED!
-            var assignment = new MultiplayerAssignmentDetails(4, null, _data.User.id);
-            _data.Db.UploadMultiplayerAssignmentDetail(assignment);
-            _data.MultiplayerAssignmentDetailses.Add(assignment);
-            selected = assignment;
-        }
-
         private async void StopAssignment(object sender, RoutedEventArgs e)
         {
             var assignment = ((Button)sender).DataContext as MultiplayerAssignmentDetails;
@@ -71,7 +52,23 @@ namespace UWPEindopdracht
                 assignment.Closed = true;
                 await _data.Db.UpdateMultiplayerAssignmentDetail(assignment);
             }
+            var button = (Button) sender;
+            if (button != null) button.IsEnabled = false;
+        }
 
+        private void BackButton_Click(object sender, RoutedEventArgs e)
+        {
+            Hide();
+        }
+
+        private void CreateNewButton_Click(object sender, RoutedEventArgs e)
+        {
+            // TODO CHECK IF NOT ALREADY JOINED!
+            var assignment = new MultiplayerAssignmentDetails(4, null, _data.User.id);
+            _data.Db.UploadMultiplayerAssignmentDetail(assignment);
+            _data.MultiplayerAssignmentDetailses.Add(assignment);
+            selected = assignment;
+            Hide();
         }
     }
 }
