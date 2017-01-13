@@ -496,7 +496,7 @@
                                 </Grid.RowDefinitions>
                                 <Grid HorizontalAlignment="Center" VerticalAlignment="Center" Grid.RowSpan="2">
                                     <Border BorderThickness="4" BorderBrush="Orange">
-                                        <Image Source="{x:Bind UnlockedImageLocation, Mode=OneWay}" Width="100" Height="100"/>
+                                        <Image Source="{x:Bind UnlockedImageLocation, Mode=OneWay}"/>
                                     </Border>
                                 </Grid>
                                 <TextBlock Style="{StaticResource InformationGridTitleStyle}" Text="{x:Bind Name}"/>
