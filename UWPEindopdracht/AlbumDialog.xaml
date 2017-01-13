@@ -275,8 +275,6 @@
                 Margin="0,23"
                 />
 
-            
-
             <Grid
                 x:Name="InformationGrid"
                 Visibility="Collapsed"
@@ -285,13 +283,14 @@
                 Margin="0,40,0,0"
                 >
                 <Grid.RowDefinitions>
-                    
+
                     <RowDefinition Height="*"/>
                     <RowDefinition Height="6*"/>
                     <RowDefinition Height="6*"/>
                     <RowDefinition Height="2*"/>
+                    <RowDefinition Height="2*"/>
                 </Grid.RowDefinitions>
-                
+
                 <TextBlock
                     Name="SelectedNameBox"
                     FontSize="18"
@@ -299,21 +298,21 @@
                     HorizontalAlignment="Center"
                     VerticalAlignment="Center"
                     />
-                    <Grid
+                <Grid
                         HorizontalAlignment="Center"
                         VerticalAlignment="Center"
                         Grid.Row="1"
                         >
-                        <Border
+                    <Border
                             BorderThickness="4"
                             BorderBrush="gray"
                             Name="SelectedImageBorder">
-                            
-                            <Image
+
+                        <Image
                                 Name="SelectedImageBox"
                                 />
-                        </Border>
-                    </Grid>
+                    </Border>
+                </Grid>
                 <ScrollViewer
                     Margin="0,5,0,5"
                     Grid.Row="2"
@@ -324,14 +323,20 @@
                         Foreground="Blue"
                         TextWrapping="Wrap"
                         Name="SelectedDescriptionBox"/>
-                    </ScrollViewer>
+                </ScrollViewer>
                 <Button
                     Grid.Row="3"
+                    Name="SellButton"
+                    Style="{StaticResource BackToAlbumButtonInfoStyle}"
+                    Content="Sell"
+                    Click="sell_click"
+                    />
+                <Button
+                    Grid.Row="4"
                     Style="{StaticResource BackToAlbumButtonInfoStyle}"
                     Click="BackToAlbumButton2_Click"
                     />
             </Grid>
-
             <Grid
                 x:Name="CollectionsGrid"
                 Visibility="Visible"
