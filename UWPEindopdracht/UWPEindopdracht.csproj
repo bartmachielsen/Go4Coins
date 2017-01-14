@@ -149,6 +149,7 @@
     <None Include="UWPEindopdracht_TemporaryKey.pfx" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include="Assets\ShopAndAlbum\down.png" />
     <Content Include="Assets\MapPage\album.png" />
     <Content Include="Assets\MapPage\new.png" />
     <Content Include="Assets\MapPage\stickman.png" />
@@ -629,6 +630,7 @@
     <Content Include="Assets\ShopAndAlbum\RareSelected.png" />
     <Content Include="Assets\ShopAndAlbum\warnerbros.png" />
     <Content Include="Assets\unavailable-image.png" />
+    <Content Include="Assets\ShopAndAlbum\up.png" />
     <Content Include="Properties\Default.rd.xml" />
     <Content Include="Assets\LockScreenLogo.scale-200.png" />
     <Content Include="Assets\SplashScreen.scale-200.png" />
