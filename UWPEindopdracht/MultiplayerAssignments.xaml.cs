@@ -34,9 +34,8 @@ namespace UWPEindopdracht
             var assignment = ((Button) sender).DataContext as MultiplayerAssignmentDetails;
             if (assignment != null)
             {  
-                // todo check if not already joined!
-                
-                assignment.Participants.Add(_data.User.id);
+                if(assignment.Participants.Contains(_data.User.id))
+                    assignment.Participants.Add(_data.User.id);
                 assignment.OnPropertyChanged("Available");
                 selected = assignment;
                 await _data.Db.UpdateMultiplayerAssignmentDetail(assignment);
