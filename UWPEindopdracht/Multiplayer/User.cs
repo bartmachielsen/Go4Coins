@@ -19,7 +19,6 @@ namespace UWPEindopdracht.Multiplayer
         
         [JsonIgnore]
         public MapIcon Icon { get; set; }
-        [JsonIgnore]
         public List<DuelRequest> AcceptedDuels = new List<DuelRequest>();
         public DuelRequest Duel { get; set; }
 
