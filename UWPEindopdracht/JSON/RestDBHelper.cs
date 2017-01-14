@@ -37,6 +37,7 @@ namespace UWPEindopdracht.JSON
                             existuser.Rewards = user.Rewards;
                             existuser.Coins = user.Coins;
                             existuser.LastSynced = user.LastSynced;
+                            existuser.Duel = user.Duel;
                         }
                         if (!exists)
                             users.Add(user);

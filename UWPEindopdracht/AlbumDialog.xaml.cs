@@ -53,11 +53,12 @@ namespace UWPEindopdracht
         private void updateAllLists()
         {
             selectedList.Clear();
-
+            
             foreach (var reward in _rewards)
             {
                 if (reward.Categorie != focus || !values.Contains(reward.Value)) continue;
-                reward.inInventory = _user.Rewards.FindAll((s => s == reward.Name)).Count;
+                if(_user.Rewards != null)
+                    reward.inInventory = _user.Rewards.FindAll((s => s == reward.Name)).Count;
                 selectedList.Add(reward);
             }
 

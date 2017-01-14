@@ -19,6 +19,9 @@ namespace UWPEindopdracht.Multiplayer
         
         [JsonIgnore]
         public MapIcon Icon { get; set; }
+        [JsonIgnore]
+        public List<DuelRequest> AcceptedDuels = new List<DuelRequest>();
+        public DuelRequest Duel { get; set; }
 
         public int Coins { get; set; } = 0;
 
@@ -53,6 +56,10 @@ namespace UWPEindopdracht.Multiplayer
 
     }
 
-
+    public class DuelRequest
+    {
+        public string MultiplayerID;
+        public string UserID;
+    }
     
 }
