@@ -24,17 +24,17 @@ namespace UWPEindopdracht.Multiplayer
         public string Description { get; set; }
         public string Categorie { get; set; }
 
-        public int inInventory { get; set; } = 0;
+        public int InInventory { get; set; } = 0;
 
-        public string Image => inInventory > 0 ? UnlockedImageLocation : LockedImageLocation;
+        public string Image => InInventory > 0 ? UnlockedImageLocation : LockedImageLocation;
 
-        public string niceName => inInventory > 1 ? Name + $" [{inInventory}x]" : Name;
+        public string NiceName => InInventory > 1 ? Name + $" [{InInventory}x]" : Name;
 
-        public int coinValue => (int)(1000*(1/(double)(int)Value));
+        public int CoinValue => (int)(1000*(1/(double)(int)Value));
 
         public RewardValue Value { get; set; }
 
-        public SolidColorBrush rareColor
+        public SolidColorBrush RareColor
         {
             get
             {

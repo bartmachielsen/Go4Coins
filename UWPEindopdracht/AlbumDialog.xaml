@@ -324,13 +324,61 @@
                         TextWrapping="Wrap"
                         Name="SelectedDescriptionBox"/>
                 </ScrollViewer>
-                <Button
+                <Grid
                     Grid.Row="3"
-                    Name="SellButton"
-                    Style="{StaticResource BackToAlbumButtonInfoStyle}"
-                    Content="Sell"
-                    Click="sell_click"
-                    />
+                    >
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="1*"/>
+                        <ColumnDefinition Width="2*"/>
+                        <ColumnDefinition Width="3*"/>
+                    </Grid.ColumnDefinitions>
+                    <TextBox 
+                        Grid.Column="1"
+                        x:Name="NumericText"
+                        Style="{StaticResource TextBoxStyle}"
+                        TextAlignment="Center"
+                        Width="60"
+                        Height="35"
+                        Text="{x:Bind _value}"
+                        TextChanged="NumericText_TextChanged" 
+                        />
+                    <Button
+                        VerticalContentAlignment="Top"
+                        Grid.Column="0"
+                        x:Name="Up"
+                        Margin="0,0,0,17.5" 
+                        Padding="0"
+                        Width="25" 
+                        Height="15"
+                        Style="{StaticResource FooterButtonStyle}"
+                        BorderThickness="0"
+                        Click="Up_Click"
+                        >
+                        <Image Source="Assets/ShopAndAlbum/up.png"/>
+                    </Button>
+                    <Button 
+                        Grid.Column="0"
+                        x:Name="Down"
+                        Margin="0,17.5,0,0"
+                        Padding="0"
+                        Width="25" 
+                        Height="15"
+                        Style="{StaticResource FooterButtonStyle}"
+                        BorderThickness="0"
+                        Click="Down_Click"
+                        >
+                        <Image Source="Assets/ShopAndAlbum/down.png"/>
+                    </Button>
+                    <Button
+                        Grid.Column="2"
+                        Name="SellButton"
+                        Style="{StaticResource FooterButtonStyle}"
+                        Content="Sell"
+                        Height="35"
+                        Width="120"
+                        Click="Sell_click"
+                        />
+                </Grid>
                 <Button
                     Grid.Row="4"
                     Style="{StaticResource BackToAlbumButtonInfoStyle}"
@@ -352,7 +400,7 @@
                     x:Name="Legendary"
                     Style="{StaticResource RarityButtonStyle}"
                     Margin="0,15,103,0"
-                    Click="toggleButton"
+                    Click="ToggleButton"
                     >
                     <Image Source="Assets/ShopAndAlbum/LegendarySelected.png"/>
                 </Button>
@@ -360,7 +408,7 @@
                     x:Name="Epic"
                     Style="{StaticResource RarityButtonStyle}"
                     Margin="0,15,78,0"
-                    Click="toggleButton"
+                    Click="ToggleButton"
                     >
                     <Image Source="Assets/ShopAndAlbum/EpicSelected.png"/>
                 </Button>
@@ -368,7 +416,7 @@
                     x:Name="Rare"
                     Style="{StaticResource RarityButtonStyle}"
                     Margin="0,15,53,0"
-                    Click="toggleButton"
+                    Click="ToggleButton"
                     >
                     <Image Source="Assets/ShopAndAlbum/RareSelected.png"/>
                 </Button>
@@ -376,7 +424,7 @@
                     x:Name="Normal"
                     Style="{StaticResource RarityButtonStyle}"
                     Margin="0,15,28,0"
-                    Click="toggleButton"
+                    Click="ToggleButton"
                     >
                     <Image Source="Assets/ShopAndAlbum/NormalSelected.png"/>
                 </Button>
@@ -384,7 +432,7 @@
                     x:Name="All"
                     Style="{StaticResource RarityButtonStyle}"
                     Margin="0,15,3,0"
-                    Click="toggleButton"
+                    Click="ToggleButton"
                     >
                     <Image Source="Assets/ShopAndAlbum/AllSelected.png"/>
                 </Button>
@@ -395,7 +443,7 @@
                     Margin="0,40,0,10"
                     >
                     <GridView 
-                        ItemsSource="{x:Bind selectedList}"
+                        ItemsSource="{x:Bind _selectedList}"
                         Width="283"
                         Margin="1.5,0,0,0"
                         SelectionMode="None"
@@ -501,7 +549,7 @@
                 VerticalScrollBarVisibility="Hidden"
                 >
                 <ListView 
-                    ItemsSource="{x:Bind won, Mode=OneWay}"
+                    ItemsSource="{x:Bind _won, Mode=OneWay}"
                     SelectionMode="None"
                     >
                     <ListView.ItemTemplate>
@@ -524,7 +572,7 @@
                                     >
                                     <Border 
                                         BorderThickness="4" 
-                                        BorderBrush="{x:Bind rareColor, Mode=OneWay}"
+                                        BorderBrush="{x:Bind RareColor, Mode=OneWay}"
                                         >
                                         <Image 
                                             Source="{x:Bind UnlockedImageLocation, Mode=OneWay}"
