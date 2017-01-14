@@ -148,6 +148,12 @@ namespace UWPEindopdracht
                     }
                     else
                     {
+                        if (user.Duel != null && !_multiplayerData.User.AcceptedDuels.Contains(user.Duel.MultiplayerID))
+                        {
+                            _multiplayerData.User.AcceptedDuels.Add(user.Duel.MultiplayerID);
+                            ShowDual(user.Duel, user);
+                        }
+
                         System.Diagnostics.Debug.WriteLine($"{user.id} is loaded! {DateTime.Now-user.LastSynced}");
                         if (user.Icon == null)
                         {
@@ -169,13 +175,27 @@ namespace UWPEindopdracht
                 }
         }
 
-        private void ShowUserDetails(User user, bool newUser = true, bool self = false)
+        private async Task<bool> ShowUserDetails(User user, bool newUser = true, bool self = false)
         {
             ContentDialog dialog = new UserDialog(user,newUser);
 
             if(self)
                 dialog = new MultiplayerSettings(user);
-            ShowDialog(dialog);
+            await ShowDialog(dialog);
+            var userDialog = dialog as UserDialog;
+            return userDialog != null && userDialog.Dueled;
+        }
+
+        private async void ShowDual(DuelRequest request, User requestee)
+        {
+            MultiplayerAssignmentDetails assignment = new MultiplayerAssignmentDetails(-1, request.MultiplayerID, requestee.id);
+            assignment.CurrentUser = _multiplayerData.User.id;
+            await new RestDBConnector().GetMultiplayerAssignment(assignment);
+
+            assignment.dual = true;
+
+            if(!assignment.Closed)
+                await SetAssignment(await GPSHelper.getLocation(), assignment, true);
         }
 
         private async Task ShowDialog(ContentDialog dialog)
@@ -189,13 +209,13 @@ namespace UWPEindopdracht
             }
         }
        
-        private void MapControl_MapElementClick(MapControl sender, MapElementClickEventArgs args)
+        private async void MapControl_MapElementClick(MapControl sender, MapElementClickEventArgs args)
         {
             foreach (var user in _multiplayerData.Users)
             {
                 if (user.Icon == null) continue;
                 if (args.MapElements.All(element => element != user.Icon)) continue;
-                ShowUserDetails(user, false);
+                DuelMultiplayerUser(ShowUserDetails(user, false), user);
                 return;
             }
             if(_assignment != null)
@@ -206,9 +226,32 @@ namespace UWPEindopdracht
                     
                 
             if(args.MapElements.All(element => element == _multiplayerData.User.Icon))
-                ShowUserDetails(_multiplayerData.User, false,true);
+                await ShowUserDetails(_multiplayerData.User, false, true);
         }
 
+        private async void DuelMultiplayerUser(Task<bool> dual, User user)
+        {
+            bool dualed = await dual;
+            System.Diagnostics.Debug.WriteLine(dualed + " DUALED");
+            if (dualed)
+            {
+                MultiplayerAssignmentDetails multiplayerAssignment = new MultiplayerAssignmentDetails(2, null,
+                    _multiplayerData.User.id);
+                multiplayerAssignment.dual = true;
+                multiplayerAssignment.Participants.Add(user.id);
+                multiplayerAssignment.CurrentUser = _multiplayerData.User.id;
+                await new RestDBConnector().UploadMultiplayerAssignmentDetail(multiplayerAssignment);
+                await SetAssignment((await GPSHelper.getLocation()), multiplayerAssignment, true);
+
+
+                _multiplayerData.User.Duel = new DuelRequest()
+                {
+                    MultiplayerID = multiplayerAssignment.Id, UserID = user.id
+                };
+
+                
+            }
+        }
         
 
         private async void RemovePinPoints(Assignment oldAssignment)
@@ -493,6 +536,16 @@ namespace UWPEindopdracht
                     var dialog = new AssignmentDialog(_assignment, await ImageLoader.GetBestUrlFromPlace(_assignment), true);
                     await ShowDialog(dialog);
                     if (dialog.Accepted) return;
+                    if (_assignment is MultiplayerAssignmentDetails)
+                    {
+                        var multi = _assignment as MultiplayerAssignmentDetails;
+                        multi.Participants.Remove(_multiplayerData.User.id);
+                        if (multi.Participants.Count == 0 || multi.Administrator == _multiplayerData.User.id)
+                        {
+                            multi.Closed = true;
+                        }
+                        new RestDBConnector().UpdateMultiplayerAssignmentDetail(multi);
+                    }
                     if(_multiplayerData.User.Coins > 500)
                         _multiplayerData.User.Coins -= 500;
                     else

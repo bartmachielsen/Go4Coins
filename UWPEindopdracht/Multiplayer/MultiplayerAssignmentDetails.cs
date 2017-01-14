@@ -30,6 +30,8 @@ namespace UWPEindopdracht.Multiplayer
         [JsonIgnore]
         public bool Available => (Participants.Count) < MaxJoiners;
 
+        public bool dual = false;
+
         [JsonIgnore]
         public string ButtonText => "Join";
 

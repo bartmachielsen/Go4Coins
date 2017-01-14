@@ -115,7 +115,7 @@ namespace UWPEindopdracht.DataConnections
             return RestDBHelper.GetRewards(response);
         }
 
-        public async void UploadMultiplayerAssignmentDetail(MultiplayerAssignmentDetails detail)
+        public async Task UploadMultiplayerAssignmentDetail(MultiplayerAssignmentDetails detail)
         {
             Uri uri = new Uri($"{Host}/assignments?apikey={ApiKey}");
             var header =
