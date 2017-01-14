@@ -28,7 +28,7 @@ namespace UWPEindopdracht.Multiplayer
         [JsonIgnore] public bool syncNeeded = false;
 
         [JsonIgnore]
-        public bool Available => (Participants.Count) < MaxJoiners;
+        public bool Available => (Participants.Count) < MaxJoiners || Participants.Contains(CurrentUser);
 
         public bool dual = false;
 
@@ -37,6 +37,9 @@ namespace UWPEindopdracht.Multiplayer
 
         [JsonIgnore]
         public Visibility Stoppable => CurrentUser == Administrator ? Visibility.Visible : Visibility.Collapsed;
+
+        [JsonIgnore]
+        public Visibility Show => !Closed && Participants.Count > 0 ? Visibility.Visible : Visibility.Collapsed;
 
         public string Description { get; private set; } = "Multiplayer game";
     

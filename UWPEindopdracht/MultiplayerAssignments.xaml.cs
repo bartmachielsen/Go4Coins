@@ -34,7 +34,7 @@ namespace UWPEindopdracht
             var assignment = ((Button) sender).DataContext as MultiplayerAssignmentDetails;
             if (assignment != null)
             {  
-                if(assignment.Participants.Contains(_data.User.id))
+                if(!assignment.Participants.Contains(_data.User.id))
                     assignment.Participants.Add(_data.User.id);
                 assignment.OnPropertyChanged("Available");
                 selected = assignment;

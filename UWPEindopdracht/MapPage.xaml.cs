@@ -539,12 +539,13 @@ namespace UWPEindopdracht
                     if (_assignment is MultiplayerAssignmentDetails)
                     {
                         var multi = _assignment as MultiplayerAssignmentDetails;
-                        multi.Participants.Remove(_multiplayerData.User.id);
+                        multi.Participants.RemoveAll(s => s == _multiplayerData.User.id);
                         if (multi.Participants.Count == 0 || multi.Administrator == _multiplayerData.User.id)
                         {
                             multi.Closed = true;
                         }
                         new RestDBConnector().UpdateMultiplayerAssignmentDetail(multi);
+                        SetAssignment(null, null);
                     }
                     if(_multiplayerData.User.Coins > 500)
                         _multiplayerData.User.Coins -= 500;
