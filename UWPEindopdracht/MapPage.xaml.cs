@@ -191,7 +191,9 @@ namespace UWPEindopdracht
             MultiplayerAssignmentDetails assignment = new MultiplayerAssignmentDetails(-1, request.MultiplayerID, requestee.id);
             assignment.CurrentUser = _multiplayerData.User.id;
             await new RestDBConnector().GetMultiplayerAssignment(assignment);
-            
+
+            assignment.dual = true;
+
             if(!assignment.Closed)
                 await SetAssignment(await GPSHelper.getLocation(), assignment, true);
         }
@@ -235,6 +237,7 @@ namespace UWPEindopdracht
             {
                 MultiplayerAssignmentDetails multiplayerAssignment = new MultiplayerAssignmentDetails(2, null,
                     _multiplayerData.User.id);
+                multiplayerAssignment.dual = true;
                 multiplayerAssignment.Participants.Add(user.id);
                 multiplayerAssignment.CurrentUser = _multiplayerData.User.id;
                 await new RestDBConnector().UploadMultiplayerAssignmentDetail(multiplayerAssignment);

@@ -14,6 +14,7 @@ using Windows.UI.Xaml.Input;
 using Windows.UI.Xaml.Media.Imaging;
 using Windows.UI.Xaml.Navigation;
 using UWPEindopdracht.DataConnections;
+using UWPEindopdracht.Multiplayer;
 
 // The Content Dialog item template is documented at http://go.microsoft.com/fwlink/?LinkId=234238
 
@@ -33,6 +34,8 @@ namespace UWPEindopdracht
             {
                 SkipButton.Content = "Stop";
             }
+            
+
             _imageURL = imageURL;
             this.loaded = loaded;
             LoadDetails();
@@ -44,7 +47,16 @@ namespace UWPEindopdracht
             AssignmentName.Text = _assignment.Name;
             if(_imageURL != null)
                 AssignmentImage.Source = new BitmapImage(new Uri(_imageURL));
-            SkipButton.IsEnabled = _assignment.Skippable || loaded;
+
+            var details = _assignment as MultiplayerAssignmentDetails;
+            if (details != null && details.dual)
+            {
+                SkipButton.Content = "Refuse";
+            }
+
+
+
+            SkipButton.IsEnabled = _assignment.Skippable || loaded || (details != null && details.dual);
         }
 
         private void StartButton_Click(object sender, RoutedEventArgs e)
