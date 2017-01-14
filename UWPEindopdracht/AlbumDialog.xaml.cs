@@ -204,20 +204,19 @@ namespace UWPEindopdracht
 
         private void Sell_click(object sender, RoutedEventArgs e)
         {
-            var removeList = new List<Reward>();
             var datacontext = (Reward)((Button)sender).DataContext;
             if (!_user.Rewards.Contains(datacontext.Name))
                 return;
-            removeList.Add(datacontext);
-            if (removeList.Count == int.Parse(NumericText.Text))
+
+            for (int i = 0; i < _value; i++)
             {
-                foreach(var r in removeList)
-                {
-                    _user.Rewards.Remove(r.Name);
-                    _user.Coins += r.CoinValue;
-                    r.InInventory -= 1;
-                }
+                _user.Rewards.Remove(datacontext.Name);
+                _user.Coins += datacontext.CoinValue;
+                datacontext.InInventory -= 1;
             }
+           
+                
+            
             InformationGrid.Visibility = Visibility.Collapsed;
             CollectionsGrid.Visibility = Visibility.Visible;
             UpdateAllLists();
