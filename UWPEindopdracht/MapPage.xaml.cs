@@ -191,7 +191,9 @@ namespace UWPEindopdracht
             MultiplayerAssignmentDetails assignment = new MultiplayerAssignmentDetails(-1, request.MultiplayerID, requestee.id);
             assignment.CurrentUser = _multiplayerData.User.id;
             await new RestDBConnector().GetMultiplayerAssignment(assignment);
-            await SetAssignment(await GPSHelper.getLocation(), assignment, true);
+            
+            if(!assignment.Closed)
+                await SetAssignment(await GPSHelper.getLocation(), assignment, true);
         }
 
         private async Task ShowDialog(ContentDialog dialog)
@@ -531,6 +533,16 @@ namespace UWPEindopdracht
                     var dialog = new AssignmentDialog(_assignment, await ImageLoader.GetBestUrlFromPlace(_assignment), true);
                     await ShowDialog(dialog);
                     if (dialog.Accepted) return;
+                    if (_assignment is MultiplayerAssignmentDetails)
+                    {
+                        var multi = _assignment as MultiplayerAssignmentDetails;
+                        multi.Participants.Remove(_multiplayerData.User.id);
+                        if (multi.Participants.Count == 0 || multi.Administrator == _multiplayerData.User.id)
+                        {
+                            multi.Closed = true;
+                        }
+                        new RestDBConnector().UpdateMultiplayerAssignmentDetail(multi);
+                    }
                     if(_multiplayerData.User.Coins > 500)
                         _multiplayerData.User.Coins -= 500;
                     else
