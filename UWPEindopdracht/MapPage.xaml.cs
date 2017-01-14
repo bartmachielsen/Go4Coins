@@ -148,9 +148,9 @@ namespace UWPEindopdracht
                     }
                     else
                     {
-                        if (user.Duel != null && !_multiplayerData.User.AcceptedDuels.Contains(user.Duel))
+                        if (user.Duel != null && !_multiplayerData.User.AcceptedDuels.Contains(user.Duel.MultiplayerID))
                         {
-                            _multiplayerData.User.AcceptedDuels.Add(user.Duel);
+                            _multiplayerData.User.AcceptedDuels.Add(user.Duel.MultiplayerID);
                             ShowDual(user.Duel, user);
                         }
 
