@@ -149,6 +149,8 @@
     <None Include="UWPEindopdracht_TemporaryKey.pfx" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include="Assets\Reward\MarvelGrey\x-23Grey.png" />
+    <Content Include="Assets\Reward\Marvel\x-23.png" />
     <Content Include="Assets\ShopAndAlbum\down.png" />
     <Content Include="Assets\MapPage\album.png" />
     <Content Include="Assets\MapPage\new.png" />
@@ -526,7 +528,6 @@
     <Content Include="Assets\Reward\MarvelGrey\wiccanGrey.png" />
     <Content Include="Assets\Reward\MarvelGrey\wolfsbaneGrey.png" />
     <Content Include="Assets\Reward\MarvelGrey\wolverineGrey.png" />
-    <Content Include="Assets\Reward\MarvelGrey\x-23Grey.png" />
     <Content Include="Assets\Reward\Marvel\alexWilder.png" />
     <Content Include="Assets\Reward\Marvel\amadeusCho.png" />
     <Content Include="Assets\Reward\Marvel\angel.png" />
@@ -606,7 +607,6 @@
     <Content Include="Assets\Reward\Marvel\wiccan.png" />
     <Content Include="Assets\Reward\Marvel\wolfsbane.png" />
     <Content Include="Assets\Reward\Marvel\wolverine.png" />
-    <Content Include="Assets\Reward\Marvel\x-23.png" />
     <Content Include="Assets\ShopAndAlbum\All.png" />
     <Content Include="Assets\ShopAndAlbum\AllSelected.png" />
     <Content Include="Assets\ShopAndAlbum\chest.png" />

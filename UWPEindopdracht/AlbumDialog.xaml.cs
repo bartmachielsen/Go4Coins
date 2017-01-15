@@ -215,8 +215,6 @@ namespace UWPEindopdracht
                 datacontext.InInventory -= 1;
             }
            
-                
-            
             InformationGrid.Visibility = Visibility.Collapsed;
             CollectionsGrid.Visibility = Visibility.Visible;
             UpdateAllLists();
