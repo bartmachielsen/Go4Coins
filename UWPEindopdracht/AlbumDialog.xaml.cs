@@ -196,7 +196,6 @@ namespace UWPEindopdracht
             SelectedImageBox.DataContext = selected;
             SellButton.DataContext = selected;
             SellButton.Visibility = selected.InInventory > 0 ? Visibility.Visible : Visibility.Collapsed;
-            // TODO ADD DATACONTEXT TO SELL BUTTON @NARD
             SelectedDescriptionBox.Text = selected.Description;
             InformationGrid.Visibility = Visibility.Visible;
             CollectionsGrid.Visibility = Visibility.Collapsed;
