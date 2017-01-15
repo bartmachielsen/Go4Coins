@@ -36,7 +36,8 @@ namespace UWPEindopdracht
         private async void ImageUrl()
         {
             string url = await ImageLoader.GetBestUrlFromPlace(place);
-            if(url != null)
+
+            if(url != null && PlaceImage != null)
                 PlaceImage.Source = new BitmapImage(new Uri(url));
         }
 
