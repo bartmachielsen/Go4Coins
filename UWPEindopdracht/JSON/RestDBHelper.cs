@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using UWPEindopdracht.GPSConnections;
@@ -87,6 +88,11 @@ namespace UWPEindopdracht.JSON
             return JsonConvert.SerializeObject(reward);
         }
 
+        public static string ConvertRewards(List<Reward> rewards)
+        {
+            return JsonConvert.SerializeObject(rewards);
+        }
+
         public static List<Reward> GetRewards(string response)
         {
             List<Reward> rewards = new List<Reward>();
@@ -108,6 +114,8 @@ namespace UWPEindopdracht.JSON
         public static User getUsername(string response)
         {
             dynamic data = JsonConvert.DeserializeObject(response);
+            if (data is JArray)
+                return null;
             User user = JsonConvert.DeserializeObject<User>(JsonConvert.SerializeObject(data.data));
             user.id = (string) data._id;
             return user;

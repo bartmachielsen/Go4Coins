@@ -54,7 +54,6 @@ namespace UWPEindopdracht.Multiplayer
                 try
                 {
                     User = await Db.GetUser((string)localSettings.Values["multiplayerID"]);
-                    System.Diagnostics.Debug.WriteLine(User.Name);
                     MultiplayerData.NoInternetConfirmed = false;
 
                 }

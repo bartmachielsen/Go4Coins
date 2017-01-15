@@ -25,15 +25,15 @@ namespace UWPEindopdracht.Multiplayer
         public string Categorie { get; set; }
 
         public int InInventory { get; set; } = 0;
-
+        [JsonIgnore]
         public string Image => InInventory > 0 ? UnlockedImageLocation : LockedImageLocation;
-
+        [JsonIgnore]
         public string NiceName => InInventory > 1 ? Name + $" [{InInventory}x]" : Name;
-
+        [JsonIgnore]
         public int CoinValue => (int)(1000*(1/(double)(int)Value));
 
         public RewardValue Value { get; set; }
-
+        [JsonIgnore]
         public SolidColorBrush RareColor
         {
             get

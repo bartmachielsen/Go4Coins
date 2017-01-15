@@ -13,9 +13,9 @@ namespace UWPEindopdracht.DataConnections
 {
     public class RestDBConnector : HttpConnector,IApiKeyConnector
     {
-        public string ApiKey { get; set; } = "711dc584f7d33bf508b643a165c95bc9a4129";
+        public string ApiKey { get; set; } = "135f658e5d8daebf1686e93bc29470fce4367";
 
-        public RestDBConnector() : base("https://uwpeindopdracht-429b.restdb.io/rest")
+        public RestDBConnector() : base("https://eindopdracht-68d6.restdb.io/rest")
         {
             
         }
@@ -84,7 +84,7 @@ namespace UWPEindopdracht.DataConnections
             
         }
 
-        public async void UploadReward(Reward reward)
+        public async Task UploadReward(Reward reward)
         {
             Uri uri = new Uri($"{Host}/rewards?apikey={ApiKey}");
             var header =
@@ -92,6 +92,7 @@ namespace UWPEindopdracht.DataConnections
                     Post(uri,
                         new HttpStringContent(RestDBHelper.ConvertReward(reward), UnicodeEncoding.Utf8,
                             "application/json"));
+            System.Diagnostics.Debug.WriteLine("SUCCES " + header.IsSuccessStatusCode);
 
         }
 

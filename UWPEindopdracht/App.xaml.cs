@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Runtime.InteropServices.WindowsRuntime;
+using System.Threading.Tasks;
 using Windows.ApplicationModel;
 using Windows.ApplicationModel.Activation;
 using Windows.Foundation;
@@ -14,6 +15,9 @@ using Windows.UI.Xaml.Data;
 using Windows.UI.Xaml.Input;
 using Windows.UI.Xaml.Media;
 using Windows.UI.Xaml.Navigation;
+using UWPEindopdracht.DataConnections;
+using UWPEindopdracht.JSON;
+using UWPEindopdracht.Multiplayer;
 
 namespace UWPEindopdracht
 {
@@ -73,7 +77,9 @@ namespace UWPEindopdracht
                     // configuring the new page by passing required information as a navigation
                     // parameter
                     rootFrame.Navigate(typeof(MapPage), e.Arguments);
-                }
+                    //DownloadAllRewards();
+                    //UploadAllRewards();
+                    }
                 // Ensure the current window is active
                 Window.Current.Activate();
             }
@@ -102,5 +108,42 @@ namespace UWPEindopdracht
             //TODO: Save application state and stop any background activity
             deferral.Complete();
         }
+
+        private async void DownloadAllRewards()
+        {
+            List<Reward> rewards = await new RestDBConnector().GetRewards();
+
+            Windows.Storage.StorageFolder storageFolder =
+            Windows.Storage.ApplicationData.Current.LocalFolder;
+            Windows.Storage.StorageFile sampleFile =
+                await storageFolder.CreateFileAsync("rewards.json",
+                    Windows.Storage.CreationCollisionOption.ReplaceExisting);
+            System.Diagnostics.Debug.WriteLine(sampleFile.Path);
+            System.Diagnostics.Debug.WriteLine(RestDBHelper.ConvertRewards(rewards));
+            await Windows.Storage.FileIO.WriteTextAsync(sampleFile, RestDBHelper.ConvertRewards(rewards));
+        }
+
+        private async void UploadAllRewards()
+        {
+            Windows.Storage.StorageFolder storageFolder =
+            Windows.Storage.ApplicationData.Current.LocalFolder;
+            Windows.Storage.StorageFile sampleFile =
+                await storageFolder.CreateFileAsync("rewards.json",
+                    Windows.Storage.CreationCollisionOption.OpenIfExists);
+            if (sampleFile.IsAvailable)
+            {
+                string content = await Windows.Storage.FileIO.ReadTextAsync(sampleFile);
+                var db = new RestDBConnector();
+                List<Reward> rewards = RestDBHelper.GetRewards(content);
+                foreach (var reward in rewards)
+                {
+                    System.Diagnostics.Debug.WriteLine("UPLOADING " + reward.Name);
+                    await db.UploadReward(reward);
+                    await Task.Delay(1000);
+                }
+            }
+
+        }
+
     }
 }
