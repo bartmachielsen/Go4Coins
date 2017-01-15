@@ -164,6 +164,9 @@ namespace UWPEindopdracht
         public void ShowReward()
         {
             RewardGrid.Visibility = Visibility.Visible;
+            EnlargeListview.Begin();
+            FadeInBackAnimation.BeginTime = new TimeSpan(0,0,4);
+            FadeInBackAnimation.Begin();
             BackButton.Visibility = Visibility.Collapsed;
             HeaderText.Visibility = Visibility.Collapsed;
             ChestGrid.Visibility = Visibility.Collapsed;
