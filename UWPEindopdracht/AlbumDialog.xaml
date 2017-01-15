@@ -450,6 +450,7 @@
                                 <Grid
                                     x:Name="GridViewItem"
                                     Height="180" 
+                                    
                                     Width="90" 
                                     Background="White"
                                     >
@@ -457,10 +458,15 @@
                                         <RowDefinition Height="5*"/>
                                         <RowDefinition Height="*"/>
                                     </Grid.RowDefinitions>
-                                    <Image
+                                    <Border
+                                        BorderThickness="4" 
+                                        BorderBrush="{x:Bind RareColor, Mode=OneWay}"
+                                        >
+                                        <Image
                                         Tapped="ShowInformation"
                                         Source="{x:Bind Image}"
                                         />
+                                    </Border>
                                     <TextBlock
                                         Text="{x:Bind Name}"
                                         Grid.Row="1"
