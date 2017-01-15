@@ -164,6 +164,9 @@ namespace UWPEindopdracht
         public void ShowReward()
         {
             RewardGrid.Visibility = Visibility.Visible;
+            EnlargeListview.Begin();
+            FadeInBackAnimation.BeginTime = new TimeSpan(0,0,4);
+            FadeInBackAnimation.Begin();
             BackButton.Visibility = Visibility.Collapsed;
             HeaderText.Visibility = Visibility.Collapsed;
             ChestGrid.Visibility = Visibility.Collapsed;
@@ -196,7 +199,6 @@ namespace UWPEindopdracht
             SelectedImageBox.DataContext = selected;
             SellButton.DataContext = selected;
             SellButton.Visibility = selected.InInventory > 0 ? Visibility.Visible : Visibility.Collapsed;
-            // TODO ADD DATACONTEXT TO SELL BUTTON @NARD
             SelectedDescriptionBox.Text = selected.Description;
             InformationGrid.Visibility = Visibility.Visible;
             CollectionsGrid.Visibility = Visibility.Collapsed;
@@ -215,8 +217,6 @@ namespace UWPEindopdracht
                 datacontext.InInventory -= 1;
             }
            
-                
-            
             InformationGrid.Visibility = Visibility.Collapsed;
             CollectionsGrid.Visibility = Visibility.Visible;
             UpdateAllLists();
