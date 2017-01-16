@@ -544,29 +544,31 @@
             <Grid.Resources>
                 <Storyboard x:Name="FadeInBackAnimation">
                     <DoubleAnimation 
-                    Storyboard.TargetName="BackToAlbumButton"
-                    Storyboard.TargetProperty="Opacity"
-                    From="0"
-                    To="1.0"
-                    Duration="0:0:3"
-                    />
+                        Storyboard.TargetName="BackToAlbumButton"
+                        Storyboard.TargetProperty="Opacity"
+                        From="0"
+                        To="1.0"
+                        Duration="0:0:2"
+                        />
                 </Storyboard>
                 <Storyboard x:Name="EnlargeListview">
                     <DoubleAnimation 
-                    Storyboard.TargetName="ScrollViewer"
-                    Storyboard.TargetProperty="Width"
-                    EnableDependentAnimation="True"
-                    From="0"
-                    To="285"
-                    Duration="0:0:0.4"
-                    />
+                        Storyboard.TargetName="ScrollViewer"
+                        Storyboard.TargetProperty="Height"
+                        EnableDependentAnimation="True"
+                        From="0"
+                        To="515"
+                        Duration="0:0:3"
+                        Completed="CompletedEnlarge"
+                        />
                 </Storyboard>
             </Grid.Resources>
             
             <ScrollViewer
                 x:Name="ScrollViewer"
                 VerticalScrollBarVisibility="Hidden"
-                Width="0"
+                Height="0"
+                VerticalAlignment="Top"
                 >
                 <ListView 
                     ItemsSource="{x:Bind _won, Mode=OneWay}"

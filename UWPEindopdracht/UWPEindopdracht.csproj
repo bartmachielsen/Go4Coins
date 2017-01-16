@@ -629,6 +629,7 @@
     <Content Include="Assets\ShopAndAlbum\Rare.png" />
     <Content Include="Assets\ShopAndAlbum\RareSelected.png" />
     <Content Include="Assets\ShopAndAlbum\warnerbros.png" />
+    <Content Include="Assets\splashscreen.png" />
     <Content Include="Assets\unavailable-image.png" />
     <Content Include="Assets\ShopAndAlbum\up.png" />
     <Content Include="Properties\Default.rd.xml" />

@@ -163,14 +163,19 @@ namespace UWPEindopdracht
 
         public void ShowReward()
         {
+            BackToAlbumButton.IsEnabled = false;
             RewardGrid.Visibility = Visibility.Visible;
             EnlargeListview.Begin();
-            FadeInBackAnimation.BeginTime = new TimeSpan(0,0,4);
-            FadeInBackAnimation.Begin();
             BackButton.Visibility = Visibility.Collapsed;
             HeaderText.Visibility = Visibility.Collapsed;
             ChestGrid.Visibility = Visibility.Collapsed;
             UpdateAllLists();
+        }
+
+        private void CompletedEnlarge(object sender, object e)
+        {
+            BackToAlbumButton.IsEnabled = true;
+            FadeInBackAnimation.Begin();
         }
 
         public void RefreshChests()
