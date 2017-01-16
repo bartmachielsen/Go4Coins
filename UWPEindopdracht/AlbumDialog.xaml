@@ -594,15 +594,12 @@
                                     HorizontalAlignment="Center" 
                                     VerticalAlignment="Center" 
                                     Grid.RowSpan="2"
+                                    BorderThickness="4" 
+                                    BorderBrush="{x:Bind RareColor, Mode=OneWay}"
                                     >
-                                    <Border 
-                                        BorderThickness="4" 
-                                        BorderBrush="{x:Bind RareColor, Mode=OneWay}"
-                                        >
-                                        <Image 
-                                            Source="{x:Bind UnlockedImageLocation, Mode=OneWay}"
-                                            />
-                                    </Border>
+                                    <Image 
+                                        Source="{x:Bind UnlockedImageLocation, Mode=OneWay}"
+                                        />
                                 </Grid>
                                 <TextBlock 
                                     Style="{StaticResource InformationGridTitleStyle}" 
