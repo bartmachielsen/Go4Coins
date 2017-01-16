@@ -8,6 +8,7 @@ using Windows.ApplicationModel;
 using Windows.ApplicationModel.Activation;
 using Windows.Foundation;
 using Windows.Foundation.Collections;
+using Windows.Storage;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Controls.Primitives;
@@ -77,12 +78,12 @@ namespace UWPEindopdracht
                     // configuring the new page by passing required information as a navigation
                     // parameter
                     rootFrame.Navigate(typeof(MapPage), e.Arguments);
-                    
-                    
+                    //UploadAllRewardsInFolder("Disney");
+
                     // UPDATER IN NEW DATABASE
                     //await DownloadAllRewards();
                     //await UploadAllRewards();
-                    }
+                }
                 // Ensure the current window is active
                 Window.Current.Activate();
             }
@@ -149,6 +150,46 @@ namespace UWPEindopdracht
                     await db.UploadReward(reward);
                     await Task.Delay(1000);
                 }
+            }
+
+        }
+
+        private async Task UploadAllRewardsInFolder(string folderName)
+        {
+            var db = new RestDBConnector();
+            StorageFolder InstallationFolder = await Windows.ApplicationModel.Package.Current.InstalledLocation.GetFolderAsync(@"Assets\Reward\"+folderName);
+
+            foreach (var file in await InstallationFolder.GetFilesAsync())
+            {
+                string fileName = file.Name;
+                List<int> indexes = new List<int>();
+                var chararray = fileName.ToCharArray();
+                for (int i = 0; i < chararray.Length; i++)
+                {
+                    var character = chararray[i];
+                    if (("" + character) == ("" + character).ToUpper() && character != '.')
+                    {
+                        indexes.Add(i);
+                    }
+                }
+                string newName = fileName;
+                if (indexes.Count > 0)
+                    foreach (var index in indexes)
+                    {
+                        newName = fileName.Insert(index, " ");
+                    }
+                    
+                newName = newName.Replace(".png", "");
+                newName = (newName[0] + "").ToUpper() + newName.Substring(1);
+                Reward reward = new Reward(null, newName, 
+                    @"Assets/Reward/" + folderName + @"/"+ fileName, 
+                    @"Assets/Reward/" + folderName + @"Grey/" + fileName.Replace(".png","") + "Grey.png",
+                    newName,
+                    folderName,
+                    0);
+                System.Diagnostics.Debug.WriteLine(reward.Name);
+                await db.UploadReward(reward);
+                await Task.Delay(1000);
             }
 
         }

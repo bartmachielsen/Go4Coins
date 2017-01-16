@@ -113,7 +113,18 @@ namespace UWPEindopdracht.DataConnections
             var response = await ConvertResponseMessageToContent(header);
             if (!header.IsSuccessStatusCode) return new List<Reward>();
             RestDBHelper.CheckErrors(response);
-            return RestDBHelper.GetRewards(response);
+            var rewards = RestDBHelper.GetRewards(response);
+            foreach (var reward in rewards)
+            {
+                if (reward.Value == 0)
+                {
+                    reward.Value = RewardValue.Normal;
+                    System.Diagnostics.Debug.WriteLine("FIXING REWARDVALUE " + reward.Name);
+                    UpdateReward(reward);
+                    await Task.Delay(1000);
+                }
+            }
+            return rewards;
         }
 
         public async Task UploadMultiplayerAssignmentDetail(MultiplayerAssignmentDetails detail)

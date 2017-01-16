@@ -54,7 +54,8 @@ namespace UWPEindopdracht
         private void UpdateAllLists()
         {
             _selectedList.Clear();
-
+            if (_rewards == null)
+                return;
             foreach (var reward in _rewards)
             {
                 if (reward.Categorie != _focus || !_values.Contains(reward.Value)) continue;
