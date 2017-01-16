@@ -78,7 +78,7 @@ namespace UWPEindopdracht
                     // configuring the new page by passing required information as a navigation
                     // parameter
                     rootFrame.Navigate(typeof(MapPage), e.Arguments);
-                    //UploadAllRewardsInFolder("Disney");
+                    //UploadAllRewardsInFolder("Marvel");
 
                     // UPDATER IN NEW DATABASE
                     //await DownloadAllRewards();
@@ -157,6 +157,7 @@ namespace UWPEindopdracht
         private async Task UploadAllRewardsInFolder(string folderName)
         {
             var db = new RestDBConnector();
+            var existing = await db.GetRewards();
             StorageFolder InstallationFolder = await Windows.ApplicationModel.Package.Current.InstalledLocation.GetFolderAsync(@"Assets\Reward\"+folderName);
 
             foreach (var file in await InstallationFolder.GetFilesAsync())
@@ -186,8 +187,13 @@ namespace UWPEindopdracht
                     @"Assets/Reward/" + folderName + @"Grey/" + fileName.Replace(".png","") + "Grey.png",
                     newName,
                     folderName,
-                    0);
-                System.Diagnostics.Debug.WriteLine(reward.Name);
+                    RewardValue.Normal);
+                if (
+                    existing.FindAll(
+                        (reward1 =>
+                            reward1.Name == reward.Name || reward1.UnlockedImageLocation == reward.UnlockedImageLocation))
+                        .Count != 0) continue;
+                System.Diagnostics.Debug.WriteLine("UPLOADING REWARD BECAUSE NOT EXISTING " + reward.Name);
                 await db.UploadReward(reward);
                 await Task.Delay(1000);
             }
