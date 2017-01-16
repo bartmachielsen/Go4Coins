@@ -149,6 +149,7 @@
     <None Include="UWPEindopdracht_TemporaryKey.pfx" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include="Assets\Reward\Dc\stargirl.png" />
     <Content Include="Assets\Reward\MarvelGrey\x-23Grey.png" />
     <Content Include="Assets\Reward\Marvel\x-23.png" />
     <Content Include="Assets\ShopAndAlbum\down.png" />
@@ -288,7 +289,6 @@
     <Content Include="Assets\Reward\Dc\scandalSavage.png" />
     <Content Include="Assets\Reward\Dc\sinestro.png" />
     <Content Include="Assets\Reward\Dc\starfire.png" />
-    <Content Include="Assets\Reward\Dc\stargirlGrey.jpg" />
     <Content Include="Assets\Reward\Dc\static.png" />
     <Content Include="Assets\Reward\Dc\steel.png" />
     <Content Include="Assets\Reward\Dc\stephanieBrown.png" />
