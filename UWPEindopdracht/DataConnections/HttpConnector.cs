@@ -31,7 +31,7 @@ namespace UWPEindopdracht
         /// the host address of the target server
         /// default: localhost
         /// </summary>
-        protected string Host { get; }
+        public string Host { get; set; }
 
         /// <summary>
         /// the host port of the target server

@@ -41,7 +41,7 @@ namespace UWPEindopdracht
         /// will be used such as when the application is launched to open a specific file.
         /// </summary>
         /// <param name="e">Details about the launch request and process.</param>
-        protected override void OnLaunched(LaunchActivatedEventArgs e)
+        protected async override void OnLaunched(LaunchActivatedEventArgs e)
         {
 #if DEBUG
             if (System.Diagnostics.Debugger.IsAttached)
@@ -77,8 +77,11 @@ namespace UWPEindopdracht
                     // configuring the new page by passing required information as a navigation
                     // parameter
                     rootFrame.Navigate(typeof(MapPage), e.Arguments);
-                    //DownloadAllRewards();
-                    //UploadAllRewards();
+                    
+                    
+                    // UPDATER IN NEW DATABASE
+                    //await DownloadAllRewards();
+                    //await UploadAllRewards();
                     }
                 // Ensure the current window is active
                 Window.Current.Activate();
@@ -109,9 +112,14 @@ namespace UWPEindopdracht
             deferral.Complete();
         }
 
-        private async void DownloadAllRewards()
+        private async Task DownloadAllRewards()
         {
-            List<Reward> rewards = await new RestDBConnector().GetRewards();
+            var db = new RestDBConnector
+            {
+                Host = "https://uwpeindopdracht-429b.restdb.io/rest",
+                ApiKey = "711dc584f7d33bf508b643a165c95bc9a4129"
+            };
+            List<Reward> rewards = await db.GetRewards();
 
             Windows.Storage.StorageFolder storageFolder =
             Windows.Storage.ApplicationData.Current.LocalFolder;
@@ -123,7 +131,7 @@ namespace UWPEindopdracht
             await Windows.Storage.FileIO.WriteTextAsync(sampleFile, RestDBHelper.ConvertRewards(rewards));
         }
 
-        private async void UploadAllRewards()
+        private async Task UploadAllRewards()
         {
             Windows.Storage.StorageFolder storageFolder =
             Windows.Storage.ApplicationData.Current.LocalFolder;
