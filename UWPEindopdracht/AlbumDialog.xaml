@@ -450,7 +450,6 @@
                                 <Grid
                                     x:Name="GridViewItem"
                                     Height="180" 
-                                    
                                     Width="90" 
                                     Background="White"
                                     >
@@ -460,8 +459,7 @@
                                     </Grid.RowDefinitions>
                                     <Grid
                                         HorizontalAlignment="Center"
-                                        VerticalAlignment="Center">
-                                        <Border
+                                        VerticalAlignment="Center"
                                         BorderThickness="4" 
                                         BorderBrush="{x:Bind RareColor, Mode=OneWay}"
                                         >
@@ -469,7 +467,6 @@
                                         Tapped="ShowInformation"
                                         Source="{x:Bind Image}"
                                         />
-                                    </Border>
                                     </Grid>
                                     <TextBlock
                                         Text="{x:Bind Name}"
@@ -542,7 +539,8 @@
 
         <Grid
             x:Name="RewardGrid"
-            Visibility="Collapsed"
+            Visibility="Visible"
+            Width="285"
             Grid.Row="0"
             Grid.RowSpan="3"
             >
