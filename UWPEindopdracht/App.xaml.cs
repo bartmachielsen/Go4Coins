@@ -78,7 +78,7 @@ namespace UWPEindopdracht
                     // configuring the new page by passing required information as a navigation
                     // parameter
                     rootFrame.Navigate(typeof(MapPage), e.Arguments);
-                    //UploadAllRewardsInFolder("Marvel");
+                    //await UploadAllRewardsInFolder("Dreamworks");
 
                     // UPDATER IN NEW DATABASE
                     //await DownloadAllRewards();
