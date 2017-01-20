@@ -57,6 +57,10 @@ namespace UWPEindopdracht
 
 
             SkipButton.IsEnabled = _assignment.Skippable || loaded || (details != null && details.dual);
+            if (SkipButton.IsEnabled == false)
+            {
+                SkipText.Visibility = Visibility.Collapsed;
+            }
         }
 
         private void StartButton_Click(object sender, RoutedEventArgs e)
