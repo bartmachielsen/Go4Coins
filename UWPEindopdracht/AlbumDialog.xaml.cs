@@ -267,7 +267,7 @@ namespace UWPEindopdracht
             {
                 ClearAll();
                 Category4.BorderThickness = _size;
-                _focus = "WarnerBros";
+                _focus = "Warnerbros";
                 UpdateAllLists();
             }
         }
@@ -278,7 +278,7 @@ namespace UWPEindopdracht
             {
                 ClearAll();
                 Category5.BorderThickness = _size;
-                _focus = "DreamWorks";
+                _focus = "Dreamworks";
                 UpdateAllLists();
             }
         }
