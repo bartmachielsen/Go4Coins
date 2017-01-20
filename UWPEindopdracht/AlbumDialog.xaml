@@ -475,7 +475,7 @@
                                         Foreground="Blue"
                                         HorizontalAlignment="Center"
                                         VerticalAlignment="Center"
-                                    />
+                                        />
                                 </Grid>
                             </DataTemplate>
                         </GridView.ItemTemplate>
